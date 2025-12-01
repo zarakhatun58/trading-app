@@ -9,8 +9,8 @@ const FloatingInput = ({ label, type = "text" }) => {
             <input
                 type={type}
                 className="
-          w-full p-3 bg-[#1e293b] 
-          border border-gray-700 
+          w-full p-3 bg-[#444b5d] 
+          border border-[#ffffff1a] 
           rounded text-sm text-white
           focus:outline-none focus:border-gray-500
         "
