@@ -3,7 +3,6 @@ import FloatingInput from './FloatingInput';
 import { useSearchParams } from "next/navigation";
 
 const AuthBox = () => {
-    // const [tab, setTab] = useState<"login" | "register">("login");
     const searchParams = useSearchParams();
     const defaultTab = (searchParams.get("tab") as "login" | "register") || "login";
 
