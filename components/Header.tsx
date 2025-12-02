@@ -10,30 +10,18 @@ export default function Header() {
   return (
     <header className="w-full bg-[#0f172a] text-white border-b border-gray-700">
       <div className="max-w-7xl mx-auto flex items-center justify-between py-4 px-6">
-
-        {/* Left Logo */}
         <div className="text-xl font-bold flex items-center gap-2">
           <i className="fa-solid fa-house pr-1"></i>
           QUOTEX
         </div>
-
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex gap-8 text-sm">
           <Link href="/demo" className="hover:text-gray-300 font-semibold">Demo Account</Link>
           <Link href="/about" className="hover:text-gray-300 font-semibold">About Us</Link>
           <Link href="/faq" className="hover:text-gray-300 font-semibold">FAQ</Link>
           <Link href="/blog" className="hover:text-gray-300 font-semibold">Blog</Link>
         </nav>
-
-        {/* Desktop Right Side */}
         <div className="hidden md:flex items-center gap-6 text-sm">
-          {/* <button className="px-4 py-2 border rounded font-semibold hover:bg-gray-700">
-            Log in
-          </button>
 
-          <button className="px-4 py-2 bg-green-600 rounded font-semibold hover:bg-green-700">
-            Sign up
-          </button> */}
           <Link
             href="/?tab=login"
             className={`px-4 py-2 rounded font-semibold ${currentTab === "login" ? "bg-[#ffffff1a]" : "hover:bg-green-700"
@@ -45,15 +33,13 @@ export default function Header() {
           <Link
             href="/?tab=register"
             className={`px-4 py-2 rounded font-semibold ${currentTab === "register"
-                ? "bg-green-700"
-                : "bg-green-600 hover:bg-green-700"
+              ? "bg-green-700"
+              : "bg-green-600 hover:bg-green-700"
               }`}
           >
             Sign up
           </Link>
 
-
-          {/* Language Dropdown */}
           <div className="relative">
             <button
               onClick={() => setOpenLang(!openLang)}
@@ -77,8 +63,6 @@ export default function Header() {
             )}
           </div>
         </div>
-
-        {/* Mobile Hamburger */}
         <button
           className="md:hidden text-2xl"
           onClick={() => setOpenMenu(!openMenu)}
@@ -86,8 +70,6 @@ export default function Header() {
           <i className="fa-solid fa-bars"></i>
         </button>
       </div>
-
-      {/* Mobile Menu */}
       {openMenu && (
         <div className="md:hidden bg-[#0f172a] border-t border-gray-700 px-6 py-4 space-y-4">
 
@@ -105,12 +87,6 @@ export default function Header() {
           </Link>
 
           <div className="flex gap-3 pt-4">
-            {/* <button className="px-4 py-2 border rounded font-semibold w-1/2">
-              Log in
-            </button>
-            <button className="px-4 py-2 bg-green-600 rounded font-semibold w-1/2">
-              Sign up
-            </button> */}
             <Link
               href="/?tab=login"
               className={`px-4 py-2 rounded font-semibold ${currentTab === "login" ? "bg-[#ffffff1a]" : "hover:bg-gray-700"
@@ -130,8 +106,6 @@ export default function Header() {
             </Link>
 
           </div>
-
-          {/* Mobile Language */}
           <div>
             <button
               onClick={() => setOpenLang(!openLang)}

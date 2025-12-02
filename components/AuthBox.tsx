@@ -43,22 +43,7 @@ const AuthBox = () => {
                     </div>
                     {tab === "login" && (
                         <div className="flex flex-col gap-4 pl-8 pr-8">
-                            <div className="relative">
-                                <label className="absolute -top-3 left-3 px-1 text-[14px] text-gray-400 ">
-                                    Email
-                                </label>
-
-                                <input
-                                    type="text"
-                                    placeholder="Email"
-                                    className="
-          w-full p-3 bg-[#444b5d] 
-          border border-[#ffffff1a] 
-          rounded text-sm text-white
-          focus:outline-none 
-        "
-                                />
-                            </div>
+                             <FloatingInput label="Email" type="Email" />
                             <FloatingInput label="Password" type="password" />
                             <div className="flex items-center justify-between w-full text-sm mt-3">
 
@@ -100,7 +85,6 @@ const AuthBox = () => {
 
                                 <select className="w-full p-3 bg-[#444b5d] border border-[#ffffff1a] rounded text-gray-300">
                                     <option>
-                                        {/* <i className="fa-solid fa-globe"></i>  */}
                                         Search</option>
                                     <option>India</option>
                                     <option>USA</option>
