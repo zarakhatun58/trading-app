@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut } from 'lucide-react';
-import { CurrencyPair } from '../../src/types/trading';
-import { cn } from '../../src/libs/utils';
+import { CurrencyPair } from '../../types/trading';
+import { cn } from '../../libs/utils';
 import { Switch } from '../ReusableUI/switch';
 
 

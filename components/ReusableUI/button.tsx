@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { cn } from "../../src/libs/utils";
+import { cn } from "../../libs/utils";
 
 type ButtonVariant =
   | "default"

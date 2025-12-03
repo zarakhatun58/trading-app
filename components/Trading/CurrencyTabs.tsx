@@ -1,8 +1,8 @@
 "use client";
 
 import { Plus, X } from "lucide-react";
-import { CurrencyPair } from "../../src/types/trading";
-import { cn } from "../../src/libs/utils";
+import { CurrencyPair } from "../../types/trading";
+import { cn } from "../../libs/utils";
 
 interface CurrencyTabsProps {
   pairs: CurrencyPair[];

@@ -13,7 +13,7 @@ import {
   Grid3X3,
   Expand
 } from 'lucide-react';
-import { cn } from '../../src/libs/utils';
+import { cn } from '../../libs/utils';
 
 interface SidebarItem {
   icon: React.ReactNode;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CandleData } from "../../src/types/trading";
+import { CandleData } from "../../types/trading";
 import { Info } from "lucide-react";
 
 

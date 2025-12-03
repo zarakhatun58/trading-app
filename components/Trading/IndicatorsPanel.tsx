@@ -1,9 +1,9 @@
 "use client";
 
 import { X, ChevronRight, Trash2 } from "lucide-react";
-import { indicators } from "../../src/data/mockData";
+import { indicators } from "../../data/mockData";
 import { useState } from "react";
-import { cn } from "../../src/libs/utils";
+import { cn } from "../../libs/utils";
 
 interface IndicatorsPanelProps {
   isOpen: boolean;

@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-import { currencyPairs, generateCandleData } from '../src/data/mockData';
-import { CandleData, CurrencyPair } from '../src/types/trading';
-import { toast } from '../src/hooks/useToasts';
+import { currencyPairs, generateCandleData } from '../data/mockData';
+import { CandleData, CurrencyPair } from '../types/trading';
+import { toast } from '../hooks/useToasts';
 import dynamic from "next/dynamic";
 import { TradingSidebar } from '../components/Trading/TradingSidebar';
 
