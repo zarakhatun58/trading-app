@@ -1,9 +1,10 @@
 import React from 'react';
+import TradingPage from './tradingPage';
 
 const demo = () => {
     return (
         <div>
-            <h1 className="text-white p-10">Demo Account Page</h1>
+            <TradingPage/>
         </div>
     );
 };

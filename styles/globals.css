@@ -1,5 +1,176 @@
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body { background:#0f172a; color:white; }
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+
+/* ---------------------------
+   THEME VARIABLES (LIGHT MODE)
+----------------------------- */
+@layer base {
+  :root {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 199 89% 48%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 22%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 199 89% 48%;
+
+    --radius: 0.5rem;
+
+    --chart-green: 142 71% 45%;
+    --chart-red: 0 84% 60%;
+    --chart-grid: 217 33% 25%;
+
+    --sidebar-background: 222 47% 9%;
+    --sidebar-foreground: 215 20% 65%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 199 89% 48%;
+  }
+}
+
+/* ---------------------------
+        DARK MODE
+----------------------------- */
+@layer base {
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 199 89% 48%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 22%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 199 89% 48%;
+
+    --chart-green: 142 71% 45%;
+    --chart-red: 0 84% 60%;
+    --chart-grid: 217 33% 25%;
+  }
+}
+
+/* ---------------------------
+        BASE STYLES
+----------------------------- */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* ---------------------------
+       COMPONENTS (UI)
+----------------------------- */
+@layer components {
+  .trade-btn-up {
+    @apply bg-success text-success-foreground hover:bg-success/90 transition-all duration-200 shadow-lg shadow-success/20;
+  }
+
+  .trade-btn-down {
+    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all duration-200 shadow-lg shadow-destructive/20;
+  }
+
+  .currency-tab {
+    @apply px-4 py-2 rounded-lg bg-secondary/50 border border-border transition-all duration-200 hover:bg-secondary cursor-pointer;
+  }
+
+  .currency-tab-active {
+    @apply bg-primary/20 border-primary;
+  }
+
+  .sidebar-item {
+    @apply flex flex-col items-center gap-1 p-3 rounded-lg transition-all duration-200 hover:bg-sidebar-accent cursor-pointer text-sidebar-foreground hover:text-sidebar-accent-foreground;
+  }
+
+  .sidebar-item-active {
+    @apply bg-sidebar-accent text-primary;
+  }
+
+  .chart-candle-green {
+    fill: hsl(var(--chart-green));
+  }
+
+  .chart-candle-red {
+    fill: hsl(var(--chart-red));
+  }
+
+  .glow-green {
+    box-shadow: 0 0 20px hsl(var(--success) / 0.3);
+  }
+
+  .glow-red {
+    box-shadow: 0 0 20px hsl(var(--destructive) / 0.3);
+  }
+}
+
+/* ---------------------------
+        UTILITIES
+----------------------------- */
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
