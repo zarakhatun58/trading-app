@@ -52,7 +52,6 @@ export default function TradingPanel({
 
   return (
      <aside className="w-72 lg:w-80 bg-card border-l border-border flex flex-col h-full">
-      {/* Account Section with Deposit/Withdrawal */}
       <div className="p-3 border-b border-border">
         <div className="relative">
           <button
@@ -92,7 +91,6 @@ export default function TradingPanel({
           )}
         </div>
 
-        {/* Deposit/Withdrawal Buttons */}
         <div className="flex gap-2 mt-3">
           <button className="flex-1 py-2.5 px-3 rounded-lg bg-success hover:bg-success/90 text-success-foreground font-semibold text-sm transition-colors flex items-center justify-center gap-1">
             <Plus size={16} />
@@ -104,7 +102,6 @@ export default function TradingPanel({
         </div>
       </div>
 
-      {/* Pair Info */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
@@ -128,7 +125,6 @@ export default function TradingPanel({
         </div>
       </div>
 
-      {/* Time Selector */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-muted-foreground">Time</span>
@@ -154,7 +150,6 @@ export default function TradingPanel({
         </div>
       </div>
 
-      {/* Investment */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-muted-foreground">Investment</span>
@@ -177,7 +172,6 @@ export default function TradingPanel({
         </div>
       </div>
 
-      {/* Trade Buttons */}
       <div className="p-4 space-y-3">
         <button 
           onClick={() => onTrade('up', investment, tradeTime)}
@@ -200,7 +194,6 @@ export default function TradingPanel({
         </button>
       </div>
 
-      {/* Trades Section */}
       <div className="flex-1 border-t border-border">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2">
