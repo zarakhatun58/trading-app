@@ -14,8 +14,8 @@ interface TopBarProps {
       
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">Q</span>
+          <div className="w-8 h-8 rounded flex items-center justify-center">
+            <span className="text-white font-bold text-lg">Q</span>
           </div>
           <span className="font-bold text-lg tracking-tight hidden sm:inline">QUOTEX</span>
         </div>

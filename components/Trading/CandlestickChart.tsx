@@ -264,9 +264,9 @@ const CandlestickChart = ({
         height={dimensions.height}
         className="w-full h-full"
       />
-      <button className="absolute left-4 top-16 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/20 text-primary text-sm hover:bg-primary/30 transition-colors">
+      <button className="absolute left-4 top-16 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/20 text-primary text-[12px]hover:bg-primary/30 transition-colors">
         <Info size={14} />
-        <span className="font-medium">PAIR INFORMATION</span>
+        <span className="text-[10px]">PAIR INFORMATION</span>
       </button>
       <div className="absolute left-20 top-4 flex items-center gap-2 text-success text-sm">
         <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
