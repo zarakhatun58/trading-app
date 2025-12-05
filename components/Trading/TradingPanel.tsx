@@ -81,7 +81,7 @@ export default function TradingPanel({
 
 
   return (
-    <aside className="w-[130px] md:w-[210px] bg-[#2b3040] flex flex-col h-full rounded-lg">
+    <aside className="w-[130px] md:w-[235px] bg-[#2b3040] flex flex-col h-full rounded-lg">
       <div className="border-border">
         <div className="relative">
 
