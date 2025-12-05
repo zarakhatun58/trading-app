@@ -136,7 +136,7 @@ const expandedBottomItems = [
           <Users size={16} />
         </button>
 
-        <button className="mt-2 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold hover:bg-primary/90 transition-colors">
+        <button className="mt-2 w-10 h-10 rounded-lg bg-green text-primary-foreground flex items-center justify-center text-xs font-semibold hover:bg-primary/90 transition-colors">
           Help
         </button>
       </aside>

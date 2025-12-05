@@ -41,7 +41,7 @@ type Category = 'CURRENCIES' | 'CRYPTO' | 'COMMODITIES' | 'STOCKS';
   };
 
   return (
-    <div className="bg-card border border-border rounded-lg w-96 shadow-2xl max-h-[500px] overflow-hidden">
+    <div className="bg-[#2b3040] border border-border rounded-lg w-[600px] shadow-2xl max-h-[500px] overflow-hidden">
    
       <div className="flex items-center justify-between p-4 border-b border-border">
         <h2 className="text-base font-semibold text-foreground">Select trade pair</h2>

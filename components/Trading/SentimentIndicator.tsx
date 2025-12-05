@@ -35,7 +35,7 @@ const SentimentIndicator = ({
         {buyPercentage}%
       </div>
       
-      <div className="flex-1 w-2 bg-secondary rounded-full overflow-hidden flex flex-col-reverse">
+      <div className="flex-1 w-[5px] bg-secondary rounded-full overflow-hidden flex flex-col-reverse">
  
         <div 
           className="w-full bg-success transition-all duration-500"

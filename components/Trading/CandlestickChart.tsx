@@ -12,6 +12,7 @@ interface CandlestickChartProps {
   chartType: 'area' | 'candles' | 'bars' | 'heiken';
   tradeStartTime?: Date;
   tradeEndTime?: Date;
+  tradeZone?: 'up' | 'down' | null;
 }
 
 const CandlestickChart = ({ 
@@ -19,7 +20,7 @@ const CandlestickChart = ({
   currentPrice,
   chartType,
   tradeStartTime,
-  tradeEndTime 
+  tradeEndTime ,tradeZone,
 }: CandlestickChartProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -206,6 +207,24 @@ const CandlestickChart = ({
         ctx.fillRect(x - candleWidth / 2, bodyTop, candleWidth, bodyHeight);
       });
     }
+     if (tradeZone) {
+      const currentY = priceToY(currentPrice);
+      if (tradeZone === 'up') {
+        // Green zone 
+        const gradient = ctx.createLinearGradient(0, padding.top, 0, currentY);
+        gradient.addColorStop(0, 'hsla(142, 71%, 45%, 0.3)');
+        gradient.addColorStop(1, 'hsla(142, 71%, 45%, 0.05)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(padding.left, padding.top, chartWidth, currentY - padding.top);
+      } else if (tradeZone === 'down') {
+        // Red zone 
+        const gradient = ctx.createLinearGradient(0, currentY, 0, height - padding.bottom);
+        gradient.addColorStop(0, 'hsla(0, 84%, 60%, 0.05)');
+        gradient.addColorStop(1, 'hsla(0, 84%, 60%, 0.3)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(padding.left, currentY, chartWidth, height - padding.bottom - currentY);
+      }
+    }
     const currentY = priceToY(currentPrice);
     ctx.setLineDash([5, 5]);
     ctx.strokeStyle = 'hsl(199, 89%, 48%)';
@@ -254,7 +273,7 @@ const CandlestickChart = ({
       ctx.fillText('End of trade', endX, padding.top - 10);
     }
 
-  }, [data, dimensions, currentPrice, chartType, tradeStartTime, tradeEndTime]);
+  }, [data, dimensions, currentPrice, chartType, tradeStartTime, tradeEndTime, tradeZone]);
 
   return (
     <div ref={containerRef} className="relative flex-1 h-full min-h-[400px]">
@@ -264,11 +283,11 @@ const CandlestickChart = ({
         height={dimensions.height}
         className="w-full h-full"
       />
-      <button className="absolute left-4 top-16 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/20 text-primary text-[12px]hover:bg-primary/30 transition-colors">
+      <button className="absolute left-4 top-16 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary text-sm hover:bg-primary/30 transition-colors">
         <Info size={14} />
-        <span className="text-[10px]">PAIR INFORMATION</span>
+        <span className="font-bold text-[10px]">PAIR INFORMATION</span>
       </button>
-      <div className="absolute left-20 top-4 flex items-center gap-2 text-success text-sm">
+      <div className="absolute left-[20px] top-4 flex items-center gap-2 text-success text-sm">
         <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
         <span className="font-mono">{new Date().toLocaleTimeString()} UTC</span>
       </div>

@@ -24,7 +24,7 @@ import { Plus, X } from 'lucide-react';
 
 
 const TradingPage = () => {
-    const [activePairId, setActivePairId] = useState('eur-chf');
+  const [activePairId, setActivePairId] = useState('eur-chf');
   const [showIndicators, setShowIndicators] = useState(false);
   const [showDrawingSidebar, setShowDrawingSidebar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -39,7 +39,7 @@ const TradingPage = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [sidebarCollapsedToIcons, setSidebarCollapsedToIcons] = useState(false);
   const [sentimentBuy, setSentimentBuy] = useState(77);
-
+  const [tradeZone, setTradeZone] = useState<'up' | 'down' | null>(null);
   const activePair = pairs.find(p => p.id === activePairId) || pairs[0];
   const selectedPairs = pairs.filter(p => selectedPairIds.includes(p.id));
 
@@ -51,7 +51,7 @@ const TradingPage = () => {
     const interval = setInterval(() => {
       setCandleData(prev => {
         if (prev.length === 0) return prev;
-        
+
         const lastCandle = prev[prev.length - 1];
         const newClose = lastCandle.close + (Math.random() - 0.5) * 0.0002;
         const newCandle: CandleData = {
@@ -60,7 +60,7 @@ const TradingPage = () => {
           high: Math.max(lastCandle.high, newClose),
           low: Math.min(lastCandle.low, newClose),
         };
-        
+
         return [...prev.slice(0, -1), newCandle];
       });
 
@@ -118,122 +118,127 @@ const TradingPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      <div className="hidden md:block">
-        <TradingSidebar 
-          isExpanded={sidebarExpanded}
-          onToggleExpand={() => setSidebarExpanded(!sidebarExpanded)}
-          onSettingsClick={() => setShowSettings(true)}
-          onSocialClick={() => setShowSocialModal(true)}
-          onCollapseToIcons={() => setSidebarCollapsedToIcons(!sidebarCollapsedToIcons)}
-          isCollapsedToIcons={sidebarCollapsedToIcons}
-        />
-      </div>
+    <div>
+      <div className="flex h-screen bg-background overflow-hidden">
 
-      <SettingsPanel 
-        isOpen={showSettings} 
-        onClose={() => setShowSettings(false)} 
-      />
-
-      <SocialModal 
-        isOpen={showSocialModal} 
-        onClose={() => setShowSocialModal(false)} 
-      />
-
-
-      <DrawingSidebar 
-        isOpen={showDrawingSidebar} 
-        onClose={() => setShowDrawingSidebar(false)} 
-      />
-
-      <IndicatorsPanel 
-        isOpen={showIndicators} 
-        onClose={() => setShowIndicators(false)} 
-      />
-
-      <div className="hidden md:flex h-screen">
-        <SentimentIndicator 
-          buyPercentage={Math.round(sentimentBuy)} 
-          onPlusClick={() => setShowPairSelector(!showPairSelector)}
-          showPairSelector={showPairSelector}
-        >
-          <TradePairSelector 
-            isOpen={showPairSelector}
-            onClose={() => setShowPairSelector(false)}
-            pairs={pairs}
-            selectedPairs={selectedPairIds}
-            onSelectPair={handleSelectPair}
+        {/* LEFT SIDEBAR */}
+        <div className="hidden md:block">
+          <TradingSidebar
+            isExpanded={sidebarExpanded}
+            onToggleExpand={() => setSidebarExpanded(!sidebarExpanded)}
+            onSettingsClick={() => setShowSettings(true)}
+            onSocialClick={() => setShowSocialModal(true)}
+            onCollapseToIcons={() => setSidebarCollapsedToIcons(!sidebarCollapsedToIcons)}
+            isCollapsedToIcons={sidebarCollapsedToIcons}
           />
-        </SentimentIndicator>
-      </div>
+        </div>
 
-      <div className="flex-1 flex flex-col min-w-0">
-       <TopBar balance={balance} isLiveAccount={false} />
-        <div className="flex items-center bg-card border-b border-border">
-          <div className="flex-1 flex items-center gap-2 px-2 overflow-x-auto">
-            {selectedPairs.map((pair) => {
-              const isActive = pair.id === activePairId;
-              const priceChange = pair.currentPrice - pair.previousPrice;
-              
-              return (
-                <div
-                  key={pair.id}
-                  className={`relative flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all ${
-                    isActive 
-                      ? 'bg-secondary border border-primary' 
-                      : 'bg-secondary/50 border border-border hover:bg-secondary'
-                  }`}
-                >
-                  <button
-                    onClick={() => setActivePairId(pair.id)}
-                    className="flex items-center gap-2"
-                  >
-                    <span className="text-lg">{pair.flag}</span>
-                    <div>
-                      <div className="text-sm font-medium text-foreground">{pair.name}</div>
-                      <div className={`text-xs ${priceChange >= 0 ? 'text-success' : 'text-destructive'}`}>
-                        {pair.performance}%
-                      </div>
-                    </div>
-                  </button>
-                  
-                  {selectedPairIds.length > 1 && (
-                    <button
-                      onClick={() => removePairFromTabs(pair.id)}
-                      className="ml-1 p-1 rounded hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
+        {/* MAIN CONTENT */}
+        <div className="flex flex-col flex-1 overflow-hidden">
+
+          {/* TOPBAR — NOT FULL WIDTH — STARTS AFTER SIDEBAR */}
+          <TopBar balance={balance} initialIsLive={false} />
+
+          {/* CONTENT AREA */}
+          <div className="flex flex-1 overflow-hidden">
+
+            {/* SENTIMENT INDICATOR */}
+            <div className="hidden md:flex">
+              <SentimentIndicator
+                buyPercentage={Math.round(sentimentBuy)}
+                onPlusClick={() => setShowPairSelector(!showPairSelector)}
+                showPairSelector={showPairSelector}
+              >
+                <TradePairSelector
+                  isOpen={showPairSelector}
+                  onClose={() => setShowPairSelector(false)}
+                  pairs={pairs}
+                  selectedPairs={selectedPairIds}
+                  onSelectPair={handleSelectPair}
+                />
+              </SentimentIndicator>
+            </div>
+
+            {/* CHART + TABS */}
+            <div className="flex flex-col flex-1 min-w-0">
+
+              {/* CURRENCY TABS */}
+              <div className="flex items-center bg-[#101729] border-b border-[#2a3040] px-2 py-1 overflow-x-auto gap-2 min-h-[60px]">
+                {selectedPairs.map((pair) => {
+                  const isActive = pair.id === activePairId;
+                  const priceChange = pair.currentPrice - pair.previousPrice;
+
+                  return (
+                    <div
+                      key={pair.id}
+                      className={`relative flex items-center gap-2 px-3 py-2 rounded-sm cursor-pointer transition-all ${isActive
+                        ? 'bg-[#1a1f2e] border border-none'
+                        : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
+                        }`}
                     >
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
-              );
-            })}
+                      <button
+                        onClick={() => setActivePairId(pair.id)}
+                        className="flex items-center gap-2"
+                      >
+                        <span className="text-lg">{pair.flag}</span>
+                        <div>
+                          <div className="text-[10px] font-bold text-white">{pair.name}</div>
+                          <div className={`text-[10px] font-bold ${priceChange >= 0 ? 'text-orange-400' : 'text-destructive'}`}>
+                            {pair.performance}%
+                          </div>
+                        </div>
+                      </button>
+
+                      {selectedPairIds.length > 1 && (
+                        <button
+                          onClick={() => removePairFromTabs(pair.id)}
+                          className="ml-1 p-1 rounded-full bg-[#000000] hover:bg-destructive/20 text-white hover:text-destructive transition-colors absolute right-[-10px] top-[-10px]"
+                        >
+                          <X size={14} />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* CHART AREA */}
+              <div className="flex-1 relative">
+                <CandlestickChart
+                  data={candleData}
+                  currentPrice={activePair.currentPrice}
+                  chartType={chartType as 'area' | 'candles' | 'bars' | 'heiken'}
+                />
+                {/* CHART TOOLBAR */}
+                <ChartToolbar
+                  onDrawingClick={() => setShowDrawingSidebar(true)}
+                  onChartTypeChange={setChartType}
+                  currentChartType={chartType}
+                  currentTimeframe={timeframe}
+                  onTimeframeChange={setTimeframe}
+                />
+              </div>
+
+            </div>
+
+            {/* RIGHT TRADING PANEL */}
+            <TradingPanel
+              activePair={activePair}
+              onTrade={handleTrade}
+              balance={balance}
+              isLiveAccount={false}
+              onTradeZone={setTradeZone}
+            />
+
           </div>
         </div>
-
-        <div className="flex-1 flex relative">
-          <CandlestickChart 
-            data={candleData}
-            currentPrice={activePair.currentPrice}
-            chartType={chartType as 'area' | 'candles' | 'bars' | 'heiken'}
-          />
-          
-          <ChartToolbar
-            onDrawingClick={() => setShowDrawingSidebar(true)}
-            onChartTypeChange={setChartType}
-            currentChartType={chartType}
-            currentTimeframe={timeframe}
-            onTimeframeChange={setTimeframe}
-          />
-        </div>
       </div>
 
-      <TradingPanel 
-        activePair={activePair}
-        onTrade={handleTrade}
-        balance={balance}
-        isLiveAccount={false}
-      />
+      {/* MODALS */}
+      <SettingsPanel isOpen={showSettings} onClose={() => setShowSettings(false)} />
+      <SocialModal isOpen={showSocialModal} onClose={() => setShowSocialModal(false)} />
+      <DrawingSidebar isOpen={showDrawingSidebar} onClose={() => setShowDrawingSidebar(false)} />
+      <IndicatorsPanel isOpen={showIndicators} onClose={() => setShowIndicators(false)} />
     </div>
   );
 };
