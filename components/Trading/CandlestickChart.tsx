@@ -287,9 +287,9 @@ const CandlestickChart = ({
         <Info size={14} />
         <span className="font-bold text-[10px]">PAIR INFORMATION</span>
       </button>
-      <div className="absolute left-[20px] top-4 flex items-center gap-2 text-success text-sm">
+      <div className="absolute left-[20px] top-4 flex items-center gap-2  text-sm">
         <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-        <span className="font-mono">{new Date().toLocaleTimeString()} UTC</span>
+        <span className="text-[10px] text-[#ffffff]">{new Date().toLocaleTimeString()} <span className="text-[#595b65]">UTC</span></span>
       </div>
 
       <div className="absolute right-20 bottom-4 flex items-center gap-2 bg-secondary/50 rounded px-2 py-1">

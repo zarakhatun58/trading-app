@@ -73,7 +73,7 @@ const expandedBottomItems = [
 }: TradingSidebarProps) => {
   if (isCollapsedToIcons) {
     return (
-      <aside className="w-14 bg-sidebar border-r border-sidebar-border flex flex-col items-center py-4 h-screen">
+      <aside className="w-14 bg-[#101729] flex flex-col items-center py-4 h-screen">
     
         <button
           onClick={onToggleExpand}
@@ -145,7 +145,7 @@ const expandedBottomItems = [
 
   return (
     <aside className={cn(
-      "bg-sidebar border-r border-sidebar-border flex flex-col h-screen transition-all duration-300",
+      "bg-[#101729] flex flex-col h-screen transition-all duration-300",
       isExpanded ? "w-52" : "w-20"
     )}>
 

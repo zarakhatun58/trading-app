@@ -17,7 +17,7 @@ interface TopBarProps {
   initialIsLive?: boolean;
 }
 
- const TopBar = ({
+const TopBar = ({
   email = 'demo@qxbroker.com',
   id = '71910310',
   currency = 'USD',
@@ -33,7 +33,7 @@ interface TopBarProps {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [showOnlineUsers, setShowOnlineUsers] = useState(false);
-  
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const accountRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const onlineUsersRef = useRef<HTMLDivElement>(null);
@@ -64,7 +64,7 @@ interface TopBarProps {
 
   return (
     <header className="h-14 bg-[#101729] flex items-center justify-between px-4 pb-2 pt-4 mb-2">
-   
+
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded flex items-center justify-center">
@@ -87,26 +87,47 @@ interface TopBarProps {
 
       <div className="flex items-center gap-2">
         <div ref={notificationRef} className="relative">
-          <button 
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2 rounded-lg hover:bg-[#2a3040] transition-colors"
+          <button
+            onClick={() => {
+              const next = !showNotifications;
+              setShowNotifications(next);
+              if (next) setActiveIndex(0);
+              else setActiveIndex(null);
+            }}
+            className={`
+    relative p-2 rounded-sm transition-colors
+    hover:bg-[#2a3040]
+    ${activeIndex === 0 ? "bg-success" : ""}
+  `}
           >
-            <Bell size={20} className="text-gray-400" />
+            <Bell size={20} className="text-[#ffffff]" />
             {notifications > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 min-w-4 flex items-center justify-center px-1">
                 {notifications}
               </span>
             )}
           </button>
-          <NotificationModal isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
+          <NotificationModal isOpen={showNotifications} onClose={() => {
+            setShowNotifications(false);
+            setActiveIndex(null);
+          }} />
         </div>
 
         {/* Chat */}
-        <button 
-          onClick={() => setShowChat(!showChat)}
-          className="relative p-2 rounded-lg hover:bg-[#2a3040] transition-colors"
+        <button
+          onClick={() => {
+            const nextchat = !showChat;
+            setShowChat(nextchat);
+            if (nextchat) setActiveIndex(1);
+            else setActiveIndex(null);
+          }}
+          className={`
+    relative p-2 rounded-sm transition-colors
+    hover:bg-[#2a3040]
+    ${activeIndex === 1 ? "bg-success" : ""}
+  `}
         >
-          <MessageCircle size={20} className="text-gray-400" />
+          <MessageCircle size={20} className="text-[#ffffff]" />
           {unreadMessages > 0 && (
             <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-[10px] font-bold rounded-full h-4 min-w-4 flex items-center justify-center px-1">
               {unreadMessages}
@@ -115,7 +136,7 @@ interface TopBarProps {
         </button>
 
         <div ref={onlineUsersRef} className="relative">
-          <button 
+          <button
             onClick={() => setShowOnlineUsers(!showOnlineUsers)}
             className="relative p-2 rounded-lg hover:bg-[#2a3040] transition-colors"
           >
@@ -127,20 +148,26 @@ interface TopBarProps {
             )}
           </button>
           <OnlineUsersModal
-            isOpen={showOnlineUsers} 
-            onClose={() => setShowOnlineUsers(false)} 
+            isOpen={showOnlineUsers}
+            onClose={() => setShowOnlineUsers(false)}
             onlineCount={onlineUsers}
           />
         </div>
 
         <div ref={accountRef} className="relative">
           <button
-            onClick={() => setShowAccountMenu(!showAccountMenu)}
-            className="flex items-center gap-2 px-2 py-1 rounded-lg bg-[#1a1f2e] hover:bg-[#2a3040] transition-colors border border-[#2a3040]"
+            // onClick={() => setShowAccountMenu(!showAccountMenu)}
+            onClick={() => {
+              const next = !showAccountMenu;
+              setShowAccountMenu(next);
+              if (next) setActiveIndex(2);
+              else setActiveIndex(null);
+            }}
+            className="flex items-center gap-2 px-2 py-1 rounded-sm bg-[#1a1f2e] hover:bg-[#2a3040] transition-colors border border-[#2a3040] "
           >
             <GraduationCap className="w-5 h-5 text-gray-400" />
             <div className="flex flex-col items-start">
-              <span className={`text-[8px] font-bold px-2 py-0.5 rounded ${isLive ? 'bg-success/20 text-success' : 'bg-orange-500/20 text-orange-400'}`}>
+              <span className={`text-[8px] font-bold px-2 py-0.5 rounded ${isLive ? 'bg-success/20 text-success' : 'bg-orange-500/20 text-orange-400'} `}>
                 {isLive ? 'LIVE ACCOUNT' : 'DEMO ACCOUNT'}
               </span>
               <span className="font-semibold text-white text-[10px]">${fmt(isLive ? liveBalance : balance)}</span>
@@ -165,17 +192,22 @@ interface TopBarProps {
         </div>
 
         <div className="hidden sm:flex gap-2">
-          <button className="py-2 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-sm transition-colors flex items-center gap-1">
+          <button className="py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-sm transition-colors flex items-center gap-1">
             <Plus size={16} />
             Deposit
           </button>
-          <button className="py-2 px-4 rounded-lg bg-[#2a3040] hover:bg-[#3a4050] text-white font-medium text-sm transition-colors border border-[#3a4050]">
+          <button className="py-2 px-4 rounded-sm bg-[#2a3040] hover:bg-[#3a4050] text-white font-medium text-sm transition-colors border border-[#3a4050]">
             Withdrawal
           </button>
         </div>
       </div>
 
-      <ChatBox isOpen={showChat} onClose={() => setShowChat(false)} />
+      <ChatBox isOpen={showChat}
+        onClose={() => {
+          setShowChat(false);
+          setActiveIndex(null);
+        }}
+      />
     </header>
   );
 };

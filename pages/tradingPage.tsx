@@ -163,7 +163,7 @@ const TradingPage = () => {
             <div className="flex flex-col flex-1 min-w-0">
 
               {/* CURRENCY TABS */}
-              <div className="flex items-center bg-[#101729] border-b border-[#2a3040] px-2 py-1 overflow-x-auto gap-2 min-h-[60px]">
+              <div className="flex items-center bg-[#101729] border-b border-[#2a3040] px-2 py-2 overflow-x-auto gap-2 min-h-[70px]">
                 {selectedPairs.map((pair) => {
                   const isActive = pair.id === activePairId;
                   const priceChange = pair.currentPrice - pair.previousPrice;
@@ -171,7 +171,7 @@ const TradingPage = () => {
                   return (
                     <div
                       key={pair.id}
-                      className={`relative flex items-center gap-2 px-3 py-2 rounded-sm cursor-pointer transition-all ${isActive
+                      className={`relative flex items-center gap-2 px-2 py-2 rounded-sm cursor-pointer transition-all ${isActive
                         ? 'bg-[#1a1f2e] border border-none'
                         : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
                         }`}
@@ -194,7 +194,7 @@ const TradingPage = () => {
                           onClick={() => removePairFromTabs(pair.id)}
                           className="ml-1 p-1 rounded-full bg-[#000000] hover:bg-destructive/20 text-white hover:text-destructive transition-colors absolute right-[-10px] top-[-10px]"
                         >
-                          <X size={14} />
+                          <X size={8} />
                         </button>
                       )}
                     </div>
