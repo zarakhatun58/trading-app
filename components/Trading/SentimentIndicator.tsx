@@ -23,7 +23,7 @@ const SentimentIndicator = ({
       {/* Plus → Close button */}
       <button
         onClick={onPlusClick}
-        className="w-8 h-8 mb-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all flex items-center justify-center"
+        className="w-8 h-8 mb-2 rounded-sm bg-primary text-[#ffffff] hover:bg-primary/90 transition-all flex items-center justify-center"
       >
         <Plus
           size={18}

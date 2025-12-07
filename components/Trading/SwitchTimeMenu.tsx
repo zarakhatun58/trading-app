@@ -1,33 +1,55 @@
+import { useState } from "react";
+
 interface SwitchTimeMenuProps {
   isOpen: boolean;
   onClose: () => void;
   currentTime: number;
   onSelectTime: (seconds: number) => void;
+  isSwitchMode?: boolean;
 }
 
-const timeOptions = [
+const durationOptions = [
+  { label: '00:05', value: 5 },
+  { label: '00:10', value: 10 },
+  { label: '00:15', value: 15 },
+  { label: '00:30', value: 30 },
   { label: '01:00', value: 60 },
   { label: '02:00', value: 120 },
-  { label: '03:00', value: 180 },
-  { label: '04:00', value: 240 },
   { label: '05:00', value: 300 },
   { label: '10:00', value: 600 },
   { label: '15:00', value: 900 },
   { label: '30:00', value: 1800 },
-  { label: '45:00', value: 2700 },
   { label: '01:00:00', value: 3600 },
   { label: '02:00:00', value: 7200 },
-  { label: '03:00:00', value: 10800 },
   { label: '04:00:00', value: 14400 },
 ];
+const generateAbsoluteTimeOptions = () => {
+  const now = new Date();
+  const options = [];
+  
+  for (let i = 0; i < 12; i++) {
+    const time = new Date(now.getTime() + (i + 1) * 60000 * 5); // Every 5 minutes
+    const hours = time.getHours().toString().padStart(2, '0');
+    const minutes = time.getMinutes().toString().padStart(2, '0');
+    options.push({
+      label: `${hours}:${minutes}`,
+      value: (i + 1) * 300 // seconds from now
+    });
+  }
+  
+  return options;
+};
 
- const SwitchTimeMenu = ({ isOpen, onClose, currentTime, onSelectTime }: SwitchTimeMenuProps) => {
+ const SwitchTimeMenu = ({ isOpen, onClose, currentTime, onSelectTime, isSwitchMode = false }: SwitchTimeMenuProps) => {
+  const [isAbsoluteMode, setIsAbsoluteMode] = useState(isSwitchMode);
+  
   if (!isOpen) return null;
 
+  const options = isAbsoluteMode ? generateAbsoluteTimeOptions() : durationOptions;
   return (
     <div className="absolute top-full left-0 right-0 mt-1 bg-[#1a1f2e] border border-[#2a3040] rounded-lg overflow-hidden z-50 shadow-xl">
       <div className="grid grid-cols-3 gap-1 p-2 max-h-[200px] overflow-y-auto">
-        {timeOptions.map((option) => (
+        {options.map((option) => (
           <button
             key={option.value}
             onClick={() => {

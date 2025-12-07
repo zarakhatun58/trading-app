@@ -1,4 +1,5 @@
-import { Eye, Menu, RefreshCw } from 'lucide-react';
+import { Eye, EyeOff, Menu, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
 
 interface AccountModalProps {
   isOpen: boolean;
@@ -17,12 +18,13 @@ interface AccountModalProps {
   onClose,
   email = 'demo@qxbroker.com',
   id = '71910310',
-  currency = 'USD',
+ currency = 'INR',
   liveBalance = 0,
   balance = 1000000,
   isLive,
   onToggleLive,
 }: AccountModalProps) => {
+   const [hideBalance, setHideBalance] = useState(false);
   if (!isOpen) return null;
 
   const fmt = (n?: number) => {
@@ -32,7 +34,12 @@ interface AccountModalProps {
       maximumFractionDigits: 2,
     });
   };
-
+ const maskValue = (value: string) => {
+    if (hideBalance) {
+      return '* '.repeat(6).trim();
+    }
+    return value;
+  };
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
@@ -56,14 +63,22 @@ interface AccountModalProps {
                   <span className="font-bold text-white text-[10px]">+0% profit</span>
                 </div>
               </div>
-              <button title="Hide balance" className="p-4 rounded-sm hover:bg-slate-900 bg-[#282a38]">
-                <Eye className="w-4 h-4 text-slate-300" />
+              <button className="p-4 rounded-sm hover:bg-slate-900 bg-[#282a38]"
+               title={hideBalance ? "Show balance" : "Hide balance"}
+               onClick={() => setHideBalance(!hideBalance)} 
+              >
+                
+                 {hideBalance ? (
+                  <EyeOff className="w-4 h-4 text-slate-300" />
+                ) : (
+                  <Eye className="w-4 h-4 text-slate-300" />
+                )}
               </button>
             </div>
 
             <div className="mb-3">
-              <div className="text-sm font-semibold text-white">{email}</div>
-              <div className="text-xs text-slate-500">ID: {id}</div>
+              <div className="text-sm font-semibold text-white">{maskValue(email)}</div>
+              <div className="text-xs text-slate-500">ID: {maskValue(String(id))}</div>
             </div>
 
             <div className="flex items-center gap-2 mb-4">
@@ -83,7 +98,7 @@ interface AccountModalProps {
                 />
                 <div className="flex-1">
                   <div className="text-sm font-semibold text-white">Live Account</div>
-                  <div className="text-xs text-slate-500">${fmt(liveBalance)}</div>
+                  <div className="text-xs text-slate-500">{hideBalance ? '******' : `₹${fmt(liveBalance)}`}</div>
                   <div className="text-xs text-slate-500 mt-1">The daily limit is not set</div>
                   <div className="text-xs text-sky-400 mt-1 cursor-pointer hover:underline">SET LIMIT</div>
                 </div>

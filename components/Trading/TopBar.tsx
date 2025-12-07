@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, MessageCircle, User, Plus, ChevronDown, ChevronUp, PlaneTakeoff, GraduationCap } from 'lucide-react';
+import { Bell, MessageCircle, User, Plus, ChevronDown, ChevronUp, PlaneTakeoff, GraduationCap, Hexagon } from 'lucide-react';
 import NotificationModal from './NotificationModal';
 import OnlineUsersModal from './OnlineUsersModal';
 import AccountModal from './AccountModal';
@@ -68,11 +68,11 @@ const TopBar = ({
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded flex items-center justify-center">
-            <span className="text-white font-bold text-lg">Q</span>
+            <span className="text-white font-bold text-lg"><Hexagon size={22} className="text-[#ffffff]" /></span>
           </div>
-          <span className="font-bold text-lg tracking-tight hidden sm:inline text-white">QUOTEX</span>
+          <span className="font-bold text-lg tracking-tight hidden sm:inline text-white">RexOption</span>
         </div>
-        <span className="text-[14px] text-[#595b65] border-l border-[#2a3040] pl-3 ml-1 hidden md:inline font-bold">
+        <span className="text-[14px] text-[#595b65] pl-3 ml-1 hidden md:inline font-bold">
           WEB TRADING PLATFORM
         </span>
       </div>
@@ -156,7 +156,6 @@ const TopBar = ({
 
         <div ref={accountRef} className="relative">
           <button
-            // onClick={() => setShowAccountMenu(!showAccountMenu)}
             onClick={() => {
               const next = !showAccountMenu;
               setShowAccountMenu(next);
@@ -167,10 +166,10 @@ const TopBar = ({
           >
             <GraduationCap className="w-5 h-5 text-gray-400" />
             <div className="flex flex-col items-start">
-              <span className={`text-[8px] font-bold px-2 py-0.5 rounded ${isLive ? 'bg-success/20 text-success' : 'bg-orange-500/20 text-orange-400'} `}>
+              <span className={`text-[8px] font-bold rounded ${isLive ? ' text-success' : ' text-orange-400'} `}>
                 {isLive ? 'LIVE ACCOUNT' : 'DEMO ACCOUNT'}
               </span>
-              <span className="font-semibold text-white text-[10px]">${fmt(isLive ? liveBalance : balance)}</span>
+              <span className="font-semibold text-white text-[12px]">$00000{fmt(isLive ? liveBalance : balance)}</span>
             </div>
             {showAccountMenu ? (
               <ChevronUp className="w-4 h-4 text-gray-400" />

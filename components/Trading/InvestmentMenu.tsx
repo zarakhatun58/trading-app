@@ -3,17 +3,25 @@ interface InvestmentMenuProps {
   onClose: () => void;
   currentInvestment: number;
   onSelectInvestment: (amount: number) => void;
+  isPercentMode?: boolean;
 }
 
 const investmentOptions = [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
-
- const InvestmentMenu = ({ isOpen, onClose, currentInvestment, onSelectInvestment }: InvestmentMenuProps) => {
+const percentOptions = [1, 2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100];
+ const InvestmentMenu = ({ 
+  isOpen, 
+  onClose, 
+  currentInvestment, 
+  onSelectInvestment,
+  isPercentMode = false 
+}: InvestmentMenuProps) => {
   if (!isOpen) return null;
-
+  const options = isPercentMode ? percentOptions : investmentOptions;
+  const suffix = isPercentMode ? '%' : '$';
   return (
     <div className="absolute top-full left-0 right-0 mt-1 bg-[#1a1f2e] border border-[#2a3040] rounded-lg overflow-hidden z-50 shadow-xl">
       <div className="grid grid-cols-3 gap-1 p-2 max-h-[200px] overflow-y-auto">
-        {investmentOptions.map((amount) => (
+        {options.map((amount) => (
           <button
             key={amount}
             onClick={() => {
@@ -26,7 +34,7 @@ const investmentOptions = [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000]
                 : 'bg-[#2a3040] text-gray-300 hover:bg-[#3a4050]'
             }`}
           >
-            {amount} $
+           {amount} {suffix}
           </button>
         ))}
       </div>

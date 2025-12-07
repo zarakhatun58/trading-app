@@ -6,6 +6,7 @@ export interface CurrencyPair {
   performance: number;
   currentPrice: number;
   previousPrice: number;
+  category?: 'CURRENCIES' | 'CRYPTO' | 'COMMODITIES' | 'STOCKS';
 }
 
 export interface CandleData {

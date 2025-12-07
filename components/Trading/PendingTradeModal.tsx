@@ -9,15 +9,50 @@ interface PendingTradeModalProps {
 }
 
 const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
+// Duration time options
+const durationTimeOptions = [
+  { label: '00:05', value: '00:05' },
+  { label: '00:10', value: '00:10' },
+  { label: '00:15', value: '00:15' },
+  { label: '00:30', value: '00:30' },
+  { label: '01:00', value: '01:00' },
+  { label: '02:00', value: '02:00' },
+  { label: '05:00', value: '05:00' },
+  { label: '10:00', value: '10:00' },
+  { label: '15:00', value: '15:00' },
+  { label: '30:00', value: '30:00' },
+  { label: '01:00:00', value: '01:00:00' },
+  { label: '02:00:00', value: '02:00:00' },
+  { label: '04:00:00', value: '04:00:00' },
+];
+
+// Generate absolute time options
+const generateAbsoluteTimeOptions = () => {
+  const now = new Date();
+  const options = [];
+  
+  for (let i = 0; i < 12; i++) {
+    const time = new Date(now.getTime() + (i + 1) * 60000 * 5);
+    const hours = time.getHours().toString().padStart(2, '0');
+    const minutes = time.getMinutes().toString().padStart(2, '0');
+    options.push({
+      label: `${hours}:${minutes}`,
+      value: `${hours}:${minutes}`
+    });
+  }
+  
+  return options;
+};
 
  const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTradeModalProps) => {
   const [activeTab, setActiveTab] = useState<'quote' | 'time'>('quote');
   const [quoteValue, setQuoteValue] = useState(currentQuote.toFixed(3));
-  const [timeValue, setTimeValue] = useState('05/12 09:43:00');
+   const [timeValue, setTimeValue] = useState('01:00');
   const [period, setPeriod] = useState('M1');
   const [showPeriodMenu, setShowPeriodMenu] = useState(false);
   const [investment, setInvestment] = useState(100);
-
+ const [isAbsoluteTimeMode, setIsAbsoluteTimeMode] = useState(false);
+  const [showTimeMenu, setShowTimeMenu] = useState(false);
   if (!isOpen) return null;
 
   const adjustInvestment = (delta: number) => {
@@ -30,15 +65,16 @@ const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
     minute: '2-digit', 
     second: '2-digit' 
   });
-
+ const absoluteTimeOptions = generateAbsoluteTimeOptions();
+  const timeOptions = isAbsoluteTimeMode ? absoluteTimeOptions : durationTimeOptions
   return (
     <div className="fixed right-[230px] top-[100px] z-50">
-      <div className="bg-[#1a1f2e] rounded-xl border border-[#2a3040] shadow-2xl w-[280px] overflow-hidden">
+      <div className="bg-[#191919] rounded-lg border border-[#2a3040] shadow-2xl w-[180px] overflow-hidden p-4">
         {/* Tabs */}
-        <div className="flex">
+        <div className="flex mb-4">
           <button
             onClick={() => setActiveTab('quote')}
-            className={`flex-1 py-3 text-sm font-semibold transition-colors ${
+            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${
               activeTab === 'quote'
                 ? 'bg-[#2a3040] text-white'
                 : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-300'
@@ -48,7 +84,7 @@ const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
           </button>
           <button
             onClick={() => setActiveTab('time')}
-            className={`flex-1 py-3 text-sm font-semibold transition-colors ${
+            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${
               activeTab === 'time'
                 ? 'bg-primary text-white'
                 : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-300'
@@ -58,17 +94,17 @@ const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
           </button>
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="space-y-4">
           {activeTab === 'quote' ? (
             <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 text-[10px] text-gray-500 bg-[#1a1f2e]">
+              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#191919]">
                 Quote:
               </label>
               <input
                 type="text"
                 value={quoteValue}
                 onChange={(e) => setQuoteValue(e.target.value)}
-                className="w-full p-3 bg-[#0d1117] border border-[#2a3040] rounded-lg text-white font-mono text-lg focus:outline-none focus:border-primary"
+                className="w-full py-2 px-3 bg-[#191919] border border-[#3a4050] rounded-sm text-white text-[14px] focus:outline-none focus:border-primary"
               />
               <div className="text-xs text-gray-500 mt-1">
                 Current quote: {currentQuote.toFixed(3)}
@@ -76,14 +112,14 @@ const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
             </div>
           ) : (
             <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 text-[10px] text-gray-500 bg-[#1a1f2e]">
+              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#191919]">
                 Time:
               </label>
               <input
                 type="text"
                 value={timeValue}
                 onChange={(e) => setTimeValue(e.target.value)}
-                className="w-full p-3 bg-[#0d1117] border border-[#2a3040] rounded-lg text-white font-mono text-lg focus:outline-none focus:border-primary"
+                className="w-full py-2 px-3 bg-[#191919] border border-[#2a3040] rounded-sm text-white text-[12px] focus:outline-none focus:border-primary"
               />
               <div className="text-xs text-gray-500 mt-1">
                 Current time: {currentTime}
@@ -92,18 +128,18 @@ const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
           )}
 
           <div className="relative">
-            <label className="absolute -top-2 left-3 px-1 text-[10px] text-gray-500 bg-[#1a1f2e] z-10">
+            <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#191919] z-10">
               Period:
             </label>
             <button
               onClick={() => setShowPeriodMenu(!showPeriodMenu)}
-              className="w-full p-3 bg-[#0d1117] border border-[#2a3040] rounded-lg text-white font-semibold text-left focus:outline-none focus:border-primary"
+              className="w-full p-3 bg-[#191919] border border-[#2a3040] rounded-sm text-[12px] text-white font-semibold text-left focus:outline-none focus:border-primary"
             >
               {period}
             </button>
             
             {showPeriodMenu && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-[#1a1f2e] border border-[#2a3040] rounded-lg overflow-hidden z-50 shadow-xl">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#191919] border border-[#2a3040] rounded-sm overflow-hidden z-50 shadow-xl">
                 <div className="grid grid-cols-3 gap-1 p-2">
                   {periods.map((p) => (
                     <button
@@ -112,7 +148,7 @@ const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
                         setPeriod(p);
                         setShowPeriodMenu(false);
                       }}
-                      className={`py-2 px-3 rounded text-sm font-medium transition-colors ${
+                      className={`py-2 px-3 rounded text-[10px] transition-colors ${
                         period === p
                           ? 'bg-primary text-white'
                           : 'bg-[#2a3040] text-gray-300 hover:bg-[#3a4050]'
@@ -127,44 +163,44 @@ const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
           </div>
 
           <div className="relative">
-            <label className="absolute -top-2 left-3 px-1 text-[10px] text-gray-500 bg-[#1a1f2e] z-10">
+            <label className="absolute -top-2 left-3 px-1 text-[10px] text-gray-500 bg-[#191919] z-10">
               Investment
             </label>
-            <div className="flex items-center justify-between bg-[#0d1117] border border-[#2a3040] rounded-lg p-2">
+            <div className="flex items-center justify-between bg-[#191919] border border-[#2a3040] rounded-sm p-2">
               <button
                 onClick={() => adjustInvestment(-10)}
-                className="w-8 h-8 rounded-full bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
+                className="w-6 h-6 rounded-full bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
               >
                 <Minus size={14} />
               </button>
-              <span className="font-mono text-lg text-white">{investment} ₹</span>
+              <span className="font-mono text-[14px] text-white">{investment} ₹</span>
               <button
                 onClick={() => adjustInvestment(10)}
-                className="w-8 h-8 rounded-full bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
+                className="w-6 h-6 rounded-full bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
               >
                 <Plus size={14} />
               </button>
             </div>
-            <button className="text-primary text-xs font-semibold mt-1 hover:underline">
+            <button className="absolute -bottom-2 left-12 px-1 text-[10px] text-primary font-bold bg-[#191919]">
               SWITCH
             </button>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <button
               onClick={() => onTrade('up', investment, activeTab, activeTab === 'quote' ? quoteValue : timeValue, period)}
-              className="w-full py-3 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold flex items-center justify-between transition-colors"
+              className="w-full py-1 px-2 rounded-sm text-[14px] bg-success hover:bg-success/90 text-white font-semibold flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Clock size={16} />
                 <span>Up</span>
               </div>
-              <ArrowUp size={18} />
+              <ArrowUp size={16} />
             </button>
 
             <button
               onClick={() => onTrade('down', investment, activeTab, activeTab === 'quote' ? quoteValue : timeValue, period)}
-              className="w-full py-3 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold flex items-center justify-between transition-colors"
+              className="w-full py-1 px-2 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Clock size={16} />
@@ -173,7 +209,7 @@ const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
               <ArrowDown size={18} />
             </button>
           </div>
-          <button className="w-full text-primary text-xs font-semibold hover:underline">
+          <button className="w-full text-primary text-[10px] font-semibold hover:underline">
             HOW IT WORKS?
           </button>
         </div>

@@ -140,10 +140,10 @@ const TradingPage = () => {
           <TopBar balance={balance} initialIsLive={false} />
 
           {/* CONTENT AREA */}
-          <div className="flex flex-1 overflow-hidden">
+          <div className="flex flex-1 overflow-hidden pl-4">
 
             {/* SENTIMENT INDICATOR */}
-            <div className="hidden md:flex">
+            <div className="hidden md:flex mr-2">
               <SentimentIndicator
                 buyPercentage={Math.round(sentimentBuy)}
                 onPlusClick={() => setShowPairSelector(!showPairSelector)}

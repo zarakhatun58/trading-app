@@ -5,6 +5,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
 @layer base {
   :root {
     --background: 222 47% 11%;
@@ -126,7 +141,7 @@
   }
 
   .sidebar-item {
-    @apply flex flex-col items-center gap-1 p-3 rounded-lg transition-all duration-200 hover:bg-sidebar-accent cursor-pointer text-sidebar-foreground hover:text-sidebar-accent-foreground;
+    @apply flex flex-col items-center gap-1 p-3 rounded-sm transition-all duration-200 hover:bg-primary cursor-pointer text-sidebar-foreground hover:text-sidebar-accent-foreground;
   }
 
   .sidebar-item-active {
