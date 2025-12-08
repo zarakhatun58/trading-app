@@ -42,6 +42,7 @@ const TradingPage = () => {
   const [tradeZone, setTradeZone] = useState<'up' | 'down' | null>(null);
   const activePair = pairs.find(p => p.id === activePairId) || pairs[0];
   const selectedPairs = pairs.filter(p => selectedPairIds.includes(p.id));
+ const [hideBalance, setHideBalance] = useState(false);
 
   useEffect(() => {
     setCandleData(generateCandleData(30));
@@ -137,7 +138,7 @@ const TradingPage = () => {
         <div className="flex flex-col flex-1 overflow-hidden">
 
           {/* TOPBAR — NOT FULL WIDTH — STARTS AFTER SIDEBAR */}
-          <TopBar balance={balance} initialIsLive={false} />
+        <TopBar balance={balance} initialIsLive={false} hideBalance={hideBalance} onToggleHideBalance={() => setHideBalance(!hideBalance)} />
 
           {/* CONTENT AREA */}
           <div className="flex flex-1 overflow-hidden pl-4">
@@ -206,11 +207,18 @@ const TradingPage = () => {
               <div className="flex-1 relative">
                 <CandlestickChart
                   data={candleData}
-                  currentPrice={activePair.currentPrice}
-                  chartType={chartType as 'area' | 'candles' | 'bars' | 'heiken'}
+              currentPrice={activePair.currentPrice}
+              chartType={chartType as 'area' | 'candles' | 'bars' | 'heiken'}
+              tradeZone={tradeZone}
+              onOpenDrawing={() => setShowDrawingSidebar(true)}
+              onOpenIndicators={() => setShowIndicators(true)}
+              pairName={activePair.name}
+              pairFlag={activePair.flag}
+              pairPercentage={activePair.performance}
                 />
                 {/* CHART TOOLBAR */}
                 <ChartToolbar
+                 onOpenIndicators={()=>setShowIndicators(true)}
                   onDrawingClick={() => setShowDrawingSidebar(true)}
                   onChartTypeChange={setChartType}
                   currentChartType={chartType}

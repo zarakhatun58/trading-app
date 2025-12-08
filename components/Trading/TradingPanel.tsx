@@ -32,14 +32,14 @@ export default function TradingPanel({
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showTimeMenu, setShowTimeMenu] = useState(false);
   const [showInvestmentMenu, setShowInvestmentMenu] = useState(false);
- const [isAbsoluteTimeMode, setIsAbsoluteTimeMode] = useState(false);
+  const [isAbsoluteTimeMode, setIsAbsoluteTimeMode] = useState(false);
   const [isPercentMode, setIsPercentMode] = useState(false);
-   const [activeTradesTab, setActiveTradesTab] = useState<'trades' | 'orders'>('trades');
+  const [activeTradesTab, setActiveTradesTab] = useState<'trades' | 'orders'>('trades');
   const [tradeCount, setTradeCount] = useState(0);
   const [orderCount, setOrderCount] = useState(0);
 
   const formatTime = (seconds: number) => {
-     if (isAbsoluteTimeMode) {
+    if (isAbsoluteTimeMode) {
       // Show as absolute time (e.g., 10:43)
       const now = new Date();
       const futureTime = new Date(now.getTime() + seconds * 1000);
@@ -61,21 +61,22 @@ export default function TradingPanel({
   };
 
   const adjustInvestment = (delta: number) => {
-     if (isPercentMode) {
+    if (isPercentMode) {
       setInvestment(prev => Math.max(1, Math.min(100, prev + delta)));
     } else {
       setInvestment(prev => Math.max(1, prev + delta));
     }
   };
 
-  const calculatedPayout = isPercentMode 
+  const calculatedPayout = isPercentMode
     ? ((balance * (investment / 100)) * payout).toFixed(2)
     : (investment * payout).toFixed(2);
 
-  const displayInvestment = isPercentMode 
-    ? `${investment} %` 
+  const displayInvestment = isPercentMode
+    ? `${investment} %`
     : `${investment} ₹`;
- const toggleTimeMode = () => {
+
+  const toggleTimeMode = () => {
     setIsAbsoluteTimeMode(!isAbsoluteTimeMode);
     setShowTimeMenu(true);
   };
@@ -84,6 +85,7 @@ export default function TradingPanel({
     setIsPercentMode(!isPercentMode);
     setInvestment(isPercentMode ? 100 : 1);
   };
+
   const handleUpClick = () => {
     onTradeZone?.('up');
     onTrade('up', investment, tradeTime);
@@ -110,76 +112,85 @@ export default function TradingPanel({
 
 
   return (
-    <aside className="w-[150px] md:w-[220px] bg-[#2b3040] flex flex-col h-full rounded-lg mr-4 p-4">
-      <div className="border-border">
-        <div className="relative">
+    <aside className="w-[150px] md:w-[220px] bg-[#2b3040] rounded-lg flex flex-col h-full mr-2 p-4 ">
+      <div className='rounded-lg '>
+        <div className="border-border">
+          <div className="relative">
 
-          {showAccountMenu && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-xl z-50 overflow-hidden">
-              {accountMenuItems.map((item) => (
+            {showAccountMenu && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+                {accountMenuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
+                    onClick={() => setShowAccountMenu(false)}
+                  >
+                    <item.icon size={16} className="text-muted-foreground" />
+                    <span className="text-sm text-foreground">{item.label}</span>
+                  </button>
+                ))}
                 <button
-                  key={item.id}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-destructive/10 transition-colors text-left border-t border-border"
                   onClick={() => setShowAccountMenu(false)}
                 >
-                  <item.icon size={16} className="text-muted-foreground" />
-                  <span className="text-sm text-foreground">{item.label}</span>
+                  <LogOut size={16} className="text-destructive" />
+                  <span className="text-sm text-destructive">Logout</span>
                 </button>
-              ))}
-              <button
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-destructive/10 transition-colors text-left border-t border-border"
-                onClick={() => setShowAccountMenu(false)}
-              >
-                <LogOut size={16} className="text-destructive" />
-                <span className="text-sm text-destructive">Logout</span>
-              </button>
+              </div>
+            )}
+          </div>
+        </div>
+{/* <div className="flex rounded-lg shadow-md overflow-hidden">
+  <button className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+    Left
+  </button>
+  
+  <button className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+    Right
+  </button>
+</div> */}
+        <div className="py-2 border-b border-border">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{activePair.flag}</span>
+              <span className="font-bold text-white">{activePair.name}</span>
             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="py-4 border-b border-border">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">{activePair.flag}</span>
-            <span className="font-bold text-white">{activePair.name}</span>
+            <span className={cn(
+              'text-sm font-bold',
+              activePair.performance >= 50 ? 'text-success' : 'text-[#757885]'
+            )}>
+              {activePair.performance}%
+            </span>
           </div>
-          <span className={cn(
-            'text-sm font-bold',
-            activePair.performance >= 50 ? 'text-success' : 'text-[#757885]'
-          )}>
-            {activePair.performance}%
-          </span>
-        </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-primary"></span>
-            <span className="text-[10px] text-primary font-semibold">PENDING TRADE</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-primary"></span>
+              <span className="text-[10px] text-primary font-semibold">PENDING TRADE</span>
+            </div>
+            <button
+              onClick={() => setIsPendingTrade(!isPendingTrade)}
+              className={`w-10 h-5 rounded-full transition-colors relative ${isPendingTrade ? 'bg-primary' : 'bg-[#3a4050]'}`}
+            >
+              <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${isPendingTrade ? 'right-0.5' : 'left-0.5'}`}></span>
+            </button>
           </div>
-          <button
-            onClick={() => setIsPendingTrade(!isPendingTrade)}
-            className={`w-10 h-5 rounded-full transition-colors relative ${isPendingTrade ? 'bg-primary' : 'bg-[#3a4050]'}`}
-          >
-            <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${isPendingTrade ? 'right-0.5' : 'left-0.5'}`}></span>
-          </button>
         </div>
-      </div>
-      <div className="py-3 border-b border-[#2a3040]">
-        <div className="relative">
-          <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#2b3040] z-10 font-bold">
-            Time
-          </label>
-          <div className="
+        <div className="py-3 border-b border-[#2a3040]">
+          <div className="relative">
+            <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#2b3040] z-10 font-bold">
+              Time
+            </label>
+            <div className="
       flex items-center justify-between
       bg-[#2a3040]
       border border-[#3a4050]
       rounded-lg
       px-3 py-3 mt-1
     ">
-            <button
-              onClick={() => adjustTime(-30)}
-              className="
+              <button
+                onClick={() => adjustTime(-30)}
+                className="
           w-7 h-7 rounded-full 
           bg-[#3a4050] 
           flex items-center justify-center 
@@ -187,25 +198,25 @@ export default function TradingPanel({
           hover:bg-[#4a5060] 
           transition font-bold
         "
-            >
-              <Minus size={16} className='font-bold' />
-            </button>
-
-            {/* Time Display */}
-            <div className="flex items-center gap-1">
-              <Clock size={15} className="text-gray-400" />
-              <button 
-                onClick={() => setShowTimeMenu(!showTimeMenu)}
-                className="flex items-center gap-1"
               >
-                <span className="font-mono text-white text-sm">{formatTime(tradeTime)}</span>
+                <Minus size={16} className='font-bold' />
               </button>
-            </div>
 
-            {/* Plus */}
-            <button
-              onClick={() => adjustTime(30)}
-              className="
+              {/* Time Display */}
+              <div className="flex items-center gap-1">
+                <Clock size={15} className="text-gray-400" />
+                <button
+                  onClick={() => setShowTimeMenu(!showTimeMenu)}
+                  className="flex items-center gap-1"
+                >
+                  <span className="font-mono text-white text-sm">{formatTime(tradeTime)}</span>
+                </button>
+              </div>
+
+              {/* Plus */}
+              <button
+                onClick={() => adjustTime(30)}
+                className="
           w-7 h-7 rounded-full 
           bg-[#3a4050] 
           flex items-center justify-center 
@@ -213,99 +224,104 @@ export default function TradingPanel({
           hover:bg-[#4a5060] 
           transition 
         "
-            >
-              <Plus size={16} className='font-bold' />
-            </button>
-          </div>
+              >
+                <Plus size={16} className='font-bold' />
+              </button>
+            </div>
 
-          {/* SWITCH TIME Link — Exact Look */}
-          <button
-            onClick={toggleTimeMode}
-            className="absolute -bottom-2 left-16 px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
-          >
-            SWITCH TIME
-          </button>
-
-          {/* Dropdown */}
-          <SwitchTimeMenu
-            isOpen={showTimeMenu}
-            onClose={() => setShowTimeMenu(false)}
-            currentTime={tradeTime}
-           onSelectTime={setTradeTime}
-              isSwitchMode={isAbsoluteTimeMode}
-          />
-        </div>
-      </div>
-
-
-      {/* Investment */}
-      <div className="py-3 border-b border-[#2a3040]">
-        <div className="relative">
-          <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#2b3040] z-10 font-bold">
-            Investment
-          </label>
-          <div className="flex items-center justify-between bg-[#2a3040] border border-[#3a4050] rounded-lg p-3 mt-1">
+            {/* SWITCH TIME Link — Exact Look */}
             <button
-              onClick={() => adjustInvestment(isPercentMode ? -1 : -10)}
-              className="w-7 h-7 rounded-full bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+              onClick={toggleTimeMode}
+              className="absolute -bottom-2 left-16 px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
             >
-              <Minus size={16} className='font-bold' />
+              SWITCH TIME
             </button>
-            
-            <button 
+
+            {/* Dropdown */}
+            <SwitchTimeMenu
+              isOpen={showTimeMenu}
+              onClose={() => setShowTimeMenu(false)}
+              currentTime={tradeTime}
+              onSelectTime={setTradeTime}
+              isSwitchMode={isAbsoluteTimeMode}
+            />
+          </div>
+        </div>
+        {/* Investment */}
+        <div className="py-3 border-b border-[#2a3040] mb-2">
+          <div className="relative">
+            <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#2b3040] z-10 font-bold">
+              Investment
+            </label>
+            <div className="flex items-center justify-between bg-[#2a3040] border border-[#3a4050] rounded-lg p-3 mt-1">
+              <button
+                onClick={() => adjustInvestment(isPercentMode ? -1 : -10)}
+                className="w-7 h-7 rounded-full bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+              >
+                <Minus size={16} className='font-bold' />
+              </button>
+
+              <button
                 onClick={() => setShowInvestmentMenu(!showInvestmentMenu)}
                 className="font-mono text-white text-sm"
               >
                 {displayInvestment}
               </button>
+              <button
+                onClick={() => adjustInvestment(isPercentMode ? 1 : 10)}
+                className="w-7 h-7 rounded-full bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+              >
+                <Plus size={16} className='font-bold' />
+              </button>
+            </div>
             <button
-              onClick={() => adjustInvestment(isPercentMode ? 1 : 10)}
-              className="w-7 h-7 rounded-full bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+              onClick={toggleInvestmentMode}
+              className="absolute -bottom-2 left-16 px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
             >
-              <Plus size={16} className='font-bold' />
+              SWITCH
             </button>
+            <InvestmentMenu
+              isOpen={showInvestmentMenu}
+              onClose={() => setShowInvestmentMenu(false)}
+              currentInvestment={investment}
+              onSelectInvestment={setInvestment}
+              isPercentMode={isPercentMode}
+            />
+          </div>
+        </div>
+        <div className="space-y-4">
+          <button
+            onClick={handleUpClick}
+            className=" w-full py-3 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+          >
+            <span>Up</span>
+            <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
+              <ArrowUp size={16} className="text-white" />
+            </div>
+          </button>
+
+          <div>
+            <div className="text-left text-[14px] text-[#ffffff] font-bold">
+              Your payout: <span className="text-white font-mono">{calculatedPayout} $</span>
+            </div>
+            {isPercentMode && (
+              <div className="text-left text-[12px] text-[#989c99] font-bold">
+                Investment :
+                <span className="text-[#989c99] ">{investment}</span>
+              </div>
+            )}
           </div>
           <button
-             onClick={toggleInvestmentMode}
-            className="absolute -bottom-2 left-16 px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
+            onClick={handleDownClick}
+            className="w-full py-3 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
           >
-            SWITCH
+            <span>Down</span>
+            <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
+              <ArrowDown size={16} className="text-white" />
+            </div>
           </button>
-          <InvestmentMenu
-            isOpen={showInvestmentMenu}
-            onClose={() => setShowInvestmentMenu(false)}
-            currentInvestment={investment}
-            onSelectInvestment={setInvestment}
-            isPercentMode={isPercentMode}
-          />
         </div>
-      </div>
-      <div className="p-3 space-y-4">
-        <button
-          onClick={handleUpClick}
-          className=" w-full py-3 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-        >
-          <span>Up</span>
-          <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
-            <ArrowUp size={16} className="text-white" />
-          </div>
-        </button>
-
-        <div className="text-center text-[14px] text-[#ffffff] font-bold">
-          Your payout: <span className="text-white font-mono">{calculatedPayout} $</span>
-        </div>
-
-        <button
-          onClick={handleDownClick}
-          className="w-full py-3 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-        >
-          <span>Down</span>
-          <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
-          <ArrowDown size={16} className="text-white" />
-          </div>
-        </button>
-      </div>
-{/* <div className="relative w-full flex items-center justify-center mt-4 space-x-4">
+        {/* <div className="relative w-full flex items-center justify-center mt-4 space-x-4">
   <button
     onClick={handleUpClick}
     className="
@@ -336,27 +352,28 @@ export default function TradingPanel({
   </button>
 
 </div> */}
-
+      </div>
+      
       {/* Trades Section */}
       <div className="flex-1 border-t border-[#2a3040]">
         <div className="flex items-center justify-between py-3 border-b border-[#2a3040]">
-          <button 
-              onClick={() => setActiveTradesTab('trades')}
-              className={`flex items-center gap-2 ${activeTradesTab === 'trades' ? 'text-white' : 'text-gray-500'}`}
-            >
-              <ArrowRightLeft size={14} />
-              <span className="text-xs font-medium">Trades</span>
-              <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{tradeCount}</span>
-            </button>
-            <button 
-              onClick={() => setActiveTradesTab('orders')}
-              className={`flex items-center gap-2 ${activeTradesTab === 'orders' ? 'text-white' : 'text-gray-500'}`}
-            >
-              <Clock size={14} />
-              <span className="text-xs font-medium">Orders</span>
-              <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{orderCount}</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setActiveTradesTab('trades')}
+            className={`flex items-center gap-2 ${activeTradesTab === 'trades' ? 'text-white' : 'text-gray-500'}`}
+          >
+            <ArrowRightLeft size={14} />
+            <span className="text-xs font-medium">Trades</span>
+            <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{tradeCount}</span>
+          </button>
+          <button
+            onClick={() => setActiveTradesTab('orders')}
+            className={`flex items-center gap-2 ${activeTradesTab === 'orders' ? 'text-white' : 'text-gray-500'}`}
+          >
+            <Clock size={14} />
+            <span className="text-xs font-medium">Orders</span>
+            <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{orderCount}</span>
+          </button>
+        </div>
 
         {/* Trade History Item Example */}
         {/* <div className="py-3 text-[10px] text-gray-500">
@@ -377,18 +394,18 @@ export default function TradingPanel({
             ))}
           </div>
         </div> */}
-      {/* Empty State */}
-          <div className="flex flex-col items-center justify-center p-6 text-center">
-            <div className="w-12 h-12 rounded-full bg-[#2a3040] flex items-center justify-center mb-3">
-              <ShoppingCart size={20} className="text-gray-500" />
-            </div>
-            <p className="text-[10px] text-gray-500 leading-relaxed">
-              {activeTradesTab === 'trades' 
-                ? "You don't have a trade history yet. You can open a trade using the form above."
-                : "Order list is empty. Create a pending trade using the form above."}
-            </p>
+        {/* Empty State */}
+        <div className="flex flex-col items-center justify-center p-6 text-center">
+          <div className="w-12 h-12 rounded-full bg-[#2a3040] flex items-center justify-center mb-3">
+            <ShoppingCart size={20} className="text-gray-500" />
           </div>
+          <p className="text-[10px] text-gray-500 leading-relaxed">
+            {activeTradesTab === 'trades'
+              ? "You don't have a trade history yet. You can open a trade using the form above."
+              : "Order list is empty. Create a pending trade using the form above."}
+          </p>
         </div>
+      </div>
 
 
       {/* Pending Trade Modal */}

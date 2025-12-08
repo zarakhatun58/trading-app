@@ -50,7 +50,7 @@ const TradePairSelector = ({
   return (
     <div className="bg-[#0f1114] border border-[#2a3040] rounded-lg w-[500px] shadow-2xl max-h-[600px] overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[#2a3040]">
+      <div className="flex items-center justify-between p-4 ">
         <h2 className="text-base font-semibold text-white">Select trade pair</h2>
         <button
           onClick={onClose}
@@ -61,7 +61,7 @@ const TradePairSelector = ({
       </div>
 
       {/* Category Tabs */}
-      <div className="flex border-b border-[#2a3040]">
+      <div className="flex">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -78,7 +78,7 @@ const TradePairSelector = ({
       </div>
 
       {/* Search and Filters */}
-      <div className="p-3 flex items-center gap-3 border-b border-[#2a3040]">
+      <div className="p-3 flex items-center gap-3 ">
         <button 
           onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-colors ${
@@ -104,9 +104,9 @@ const TradePairSelector = ({
       {/* Table Header */}
       <div className="grid grid-cols-[32px_1fr_100px_80px_80px] gap-2 px-4 py-2 text-xs text-gray-500 border-b border-[#2a3040]">
         <div></div>
-        <div className="border-b-2 border-primary pb-1">Name</div>
-        <div className="text-center border-b-2 border-success pb-1">24h changing</div>
-        <div className="text-center border-b-2 border-primary pb-1">Profit 1+ min ▼</div>
+        <div className=" pb-1">Name</div>
+        <div className="text-center pb-1">24h changing</div>
+        <div className="text-center  pb-1">Profit 1+ min ▼</div>
         <div className="text-center">5+ min</div>
       </div>
 
@@ -136,7 +136,7 @@ const TradePairSelector = ({
                 >
                   <Star 
                     size={14} 
-                    className={isFavorite ? 'fill-amber-400 text-amber-400' : 'text-gray-600 hover:text-gray-400'} 
+                    className={isFavorite ? 'fill-amber-400 text-amber-400 border-b border-[#2a3040]' : 'text-gray-600 hover:text-gray-400 border-b border-[#2a3040]'} 
                   />
                 </button>
 

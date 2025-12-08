@@ -15,6 +15,8 @@ interface TopBarProps {
   liveBalance?: number;
   balance?: number;
   initialIsLive?: boolean;
+   hideBalance?: boolean;
+  onToggleHideBalance?: () => void;
 }
 
 const TopBar = ({
@@ -24,6 +26,8 @@ const TopBar = ({
   liveBalance = 0,
   balance = 1000000,
   initialIsLive = false,
+  hideBalance = false,
+  onToggleHideBalance,
 }: TopBarProps) => {
   const [notifications] = useState(3);
   const [unreadMessages] = useState(5);
@@ -61,9 +65,9 @@ const TopBar = ({
       maximumFractionDigits: 2,
     });
   };
-
+ const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : balance)}`;
   return (
-    <header className="h-14 bg-[#101729] flex items-center justify-between px-4 pb-2 pt-4 mb-2">
+    <header className="h-14 bg-[#101729] flex items-center justify-between pl-4 pr-2 pb-2 pt-4 mb-2">
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
@@ -169,7 +173,7 @@ const TopBar = ({
               <span className={`text-[8px] font-bold rounded ${isLive ? ' text-success' : ' text-orange-400'} `}>
                 {isLive ? 'LIVE ACCOUNT' : 'DEMO ACCOUNT'}
               </span>
-              <span className="font-semibold text-white text-[12px]">$00000{fmt(isLive ? liveBalance : balance)}</span>
+              <span className="font-semibold text-white text-[12px]">{displayBalance}</span>
             </div>
             {showAccountMenu ? (
               <ChevronUp className="w-4 h-4 text-gray-400" />
@@ -186,7 +190,9 @@ const TopBar = ({
             liveBalance={liveBalance}
             balance={balance}
             isLive={isLive}
-            onToggleLive={setIsLive}
+             onToggleLive={setIsLive}
+            hideBalance={hideBalance}
+            onToggleHideBalance={onToggleHideBalance}
           />
         </div>
 

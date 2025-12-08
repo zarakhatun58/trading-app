@@ -33,17 +33,11 @@ const DrawingSidebar = ({ isOpen, onClose }: DrawingSidebarProps) => {
   return (
     <>
       <div 
-        className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        className="fixed inset-0 bg-[#101729] z-40 lg:hidden"
         onClick={onClose}
       />
       <aside 
-        className={`
-          fixed lg:relative top-0 left-0 h-full z-50
-          w-64 bg-card border-r border-border
-          transform transition-transform duration-300 ease-out
-          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          flex flex-col
-        `}
+        className="fixed top-0 left-[70px] h-full z-50 w-[220px] bg-[#101729] border-r border-[#2a3040] flex flex-col animate-slide-in"
       >
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2">

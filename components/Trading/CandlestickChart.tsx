@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CandleData } from "../../types/trading";
 import { BarChart3, Bell, Info, Minus, Pen, Plus, X } from "lucide-react";
+import PairInfoModal from "./PairInfoModal";
 
 
 
@@ -15,6 +16,9 @@ interface CandlestickChartProps {
   tradeZone?: 'up' | 'down' | null;
   onOpenDrawing?: () => void;
   onOpenIndicators?: () => void;
+  pairName?: string;
+  pairFlag?: string;
+  pairPercentage?: number;
 }
 interface OHLCData {
   open: number;
@@ -38,7 +42,10 @@ const CandlestickChart = ({
   tradeEndTime,
   tradeZone,
   onOpenDrawing,
-  onOpenIndicators
+  onOpenIndicators,
+  pairName = 'CHF/JPY',
+  pairFlag = '🇨🇭🇯🇵',
+  pairPercentage = 63
 }: CandlestickChartProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -50,8 +57,10 @@ const CandlestickChart = ({
   const [crosshairTime, setCrosshairTime] = useState('');
   const [showNotificationBtn, setShowNotificationBtn] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [showPairInfo, setShowPairInfo] = useState(false);
   const [zoom, setZoom] = useState(100);
   const [timeframe, setTimeframe] = useState('1m');
+  const padding = { top: 40, right: 80, bottom: 40, left: 60 };
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -401,8 +410,18 @@ const CandlestickChart = ({
     }
 
   }, [data, dimensions, currentPrice, chartType, tradeStartTime, tradeEndTime, tradeZone, zoom]);
+
+// Calculate crosshair boundaries within chart area only
+  const crosshairTop = padding.top;
+  const crosshairBottom = dimensions.height - padding.bottom;
+  const crosshairLeft = padding.left;
+  const crosshairRight = dimensions.width - padding.right;
+ // Clamp crosshair position strictly within chart bounds
+  const clampedX = Math.max(crosshairLeft, Math.min(crosshairRight, hoverPosition.x));
+  const clampedY = Math.max(crosshairTop, Math.min(crosshairBottom, hoverPosition.y))
+
   return (
-    <div ref={containerRef} className="relative flex-1 h-full min-h-[400px]">
+    <div ref={containerRef} className="relative flex-1 h-full min-h-[400px] overflow-hidden">
       <canvas
         ref={canvasRef}
         width={dimensions.width}
@@ -415,10 +434,12 @@ const CandlestickChart = ({
         <>
           {/* Vertical line */}
           <div 
-            className="absolute top-10 pointer-events-none"
+            // className="absolute top-10 pointer-events-none"
+             className="absolute pointer-events-none"
             style={{ 
-              left: hoverPosition.x,
-              height: dimensions.height - 80,
+            left: clampedX,
+              top: crosshairTop,
+              height: crosshairBottom - crosshairTop,
               width: '1px',
               background: 'rgba(255, 255, 255, 0.5)'
             }}
@@ -427,9 +448,9 @@ const CandlestickChart = ({
           <div 
             className="absolute pointer-events-none"
             style={{ 
-              top: hoverPosition.y,
-              left: 60,
-              width: dimensions.width - 140,
+               top: clampedY,
+              left: crosshairLeft,
+              width: crosshairRight - crosshairLeft,
               height: '1px',
               background: 'rgba(255, 255, 255, 0.5)'
             }}
@@ -438,23 +459,23 @@ const CandlestickChart = ({
           <div 
             className="absolute bg-[#2a3040] text-white text-xs px-2 py-1 rounded pointer-events-none"
             style={{ 
-              left: hoverPosition.x - 30,
-              bottom: 8,
+              left: Math.max(crosshairLeft, Math.min(crosshairRight - 60, clampedX - 30)),
+              top: crosshairBottom + 4,
             }}
           >
             {crosshairTime}
           </div>
           {/* Price label with notification icon */}
           <div 
-            className="absolute flex items-center gap-1 pointer-events-none"
+           className="absolute flex items-center gap-1 pointer-events-auto"
             style={{ 
-              right: 10,
-              top: hoverPosition.y - 10,
+            left: crosshairRight - 90,
+              top: Math.max(crosshairTop, Math.min(crosshairBottom - 20, clampedY - 10)),
             }}
           >
             <button 
               onClick={addNotification}
-              className="p-1 bg-[#2a3040] rounded hover:bg-[#3a4050] pointer-events-auto transition-colors"
+              className="p-1 bg-[#2a3040] rounded hover:bg-[#3a4050] transition-colors"
             >
               <Bell size={12} className="text-gray-300" />
             </button>
@@ -487,7 +508,7 @@ const CandlestickChart = ({
           <BarChart3 size={16} className="text-gray-300" />
         </button>
       </div> */}
-      <button className="absolute left-4 top-16 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary text-sm hover:bg-primary/30 transition-colors">
+      <button onClick={() => setShowPairInfo(true)} className="absolute left-4 top-12 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary text-sm hover:bg-primary/30 transition-colors">
         <Info size={14} />
         <span className="font-bold text-[10px]">PAIR INFORMATION</span>
       </button>
@@ -498,8 +519,8 @@ const CandlestickChart = ({
 
 {/* OHLC Display - Bottom Left (always visible when hovering chart) */}
       {showCrosshair && hoveredCandle && (
-        <div className="absolute left-16 bottom-4 bg-[#1a1f2e]/95 border border-[#2a3040] rounded-lg p-2 z-20">
-          <div className="flex items-center gap-4 text-xs font-mono">
+        <div className="absolute left-16 bottom-4 bg-[#1a1f2e]/95 border border-[#2a3040] rounded-lg p-2 z-20 ">
+          <div className="flex flex-col items-center gap-4 text-xs font-mono">
             <div className="flex items-center gap-1">
               <span className="text-gray-400">Open:</span>
               <span className="text-white">{hoveredCandle.open.toFixed(5)}</span>
@@ -559,6 +580,15 @@ const CandlestickChart = ({
           <Plus size={14} />
         </button>
       </div>
+      {/* Pair Info Modal */}
+      <PairInfoModal
+        isOpen={showPairInfo}
+        onClose={() => setShowPairInfo(false)}
+        pairName={pairName}
+        pairFlag={pairFlag}
+        percentage={pairPercentage}
+        currentPrice={currentPrice}
+      />
     </div>
   );
 };

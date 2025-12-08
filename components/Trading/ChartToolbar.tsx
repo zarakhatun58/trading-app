@@ -1,9 +1,10 @@
 "use client";
 import { useState } from 'react';
-import { Pencil, BarChart3, Clock, X } from 'lucide-react';
+import { Pencil, BarChart3, Clock, X, Activity } from 'lucide-react';
 
 interface ChartToolbarProps {
   onDrawingClick: () => void;
+   onOpenIndicators:()=>void;
   onChartTypeChange: (type: string) => void;
   currentChartType: string;
   currentTimeframe: string;
@@ -21,6 +22,7 @@ const timeframes = ['1m', '5m', '15m', '30m', '1h', '4h', '1d'];
 
 export const ChartToolbar = ({
   onDrawingClick,
+   onOpenIndicators,
   onChartTypeChange,
   currentChartType,
   currentTimeframe,
@@ -121,9 +123,10 @@ export const ChartToolbar = ({
       </div>
       <button
         className="w-10 h-10 rounded-lg bg-card/90 backdrop-blur border border-border flex items-center justify-center hover:bg-destructive/20 hover:border-destructive/50 transition-colors"
-        title="Delete Tools"
+        title="Indicators"
+         onClick={onOpenIndicators}
       >
-        <X size={18} className="text-muted-foreground" />
+         <Activity size={16} className="text-gray-300" />
       </button>
     </div>
   );

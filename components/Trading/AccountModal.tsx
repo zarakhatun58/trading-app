@@ -1,5 +1,6 @@
 import { Eye, EyeOff, Menu, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import ExchangeModal from './ExchangeModal';
 
 interface AccountModalProps {
   isOpen: boolean;
@@ -11,20 +12,24 @@ interface AccountModalProps {
   balance?: number;
   isLive: boolean;
   onToggleLive: (isLive: boolean) => void;
+  hideBalance?: boolean;
+  onToggleHideBalance?: () => void;
 }
 
- const AccountModal = ({
+const AccountModal = ({
   isOpen,
   onClose,
   email = 'demo@qxbroker.com',
   id = '71910310',
- currency = 'INR',
+  currency = 'INR',
   liveBalance = 0,
   balance = 1000000,
   isLive,
   onToggleLive,
+  hideBalance = false,
+  onToggleHideBalance,
 }: AccountModalProps) => {
-   const [hideBalance, setHideBalance] = useState(false);
+  const [showExchangeModal, setShowExchangeModal] = useState(false)
   if (!isOpen) return null;
 
   const fmt = (n?: number) => {
@@ -34,7 +39,7 @@ interface AccountModalProps {
       maximumFractionDigits: 2,
     });
   };
- const maskValue = (value: string) => {
+  const maskValue = (value: string) => {
     if (hideBalance) {
       return '* '.repeat(6).trim();
     }
@@ -64,11 +69,11 @@ interface AccountModalProps {
                 </div>
               </div>
               <button className="p-4 rounded-sm hover:bg-slate-900 bg-[#282a38]"
-               title={hideBalance ? "Show balance" : "Hide balance"}
-               onClick={() => setHideBalance(!hideBalance)} 
+                title={hideBalance ? "Show balance" : "Hide balance"}
+                onClick={onToggleHideBalance}
               >
-                
-                 {hideBalance ? (
+
+                {hideBalance ? (
                   <EyeOff className="w-4 h-4 text-slate-300" />
                 ) : (
                   <Eye className="w-4 h-4 text-slate-300" />
@@ -84,7 +89,8 @@ interface AccountModalProps {
             <div className="flex items-center gap-2 mb-4">
               <div className="text-xs text-slate-400">Currency:</div>
               <div className="text-xs font-semibold bg-slate-700 px-2 py-1 rounded">{currency}</div>
-              <button className="text-xs text-sky-400 px-2 py-1 rounded hover:bg-slate-800">CHANGE</button>
+              <button className="text-xs text-sky-400 px-2 py-1 rounded hover:bg-slate-800"
+                onClick={() => setShowExchangeModal(true)}>CHANGE</button>
             </div>
 
             <div className="space-y-4">
@@ -143,6 +149,12 @@ interface AccountModalProps {
           </div>
         </div>
       </div>
+      {/* Exchange Modal */}
+      <ExchangeModal
+        isOpen={showExchangeModal}
+        onClose={() => setShowExchangeModal(false)}
+        currentCurrency={currency}
+      />
     </>
   );
 };

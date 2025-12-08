@@ -16,7 +16,7 @@ interface IndicatorsPanelProps {
   if (!isOpen) return null;
 
   return (
-    <div className="w-64 bg-card border-r border-border h-full flex flex-col animate-slide-up">
+    <div className="fixed top-0 left-[70px] h-full z-50 w-[220px] bg-[#101729] border-r border-[#2a3040] flex flex-col animate-slide-in">
       
       <div className="flex items-center justify-between p-4 border-b border-border">
         <h2 className="text-lg font-semibold">Indicators</h2>
