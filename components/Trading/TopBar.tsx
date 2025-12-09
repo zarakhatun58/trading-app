@@ -41,6 +41,8 @@ const TopBar = ({
   const accountRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const onlineUsersRef = useRef<HTMLDivElement>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -81,10 +83,13 @@ const TopBar = ({
         </span>
       </div>
 
-      <div className="hidden lg:flex bg-[#27a663] rounded-full py-2 px-4 text-[12px] items-center gap-2 h-[40px]">
+     <div  className={`xl2:hidden
+              bg-[#27a663] rounded-full py-2 px-2 text-[12px] 
+             flex items-center gap-2 h-[40px]`}>
+
         <PlaneTakeoff className="w-5" />
         <span className="pr-2 text-white">
-          Get a <strong className="text-[14px]">70% bonus</strong> on your first deposit
+          Get a <strong className="text-[14px]">70% bonus</strong> on first deposit
         </span>
         <span className="bg-[#4c5470] text-white px-2 py-1 rounded-full text-[14px] font-bold">70%</span>
       </div>

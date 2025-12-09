@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft } from 'lucide-react';
+import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling } from 'lucide-react';
 import { CurrencyPair } from '../../types/trading';
 import { cn } from '../../libs/utils';
 import { Switch } from '../ReusableUI/switch';
@@ -37,6 +37,7 @@ export default function TradingPanel({
   const [activeTradesTab, setActiveTradesTab] = useState<'trades' | 'orders'>('trades');
   const [tradeCount, setTradeCount] = useState(0);
   const [orderCount, setOrderCount] = useState(0);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const formatTime = (seconds: number) => {
     if (isAbsoluteTimeMode) {
@@ -112,9 +113,9 @@ export default function TradingPanel({
 
 
   return (
-    <aside className="w-[150px] md:w-[220px] bg-[#2b3040] rounded-lg flex flex-col h-full mr-2 p-4 ">
-      <div className='rounded-lg '>
-        <div className="border-border">
+    <aside className="w-[150px] md:w-[220px]  rounded-lg flex flex-col h-full mr-2">
+      <div className='rounded-lg border border-[#2a3040] bg-[#2b3040] px-4 py-2 mb-2'>
+        <div className="">
           <div className="relative">
 
             {showAccountMenu && (
@@ -140,20 +141,13 @@ export default function TradingPanel({
             )}
           </div>
         </div>
-{/* <div className="flex rounded-lg shadow-md overflow-hidden">
-  <button className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-    Left
-  </button>
-  
-  <button className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
-    Right
-  </button>
-</div> */}
-        <div className="py-2 border-b border-border">
+
+        <div className=" border-b border-border">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">{activePair.flag}</span>
-              <span className="font-bold text-white">{activePair.name}</span>
+              {/* <span className="text-2xl">{activePair.flag}</span> */}
+              <span className="text-green-500 rounded-full bg-[#ffffff] p-1"><PoundSterling size={12}/></span>
+              <span className="font-bold text-white text-[14px]">{activePair.name}</span>
             </div>
             <span className={cn(
               'text-sm font-bold',
@@ -191,7 +185,7 @@ export default function TradingPanel({
               <button
                 onClick={() => adjustTime(-30)}
                 className="
-          w-7 h-7 rounded-full 
+          w-7 h-7 rounded-sm
           bg-[#3a4050] 
           flex items-center justify-center 
           text-gray-300 
@@ -217,7 +211,7 @@ export default function TradingPanel({
               <button
                 onClick={() => adjustTime(30)}
                 className="
-          w-7 h-7 rounded-full 
+          w-7 h-7 rounded-sm
           bg-[#3a4050] 
           flex items-center justify-center 
           text-gray-300 
@@ -232,7 +226,7 @@ export default function TradingPanel({
             {/* SWITCH TIME Link — Exact Look */}
             <button
               onClick={toggleTimeMode}
-              className="absolute -bottom-2 left-16 px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
+              className="absolute -bottom-2 left-[32%] px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
             >
               SWITCH TIME
             </button>
@@ -256,7 +250,7 @@ export default function TradingPanel({
             <div className="flex items-center justify-between bg-[#2a3040] border border-[#3a4050] rounded-lg p-3 mt-1">
               <button
                 onClick={() => adjustInvestment(isPercentMode ? -1 : -10)}
-                className="w-7 h-7 rounded-full bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+                className="w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
               >
                 <Minus size={16} className='font-bold' />
               </button>
@@ -269,14 +263,14 @@ export default function TradingPanel({
               </button>
               <button
                 onClick={() => adjustInvestment(isPercentMode ? 1 : 10)}
-                className="w-7 h-7 rounded-full bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+                className="w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
               >
                 <Plus size={16} className='font-bold' />
               </button>
             </div>
             <button
               onClick={toggleInvestmentMode}
-              className="absolute -bottom-2 left-16 px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
+              className="absolute -bottom-2 left-[38%] px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
             >
               SWITCH
             </button>
@@ -290,16 +284,26 @@ export default function TradingPanel({
           </div>
         </div>
         <div className="space-y-4">
-          <button
-            onClick={handleUpClick}
-            className=" w-full py-3 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-          >
-            <span>Up</span>
-            <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
-              <ArrowUp size={16} className="text-white" />
-            </div>
-          </button>
-
+          <div className='flex flex-row justify-between'>
+            <button
+              onClick={handleUpClick}
+              className="w-[90px] py-2 px-2 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+            >
+              <span className='text-[14px]'>Up</span>
+              <div className="w-7 h-7 rounded-sm bg-[#57c78b] flex items-center justify-center">
+                <TrendingUp size={16} className="text-white" />
+              </div>
+            </button>
+            <button
+              onClick={handleDownClick}
+              className="w-[90px] py-2 px-2 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+            >
+              <span className='text-[14px]'>Down</span>
+              <div className="w-7 h-7 rounded-sm bg-[#ff9186] flex items-center justify-center">
+                <TrendingDown size={16} className="text-white" />
+              </div>
+            </button>
+          </div>
           <div>
             <div className="text-left text-[14px] text-[#ffffff] font-bold">
               Your payout: <span className="text-white font-mono">{calculatedPayout} $</span>
@@ -311,103 +315,93 @@ export default function TradingPanel({
               </div>
             )}
           </div>
-          <button
-            onClick={handleDownClick}
-            className="w-full py-3 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-          >
-            <span>Down</span>
-            <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
-              <ArrowDown size={16} className="text-white" />
-            </div>
-          </button>
-        </div>
-        {/* <div className="relative w-full flex items-center justify-center mt-4 space-x-4">
-  <button
-    onClick={handleUpClick}
-    className="
-      relative w-1/2 py-4 text-white font-semibold text-lg flex items-center justify-center
-      rounded-l-xl overflow-hidden bg-[#0f7a41]
-    "
-  >
-    <div className="relative flex items-center gap-2">
-      <span>Up</span>
-      <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
-        <ArrowUp size={16} className="text-white" />
-      </div>
-    </div>
-  </button>
-  <button
-    onClick={handleDownClick}
-    className="
-      relative w-1/2 py-4 text-white font-semibold text-lg flex items-center justify-center
-      rounded-r-xl overflow-hidden bg-[#b91c1c]
-    "
-  >
-    <div className="relative flex items-center gap-2">
-      <span>Down</span>
-      <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
-        <ArrowDown size={16} className="text-white" />
-      </div>
-    </div>
-  </button>
 
-</div> */}
+        </div>
       </div>
-      
+
+
       {/* Trades Section */}
-      <div className="flex-1 border-t border-[#2a3040]">
-        <div className="flex items-center justify-between py-3 border-b border-[#2a3040]">
-          <button
-            onClick={() => setActiveTradesTab('trades')}
-            className={`flex items-center gap-2 ${activeTradesTab === 'trades' ? 'text-white' : 'text-gray-500'}`}
-          >
-            <ArrowRightLeft size={14} />
-            <span className="text-xs font-medium">Trades</span>
-            <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{tradeCount}</span>
-          </button>
-          <button
-            onClick={() => setActiveTradesTab('orders')}
-            className={`flex items-center gap-2 ${activeTradesTab === 'orders' ? 'text-white' : 'text-gray-500'}`}
-          >
-            <Clock size={14} />
-            <span className="text-xs font-medium">Orders</span>
-            <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{orderCount}</span>
-          </button>
-        </div>
+      <div className='bg-[#2b3040] rounded-lg'>
+        <div className={`flex-1  border border-[#2a3040] bg-[#2b3040]
+    overflow-hidden transition-all duration-500
+    ${isCollapsed ? "max-h-[80px]" : "max-h-[120px]"}
+  `}>
+          <div className="flex items-center justify-between border-b border-[#2a3040]">
+            <button
+              onClick={() => setActiveTradesTab('trades')}
+              className={`flex items-center gap-2 p-2 rounded-lg 
+    ${activeTradesTab === 'trades'
+                  ? 'text-white border-t-2 border-[#3b82f6]'
+                  : 'text-gray-500 border-t-2 border-transparent'
+                }`}
+            >
+              <ArrowRightLeft size={14} />
+              <span className="text-xs font-medium">Trades</span>
+              <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{tradeCount}</span>
+            </button>
 
-        {/* Trade History Item Example */}
-        {/* <div className="py-3 text-[10px] text-gray-500">
-          <div className="mb-2">5 DECEMBER <span className="bg-[#2a3040] px-1 rounded">0</span></div>
-          <div className="flex items-center justify-between py-2 border-b border-[#2a3040]">
-            <div className="flex items-center gap-2">
-              <span>{activePair.flag}</span>
-              <span className="text-white text-xs">{activePair.name}</span>
+            <button
+              onClick={() => setActiveTradesTab('orders')}
+              className={`flex items-center gap-2 p-2 rounded-lg 
+    ${activeTradesTab === 'orders'
+                  ? 'text-white border-t-2 border-[#3b82f6]'
+                  : 'text-gray-500 border-t-2 border-transparent'
+                }`}
+            >
+              <Clock size={14} />
+              <span className="text-xs font-medium">Orders</span>
+              <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{orderCount}</span>
+            </button>
+          </div>
+
+          {/* Trade History Item Example */}
+          {activeTradesTab === "trades" && (
+            <div className="p-2 text-[10px] text-gray-500">
+              <div className="mb-2">5 DECEMBER <span className="bg-[#2a3040] px-1 rounded">0</span></div>
+
+              <div className="flex items-center justify-between py-2 border-b border-[#2a3040]">
+                <div className="flex items-center gap-2">
+                  <span>{activePair.flag}</span>
+                  <span className="text-white text-xs">{activePair.name}</span>
+                </div>
+                <div className="text-right">
+                  <div className="text-gray-400">{formatTime(tradeTime)}</div>
+                  <div className="text-success text-xs">0.00 $</div>
+                </div>
+              </div>
+
+              <div className="h-16 mt-2 flex items-end justify-around">
+                {[20, 35, 25, 40, 30, 45, 35, 50, 40, 55].map((h, i) => (
+                  <div key={i} className="w-1 bg-primary/50 rounded-t" style={{ height: `${h}%` }} />
+                ))}
+              </div>
             </div>
-            <div className="text-right">
-              <div className="text-gray-400">{formatTime(tradeTime)}</div>
-              <div className="text-success text-xs">0.00 $</div>
+          )}
+
+          {/* Empty State */}
+          <div className="flex flex-col items-center justify-center p-6 text-center">
+            <div className="w-12 h-12 rounded-full bg-[#2a3040] flex items-center justify-center mb-3">
+              <ShoppingCart size={20} className="text-gray-500" />
             </div>
+            <p className="text-[10px] text-gray-500 leading-relaxed">
+              {activeTradesTab === 'trades'
+                ? "You don't have a trade history yet. You can open a trade using the form above."
+                : "Order list is empty. Create a pending trade using the form above."}
+            </p>
           </div>
-          <div className="h-16 mt-2 flex items-end justify-around">
-            {[20, 35, 25, 40, 30, 45, 35, 50, 40, 55].map((h, i) => (
-              <div key={i} className="w-1 bg-primary/50 rounded-t" style={{ height: `${h}%` }}></div>
-            ))}
-          </div>
-        </div> */}
-        {/* Empty State */}
-        <div className="flex flex-col items-center justify-center p-6 text-center">
-          <div className="w-12 h-12 rounded-full bg-[#2a3040] flex items-center justify-center mb-3">
-            <ShoppingCart size={20} className="text-gray-500" />
-          </div>
-          <p className="text-[10px] text-gray-500 leading-relaxed">
-            {activeTradesTab === 'trades'
-              ? "You don't have a trade history yet. You can open a trade using the form above."
-              : "Order list is empty. Create a pending trade using the form above."}
-          </p>
+
         </div>
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="w-full flex justify-center py-2 text-gray-400 hover:text-white transition"
+        >
+          <div
+            className={`transition-transform duration-300 ${isCollapsed ? "rotate-180" : ""}`}
+          >
+            <ChevronDown size={18} />
+          </div>
+        </button>
       </div>
-
-
       {/* Pending Trade Modal */}
       <PendingTradeModal
         isOpen={isPendingTrade}
