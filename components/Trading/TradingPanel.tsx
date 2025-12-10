@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling, DollarSignIcon } from 'lucide-react';
-import { CurrencyPair } from '../../types/trading';
+import { CurrencyPair, Trade } from '../../types/trading';
 import { cn } from '../../libs/utils';
 import { Switch } from '../ReusableUI/switch';
 import SwitchTimeMenu from './SwitchTimeMenu';
@@ -16,14 +16,18 @@ interface TradingPanelProps {
   balance: number;
   isLiveAccount: boolean;
   onTradeZone?: (zone: 'up' | 'down' | null) => void;
+   trades?: Trade[];
+  onSellTrade?: (tradeId: string) => void;
 }
 
 export default function TradingPanel({
-  activePair,
-  onTrade,
-  balance,
-  isLiveAccount,
+ activePair, 
+  onTrade, 
+  balance, 
+  isLiveAccount, 
   onTradeZone,
+  trades = [],
+  onSellTrade
 }: TradingPanelProps) {
   const [investment, setInvestment] = useState(100);
   const [tradeTime, setTradeTime] = useState(60);
@@ -35,9 +39,13 @@ export default function TradingPanel({
   const [isAbsoluteTimeMode, setIsAbsoluteTimeMode] = useState(false);
   const [isPercentMode, setIsPercentMode] = useState(false);
   const [activeTradesTab, setActiveTradesTab] = useState<'trades' | 'orders'>('trades');
-  const [tradeCount, setTradeCount] = useState(0);
-  const [orderCount, setOrderCount] = useState(0);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+ const [isCollapsed, setIsCollapsed] = useState(false);
+  const [upHovered, setUpHovered] = useState(false);
+  const [downHovered, setDownHovered] = useState(false);
+
+  const pendingTrades = trades.filter(t => t.status === 'pending');
+  const tradeCount = pendingTrades.length;
+  const orderCount = 0;
 
   const formatTime = (seconds: number) => {
     if (isAbsoluteTimeMode) {
@@ -90,6 +98,7 @@ export default function TradingPanel({
   const handleUpClick = () => {
     onTradeZone?.('up');
     onTrade('up', investment, tradeTime);
+    
   };
 
   const handleDownClick = () => {
@@ -110,7 +119,12 @@ export default function TradingPanel({
     { id: 'trades', label: 'Trades', icon: ArrowUp },
     { id: 'account', label: 'Account', icon: User },
   ];
-
+const groupedTrades = pendingTrades.reduce((acc, trade) => {
+    const date = new Date(trade.timestamp).toLocaleDateString('en-US', { day: 'numeric', month: 'long' }).toUpperCase();
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(trade);
+    return acc;
+  }, {} as Record<string, Trade[]>);
 
   return (
     <aside className="w-[150px] md:w-[220px]  rounded-lg flex flex-col h-full mr-2">
@@ -286,12 +300,15 @@ export default function TradingPanel({
         <div className="space-y-2 mb-2">
           <button
             onClick={handleUpClick}
+              onMouseEnter={() => setUpHovered(true)}
+              onMouseLeave={() => setUpHovered(false)}
             className=" w-full py-2 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
           >
             <span>Up</span>
             <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
              <TrendingUp size={16} className="text-white" />
             </div>
+             <div className={`absolute bottom-0 left-0 right-0 h-1 bg-white/40 transition-opacity ${upHovered ? 'opacity-100' : 'opacity-0'}`} />
           </button>
 
           <div>
@@ -306,13 +323,16 @@ export default function TradingPanel({
             )}
           </div>
           <button
-            onClick={handleDownClick}
+           onClick={handleDownClick}
+              onMouseEnter={() => setDownHovered(true)}
+              onMouseLeave={() => setDownHovered(false)}
             className="w-full py-2 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
           >
             <span>Down</span>
             <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
                <TrendingDown size={16} className="text-white" />
             </div>
+            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-white/40 transition-opacity ${downHovered ? 'opacity-100' : 'opacity-0'}`} />
           </button>
 
 
@@ -411,16 +431,12 @@ export default function TradingPanel({
           </div>
 
         </div>
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="w-full flex justify-center py-2 text-gray-400 hover:text-white transition"
-        >
-          <div
-            className={`transition-transform duration-300 ${isCollapsed ? "rotate-180" : ""}`}
+         <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="w-full flex justify-center py-1.5 md:py-2 text-gray-400 hover:text-white transition border-t border-[#2a3040]"
           >
-            <ChevronDown size={18} />
-          </div>
-        </button>
+            <ChevronDown size={16} className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
+          </button>
       </div>
       {/* Pending Trade Modal */}
       <PendingTradeModal

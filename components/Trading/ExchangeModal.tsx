@@ -66,7 +66,8 @@ const currencies = [
 
             {/* New Currency */}
             <div className="relative ">
-              <label className="absolute -top-2 left-3 px-1 text-xs text-gray-500 z-10">
+              {/* <label className="absolute -top-2 left-3 px-1 text-xs text-gray-500 z-10"> */}
+                <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#2b3040] z-10 font-bold">
                 New Currency:
               </label>
               <button 

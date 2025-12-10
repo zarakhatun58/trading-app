@@ -3,13 +3,14 @@
 import { useState, useEffect, useCallback } from 'react';
 
 import { currencyPairs, generateCandleData } from '../data/mockData';
-import { CandleData, CurrencyPair } from '../types/trading';
+import { CandleData, CurrencyPair, Trade } from '../types/trading';
 import { toast } from '../hooks/useToasts';
 import dynamic from "next/dynamic";
 import SettingsPanel from '../components/Trading/SettingsPanel';
 import SocialModal from '../components/Trading/SocialModal';
 import TradePairSelector from '../components/Trading/TradePairSelector';
 import SentimentIndicator from '../components/Trading/SentimentIndicator';
+import { Pin, Plus, X,ChevronDown } from 'lucide-react';
 
 const ChartToolbar = dynamic(() => import('../components/Trading/ChartToolbar'), { ssr: false });
 const CandlestickChart = dynamic(() => import('../components/Trading/CandlestickChart'), { ssr: false });
@@ -20,7 +21,7 @@ const TopBar = dynamic(() => import('../components/Trading/TopBar'), { ssr: fals
 const CurrencyTabs = dynamic(() => import('../components/Trading/CurrencyTabs'), { ssr: false });
 const TradingSidebar = dynamic(() => import('../components/Trading/TradingSidebar'), { ssr: false });
 
-import { Pin, Plus, X } from 'lucide-react';
+
 
 
 const TradingPage = () => {
@@ -30,13 +31,14 @@ const TradingPage = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showSocialModal, setShowSocialModal] = useState(false);
   const [showPairSelector, setShowPairSelector] = useState(false);
+  const [showTabPairSelector, setShowTabPairSelector] = useState<string | null>(null);
   const [chartType, setChartType] = useState('candles');
   const [timeframe, setTimeframe] = useState('1m');
   const [candleData, setCandleData] = useState<CandleData[]>([]);
-  const [balance, setBalance] = useState(0.00);
+const [balance, setBalance] = useState(1000000);
   const [pairs, setPairs] = useState<CurrencyPair[]>(currencyPairs);
   const [selectedPairIds, setSelectedPairIds] = useState<string[]>(['eur-chf']);
-  const [selectedPins, setSelectedPins] = useState<string[]>(['eur-chf']);
+  const [pinnedPairIds, setPinnedPairIds] = useState<string[]>([]);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [sidebarCollapsedToIcons, setSidebarCollapsedToIcons] = useState(false);
   const [sentimentBuy, setSentimentBuy] = useState(77);
@@ -44,6 +46,7 @@ const TradingPage = () => {
   const activePair = pairs.find(p => p.id === activePairId) || pairs[0];
   const selectedPairs = pairs.filter(p => selectedPairIds.includes(p.id));
   const [hideBalance, setHideBalance] = useState(false);
+  const [trades, setTrades] = useState<Trade[]>([]);
 
   useEffect(() => {
     setCandleData(generateCandleData(30));
@@ -81,7 +84,7 @@ const TradingPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleTrade = useCallback((direction: 'up' | 'down', amount: number, time: number) => {
+ const handleTrade = useCallback((direction: 'up' | 'down', amount: number, time: number) => {
     if (balance < amount) {
       toast({
         title: "Insufficient Balance",
@@ -90,13 +93,44 @@ const TradingPage = () => {
       });
       return;
     }
+  
+
+   const newTrade: Trade = {
+      id: Date.now().toString(),
+      pair: activePair.name,
+      direction,
+      amount,
+      entryPrice: activePair.currentPrice,
+      payout: amount * 1.88,
+      timestamp: new Date(),
+      status: 'pending',
+    };
+
+    setTrades(prev => [...prev, newTrade]);
+    setBalance(prev => prev - amount);
 
     toast({
-      title: `Trade Opened: ${direction.toUpperCase()}`,
-      description: `${activePair.name} - $${amount} for ${time}s`,
+      title: `Trade opened with price: ${activePair.currentPrice.toFixed(3)} ${activePair.name}`,
+      description: (
+        <div className="flex items-center gap-2">
+          <span className={`px-2 py-0.5 rounded text-xs ${direction === 'up' ? 'bg-success text-white' : 'bg-destructive text-white'}`}>
+            {direction === 'up' ? '↑' : '↓'}
+          </span>
+        </div>
+      ),
     });
   }, [balance, activePair]);
-
+   const handleSellTrade = useCallback((tradeId: string) => {
+    const trade = trades.find(t => t.id === tradeId);
+    if (trade) {
+      setBalance(prev => prev + trade.amount);
+      setTrades(prev => prev.filter(t => t.id !== tradeId));
+      toast({
+        title: "Trade sold",
+        description: `${trade.pair} trade closed`,
+      });
+    }
+  }, [trades]);
   const handleSelectPair = (pairId: string) => {
     if (selectedPairIds.includes(pairId)) {
       if (selectedPairIds.length > 1) {
@@ -107,24 +141,28 @@ const TradingPage = () => {
       }
     } else {
       setSelectedPairIds(prev => [...prev, pairId]);
+      setActivePairId(pairId);
+    }
+    setShowPairSelector(false);
+    setShowTabPairSelector(null);
+  };
+
+ const removePairFromTabs = (pairId: string) => {
+    if (selectedPairIds.length > 1) {
+      setSelectedPairIds(prev => prev.filter(id => id !== pairId));
+      setPinnedPairIds(prev => prev.filter(id => id !== pairId));
+      if (activePairId === pairId) {
+        setActivePairId(selectedPairIds.find(id => id !== pairId) || selectedPairIds[0]);
+      }
     }
   };
 
-  const removePairFromTabs = (pairId: string) => {
-    if (selectedPairIds.length > 1) {
-      setSelectedPairIds(prev => prev.filter(id => id !== pairId));
-      if (activePairId === pairId) {
-        setActivePairId(selectedPairIds.find(id => id !== pairId) || selectedPairIds[0]);
-      }
-    }
-  };
-  const addPinsFromTabs = (pairId: string) => {
-    if (selectedPairIds.length > 1) {
-      setSelectedPairIds(prev => prev.filter(id => id !== pairId));
-      if (activePairId === pairId) {
-        setActivePairId(selectedPairIds.find(id => id !== pairId) || selectedPairIds[0]);
-      }
-    }
+   const togglePinPair = (pairId: string) => {
+    setPinnedPairIds(prev => 
+      prev.includes(pairId)
+        ? prev.filter(id => id !== pairId)
+        : [...prev, pairId]
+    );
   };
 
   return (
@@ -173,53 +211,85 @@ const TradingPage = () => {
             <div className="flex flex-col flex-1 min-w-0">
 
               {/* CURRENCY TABS */}
-              <div className="flex items-center bg-[#101729] border-b border-[#2a3040] px-2 py-2 overflow-x-auto gap-2 min-h-[70px]">
-                {selectedPairs.map((pair) => {
-                  const isActive = pair.id === activePairId;
-                  const priceChange = pair.currentPrice - pair.previousPrice;
-
-                  return (
-                    <div
-                      key={pair.id}
-                      className={`relative flex items-center gap-2 px-2 py-2 rounded-sm cursor-pointer transition-all ${isActive
-                        ? 'bg-[#1a1f2e] border border-none'
-                        : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
-                        }`}
+              <div className=" flex items-center bg-[#0f1114] border-b border-[#2a3040] px-2 py-1 overflow-x-auto gap-2 min-h-[50px]">
+            {selectedPairs.map((pair) => {
+              const isActive = pair.id === activePairId;
+              const isPinned = pinnedPairIds.includes(pair.id);
+              const priceChange = pair.currentPrice - pair.previousPrice;
+              
+              return (
+                <div
+                  key={pair.id}
+                  className={`absolute flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer transition-all shrink-0 ${
+                    isActive 
+                      ? 'bg-[#1a1f2e] border border-primary' 
+                      : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
+                  }`}
+                >
+                  {/* Close button */}
+                  {selectedPairIds.length > 1 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removePairFromTabs(pair.id);
+                      }}
+                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-black flex items-center justify-center text-white hover:bg-destructive transition-colors z-10"
                     >
-                      <button
-                        onClick={() => setActivePairId(pair.id)}
-                        className="flex items-center gap-2"
-                      >
-                        <span className="text-lg">{pair.flag}</span>
-                        <div>
-                          <div className="text-[10px] font-bold text-white">{pair.name}</div>
-                          <div className={`text-[10px] font-bold ${priceChange >= 0 ? 'text-orange-400' : 'text-destructive'}`}>
-                            {pair.performance}%
-                          </div>
-                        </div>
-                      </button>
-                      <div className='flex flex-col'>
-                        {selectedPairIds.length > 1 && (
-                          <button
-                            onClick={() => removePairFromTabs(pair.id)}
-                            className="ml-1 p-1 rounded-full bg-[#000000] hover:bg-destructive/20 text-white hover:text-destructive transition-colors absolute right-[-10px] top-[-10px]"
-                          >
-                            <X size={8} />
-                          </button>
-                        )}
-                        {selectedPins.length > 1 && (
-                          <button
-                            onClick={() => addPinsFromTabs(pair.id)}
-                            className="ml-2 p-1 rounded-full bg-[#ffffff] hover:bg-destructive/20 text-white hover:text-destructive transition-colors absolute right-[-10px] top-[-20px]"
-                          >
-                            <Pin size={18} className="text-blue-400" />
-                          </button>
-                        )}
+                      <X size={8} />
+                    </button>
+                  )}
+                  
+                  <button
+                    onClick={() => setActivePairId(pair.id)}
+                    className="flex items-center gap-2"
+                  >
+                    <span className="text-base">{pair.flag}</span>
+                    <div>
+                      <div className="text-[11px] font-bold text-white whitespace-nowrap">{pair.name}</div>
+                      <div className={`text-[10px] font-bold ${priceChange >= 0 ? 'text-success' : 'text-destructive'}`}>
+                        {pair.performance}%
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </button>
+                  
+                  {/* Dropdown arrow for pair selector */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowTabPairSelector(showTabPairSelector === pair.id ? null : pair.id);
+                    }}
+                    className="p-0.5 hover:bg-[#3a4050] rounded transition-colors"
+                  >
+                    <ChevronDown size={12} className="text-gray-400" />
+                  </button>
+                  
+                  {/* Pin button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      togglePinPair(pair.id);
+                    }}
+                    className={`p-0.5 rounded transition-colors ${isPinned ? 'text-primary' : 'text-gray-500 hover:text-gray-300'}`}
+                  >
+                    <Pin size={12} className={isPinned ? 'fill-primary' : ''} />
+                  </button>
+                  
+                  {/* Pair Selector Dropdown */}
+                  {showTabPairSelector === pair.id && (
+                    <div className="absolute top-full left-0 mt-1 z-50">
+                      <TradePairSelector 
+                        isOpen={true}
+                        onClose={() => setShowTabPairSelector(null)}
+                        pairs={pairs}
+                        selectedPairs={selectedPairIds}
+                        onSelectPair={handleSelectPair}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
               {/* CHART AREA */}
               <div className="flex-1 relative">
@@ -233,6 +303,8 @@ const TradingPage = () => {
                   pairName={activePair.name}
                   pairFlag={activePair.flag}
                   pairPercentage={activePair.performance}
+              trades={trades}
+              onSellTrade={handleSellTrade}
                 />
                 {/* CHART TOOLBAR */}
                 <ChartToolbar
@@ -254,6 +326,8 @@ const TradingPage = () => {
               balance={balance}
               isLiveAccount={false}
               onTradeZone={setTradeZone}
+              trades={trades}
+              onSellTrade={handleSellTrade}
             />
 
           </div>

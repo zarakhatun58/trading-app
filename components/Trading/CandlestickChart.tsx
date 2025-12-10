@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CandleData } from "../../types/trading";
+import { CandleData, Trade } from "../../types/trading";
 import { BarChart3, Bell, Info, Minus, Pen, Plus, X } from "lucide-react";
 import PairInfoModal from "./PairInfoModal";
-
 
 
 interface CandlestickChartProps {
@@ -19,7 +18,10 @@ interface CandlestickChartProps {
   pairName?: string;
   pairFlag?: string;
   pairPercentage?: number;
+  trades?: Trade[];
+  onSellTrade?: (tradeId: string) => void;
 }
+
 interface OHLCData {
   open: number;
   high: number;
@@ -34,7 +36,7 @@ interface Notification {
   timestamp: Date;
 }
 
-const CandlestickChart = ({ 
+ const CandlestickChart = ({ 
   data, 
   currentPrice,
   chartType,
@@ -45,7 +47,9 @@ const CandlestickChart = ({
   onOpenIndicators,
   pairName = 'CHF/JPY',
   pairFlag = '🇨🇭🇯🇵',
-  pairPercentage = 63
+  pairPercentage = 63,
+  trades = [],
+  onSellTrade
 }: CandlestickChartProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -55,12 +59,15 @@ const CandlestickChart = ({
   const [showCrosshair, setShowCrosshair] = useState(false);
   const [crosshairPrice, setCrosshairPrice] = useState(0);
   const [crosshairTime, setCrosshairTime] = useState('');
-  const [showNotificationBtn, setShowNotificationBtn] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [showPairInfo, setShowPairInfo] = useState(false);
+  const [hoveredNotificationId, setHoveredNotificationId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(100);
   const [timeframe, setTimeframe] = useState('1m');
-  const padding = { top: 40, right: 10, bottom: 40, left: 20 };
+  const [showPairInfo, setShowPairInfo] = useState(false);
+  const [hoveredTradeId, setHoveredTradeId] = useState<string | null>(null);
+
+  // Chart padding - keep crosshair within these bounds
+  const padding = { top: 40, right: 80, bottom: 40, left: 60 };
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -113,7 +120,6 @@ const CandlestickChart = ({
     const y = e.clientY - rect.top;
 
     const { width, height } = dimensions;
-    const padding = { top: 40, right: 80, bottom: 40, left: 60 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
@@ -148,18 +154,10 @@ const CandlestickChart = ({
     } else {
       setShowCrosshair(false);
     }
-
-    // Show notification button near price labels (right side)
-    if (x > width - 100) {
-      setShowNotificationBtn(true);
-    } else {
-      setShowNotificationBtn(false);
-    }
   };
 
   const handleMouseLeave = () => {
     setShowCrosshair(false);
-    setShowNotificationBtn(false);
   };
 
   const addNotification = () => {
@@ -176,7 +174,17 @@ const CandlestickChart = ({
   };
 
   const handleZoom = (delta: number) => {
-    setZoom(prev => Math.max(20, Math.min(200, prev + delta)));
+    setZoom(prev => {
+      const newZoom = Math.max(20, Math.min(200, prev + delta));
+      return newZoom;
+    });
+  };
+
+  // Calculate visible candles based on zoom
+  const getVisibleCandles = () => {
+    const baseCount = 30;
+    const visibleCount = Math.round(baseCount * (100 / zoom));
+    return Math.max(10, Math.min(data.length, visibleCount));
   };
 
   useEffect(() => {
@@ -187,7 +195,6 @@ const CandlestickChart = ({
     if (!ctx) return;
 
     const { width, height } = dimensions;
-    const padding = { top: 40, right: 80, bottom: 40, left: 60 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
@@ -195,8 +202,10 @@ const CandlestickChart = ({
     ctx.fillStyle = 'hsl(222, 47%, 11%)';
     ctx.fillRect(0, 0, width, height);
 
-    // Use Heiken Ashi data if selected
-    const chartData = chartType === 'heiken' ? calculateHeikenAshi(data) : data;
+    // Use Heiken Ashi data if selected, and apply zoom
+    const fullChartData = chartType === 'heiken' ? calculateHeikenAshi(data) : data;
+    const visibleCount = getVisibleCandles();
+    const chartData = fullChartData.slice(-visibleCount);
 
     // Calculate price range
     const prices = chartData.flatMap(d => [d.high, d.low]);
@@ -256,7 +265,6 @@ const CandlestickChart = ({
 
     // Draw chart based on type
     if (chartType === 'area') {
-      // Area Chart
       ctx.beginPath();
       ctx.moveTo(indexToX(0), priceToY(chartData[0].close));
       
@@ -264,12 +272,10 @@ const CandlestickChart = ({
         ctx.lineTo(indexToX(i), priceToY(chartData[i].close));
       }
       
-      // Line
       ctx.strokeStyle = 'hsl(142, 71%, 45%)';
       ctx.lineWidth = 2;
       ctx.stroke();
       
-      // Fill area
       ctx.lineTo(indexToX(chartData.length - 1), height - padding.bottom);
       ctx.lineTo(indexToX(0), height - padding.bottom);
       ctx.closePath();
@@ -281,7 +287,6 @@ const CandlestickChart = ({
       ctx.fill();
       
     } else if (chartType === 'bars') {
-      // Bar Chart (OHLC)
       const barWidth = Math.max(2, (chartWidth / chartData.length) * 0.5);
       
       chartData.forEach((candle, index) => {
@@ -292,19 +297,16 @@ const CandlestickChart = ({
         ctx.strokeStyle = color;
         ctx.lineWidth = 1;
         
-        // Vertical line (high to low)
         ctx.beginPath();
         ctx.moveTo(x, priceToY(candle.high));
         ctx.lineTo(x, priceToY(candle.low));
         ctx.stroke();
         
-        // Open tick (left)
         ctx.beginPath();
         ctx.moveTo(x - barWidth, priceToY(candle.open));
         ctx.lineTo(x, priceToY(candle.open));
         ctx.stroke();
         
-        // Close tick (right)
         ctx.beginPath();
         ctx.moveTo(x, priceToY(candle.close));
         ctx.lineTo(x + barWidth, priceToY(candle.close));
@@ -312,14 +314,12 @@ const CandlestickChart = ({
       });
       
     } else {
-      // Candles or Heiken Ashi (same rendering, different data)
       const candleWidth = Math.max(4, (chartWidth / chartData.length) * 0.7);
 
       chartData.forEach((candle, index) => {
         const x = indexToX(index);
         const isGreen = candle.close >= candle.open;
         
-        // Wick
         ctx.strokeStyle = isGreen ? 'hsl(142, 71%, 45%)' : 'hsl(0, 84%, 60%)';
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -327,7 +327,6 @@ const CandlestickChart = ({
         ctx.lineTo(x, priceToY(candle.low));
         ctx.stroke();
 
-        // Body
         ctx.fillStyle = isGreen ? 'hsl(142, 71%, 45%)' : 'hsl(0, 84%, 60%)';
         const bodyTop = priceToY(Math.max(candle.open, candle.close));
         const bodyBottom = priceToY(Math.min(candle.open, candle.close));
@@ -341,14 +340,12 @@ const CandlestickChart = ({
     if (tradeZone) {
       const currentY = priceToY(currentPrice);
       if (tradeZone === 'up') {
-        // Green zone above the current price line
         const gradient = ctx.createLinearGradient(0, padding.top, 0, currentY);
         gradient.addColorStop(0, 'hsla(142, 71%, 45%, 0.3)');
         gradient.addColorStop(1, 'hsla(142, 71%, 45%, 0.05)');
         ctx.fillStyle = gradient;
         ctx.fillRect(padding.left, padding.top, chartWidth, currentY - padding.top);
       } else if (tradeZone === 'down') {
-        // Red zone below the current price line
         const gradient = ctx.createLinearGradient(0, currentY, 0, height - padding.bottom);
         gradient.addColorStop(0, 'hsla(0, 84%, 60%, 0.05)');
         gradient.addColorStop(1, 'hsla(0, 84%, 60%, 0.3)');
@@ -409,50 +406,89 @@ const CandlestickChart = ({
       ctx.fillText('End of trade', endX, padding.top - 10);
     }
 
-  }, [data, dimensions, currentPrice, chartType, tradeStartTime, tradeEndTime, tradeZone, zoom]);
+    // Draw notification lines on chart
+    ctx.setLineDash([4, 4]);
+    notifications.forEach(notification => {
+      const notificationY = priceToY(notification.price);
+      if (notificationY >= padding.top && notificationY <= height - padding.bottom) {
+        ctx.strokeStyle = 'hsl(45, 100%, 50%)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, notificationY);
+        ctx.lineTo(width - padding.right, notificationY);
+        ctx.stroke();
+      }
+    });
 
-// Calculate crosshair boundaries within chart area only
+  }, [data, dimensions, currentPrice, chartType, tradeStartTime, tradeEndTime, tradeZone, zoom, notifications]);
+
+  // Calculate crosshair boundaries within chart area only
   const crosshairTop = padding.top;
   const crosshairBottom = dimensions.height - padding.bottom;
   const crosshairLeft = padding.left;
   const crosshairRight = dimensions.width - padding.right;
- // Clamp crosshair position strictly within chart bounds
+
+  // Clamp crosshair position strictly within chart bounds
   const clampedX = Math.max(crosshairLeft, Math.min(crosshairRight, hoverPosition.x));
-  const clampedY = Math.max(crosshairTop, Math.min(crosshairBottom, hoverPosition.y))
+  const clampedY = Math.max(crosshairTop, Math.min(crosshairBottom, hoverPosition.y));
+
+  // Check if hovering near a notification
+  const isNearNotification = notifications.some(n => {
+    const chartData = chartType === 'heiken' ? calculateHeikenAshi(data) : data;
+    const prices = chartData.flatMap(d => [d.high, d.low]);
+    const minPrice = Math.min(...prices) - 0.0002;
+    const maxPrice = Math.max(...prices) + 0.0002;
+    const priceRange = maxPrice - minPrice;
+    const chartHeight = dimensions.height - padding.top - padding.bottom;
+    const notificationY = padding.top + chartHeight - ((n.price - minPrice) / priceRange) * chartHeight;
+    return Math.abs(clampedY - notificationY) < 15;
+  });
+
+  const nearestNotification = notifications.find(n => {
+    const chartData = chartType === 'heiken' ? calculateHeikenAshi(data) : data;
+    const prices = chartData.flatMap(d => [d.high, d.low]);
+    const minPrice = Math.min(...prices) - 0.0002;
+    const maxPrice = Math.max(...prices) + 0.0002;
+    const priceRange = maxPrice - minPrice;
+    const chartHeight = dimensions.height - padding.top - padding.bottom;
+    const notificationY = padding.top + chartHeight - ((n.price - minPrice) / priceRange) * chartHeight;
+    return Math.abs(clampedY - notificationY) < 15;
+  });
 
   return (
-    <div ref={containerRef} className="relative flex-1 h-full min-h-[400px] overflow-hidden">
+    <div ref={containerRef} className="relative flex-1 h-full min-h-[300px] md:min-h-[400px] overflow-hidden">
       <canvas
         ref={canvasRef}
         width={dimensions.width}
         height={dimensions.height}
-        className="w-full h-full"
+        className="w-full h-full cursor-crosshair"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       />
-       {showCrosshair && (
+
+      {/* Crosshair Lines - Strictly contained within chart area */}
+      {showCrosshair && (
         <>
           {/* Vertical line */}
           <div 
-            // className="absolute top-10 pointer-events-none"
-             className="absolute pointer-events-none"
+            className="absolute pointer-events-none"
             style={{ 
-            left: clampedX,
+              left: clampedX,
               top: crosshairTop,
               height: crosshairBottom - crosshairTop,
               width: '1px',
-              background: 'rgba(255, 255, 255, 0.5)'
+              background: 'rgba(255, 255, 255, 0.7)'
             }}
           />
-          {/* Horizontal line */}
+          {/* Horizontal line - stops at chart right edge */}
           <div 
             className="absolute pointer-events-none"
             style={{ 
-               top: clampedY,
+              top: clampedY,
               left: crosshairLeft,
               width: crosshairRight - crosshairLeft,
               height: '1px',
-              background: 'rgba(255, 255, 255, 0.5)'
+              background: 'rgba(255, 255, 255, 0.7)'
             }}
           />
           {/* Time label at bottom */}
@@ -465,62 +501,55 @@ const CandlestickChart = ({
           >
             {crosshairTime}
           </div>
-          {/* Price label with notification icon */}
+          {/* Price label with notification icon - positioned at right edge of chart area */}
           <div 
-           className="absolute flex items-center gap-1 pointer-events-auto"
+            className="absolute flex items-center gap-1 pointer-events-auto"
             style={{ 
-            left: crosshairRight - 90,
+              left: crosshairRight - 90,
               top: Math.max(crosshairTop, Math.min(crosshairBottom - 20, clampedY - 10)),
             }}
           >
-            <button 
-              onClick={addNotification}
-              className="p-1 bg-[#2a3040] rounded hover:bg-[#3a4050] transition-colors"
-            >
-              <Bell size={12} className="text-gray-300" />
-            </button>
+            {isNearNotification && nearestNotification ? (
+              <button 
+                onClick={() => removeNotification(nearestNotification.id)}
+                className="p-1 bg-destructive rounded hover:bg-destructive/80 transition-colors"
+              >
+                <X size={12} className="text-white" />
+              </button>
+            ) : (
+              <button 
+                onClick={addNotification}
+                className="p-1 bg-[#2a3040] rounded hover:bg-[#3a4050] transition-colors"
+              >
+                <Bell size={12} className="text-gray-300" />
+              </button>
+            )}
             <span className="bg-[#2a3040] text-white text-xs px-2 py-1 rounded">
               {crosshairPrice.toFixed(5)}
             </span>
           </div>
         </>
       )}
-      {/* <div className="absolute left-4 bottom-16 flex flex-col gap-2">
-        <button 
-          onClick={onOpenDrawing}
-          className="w-9 h-9 bg-[#2a3040] hover:bg-[#3a4050] rounded-lg flex items-center justify-center transition-colors"
-        >
-          <Pen size={16} className="text-gray-300" />
-        </button>
-        <button className="w-9 h-9 bg-[#2a3040] hover:bg-[#3a4050] rounded-lg flex items-center justify-center transition-colors">
-          <span className="text-xs font-mono text-gray-300">{timeframe}</span>
-        </button>
-        <button className="w-9 h-9 bg-[#2a3040] hover:bg-[#3a4050] rounded-lg flex items-center justify-center transition-colors">
-          <svg viewBox="0 0 24 24" className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 3v18h18" />
-            <path d="M7 12l4-4 4 4 6-6" />
-          </svg>
-        </button>
-        <button 
-          onClick={onOpenIndicators}
-          className="w-9 h-9 bg-[#2a3040] hover:bg-[#3a4050] rounded-lg flex items-center justify-center transition-colors"
-        >
-          <BarChart3 size={16} className="text-gray-300" />
-        </button>
-      </div> */}
-      <button onClick={() => setShowPairInfo(true)} className="absolute left-4 top-12 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 text-primary text-sm hover:bg-primary/30 transition-colors">
-        <Info size={14} />
-        <span className="font-bold text-[10px]">PAIR INFORMATION</span>
+
+      {/* Pair Info Button */}
+      <button 
+        onClick={() => setShowPairInfo(true)}
+        className="absolute left-10 md:left-4 top-12 md:top-12 flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-primary/20 text-primary text-xs md:text-sm hover:bg-primary/30 transition-colors"
+      >
+        <Info size={12} className="md:w-[14px] md:h-[14px]" />
+        <span className="font-medium hidden sm:inline text-[10px]">PAIR INFORMATION</span>
       </button>
-      <div className="absolute left-[20px] top-4 flex items-center gap-2  text-sm">
+
+      {/* Time Display */}
+      <div className="absolute left-10 md:left-4 top-2 md:top-4 flex items-center gap-2 text-success text-xs md:text-sm">
         <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-        <span className="text-[10px] text-[#ffffff]">{new Date().toLocaleTimeString()} <span className="text-[#595b65]">UTC</span></span>
+        <span className="font-mono text-[#ffffff] text-[10px]">{new Date().toLocaleTimeString()} <span className="text-gray-500">UTC</span></span>
       </div>
 
-{/* OHLC Display - Bottom Left (always visible when hovering chart) */}
+      {/* OHLC Display - Bottom Left */}
       {showCrosshair && hoveredCandle && (
-        <div className="absolute left-16 bottom-4 bg-[#1a1f2e]/95 border border-[#2a3040] rounded-lg p-2 z-20 ">
-          <div className="flex flex-col items-center gap-4 text-xs font-mono">
+        <div className="absolute left-14 md:left-16 bottom-2 md:bottom-4 bg-[#1a1f2e]/95 border border-[#2a3040] rounded-lg p-2 z-20">
+          <div className="flex flex-col gap-1 text-[10px] md:text-xs font-mono">
             <div className="flex items-center gap-1">
               <span className="text-gray-400">Open:</span>
               <span className="text-white">{hoveredCandle.open.toFixed(5)}</span>
@@ -541,45 +570,101 @@ const CandlestickChart = ({
         </div>
       )}
 
-     {/* Notifications Stack - Bottom Left */}
-      <div className="absolute left-4 bottom-4 flex flex-col gap-2 z-30 max-w-xs w-[100px]">
+      {/* Active Trade Lines on Chart */}
+      {trades.filter(t => t.status === 'pending').map((trade) => {
+        const chartData = chartType === 'heiken' ? calculateHeikenAshi(data) : data;
+        if (chartData.length === 0) return null;
+        const prices = chartData.flatMap(d => [d.high, d.low]);
+        const minPrice = Math.min(...prices) - 0.0002;
+        const maxPrice = Math.max(...prices) + 0.0002;
+        const priceRange = maxPrice - minPrice;
+        const chartHeight = dimensions.height - padding.top - padding.bottom;
+        const tradeY = padding.top + chartHeight - ((trade.entryPrice - minPrice) / priceRange) * chartHeight;
+        
+        if (tradeY < padding.top || tradeY > dimensions.height - padding.bottom) return null;
+        
+        return (
+          <div
+            key={trade.id}
+            className="absolute left-0 right-0 pointer-events-auto"
+            style={{ top: tradeY }}
+            onMouseEnter={() => setHoveredTradeId(trade.id)}
+            onMouseLeave={() => setHoveredTradeId(null)}
+          >
+            {/* Trade line */}
+            <div 
+              className={`absolute left-[60px] right-[80px] h-[2px] ${trade.direction === 'up' ? 'bg-success' : 'bg-destructive'}`}
+              style={{ boxShadow: '0 0 4px rgba(0,0,0,0.5)' }}
+            />
+            
+            {/* Trade info box */}
+            <div 
+              className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-1.5 rounded ${trade.direction === 'up' ? 'bg-success' : 'bg-destructive'} text-white text-xs shadow-lg`}
+            >
+              <span className="font-mono">{trade.amount} ₹</span>
+              {hoveredTradeId === trade.id && (
+                <button 
+                  onClick={() => onSellTrade?.(trade.id)}
+                  className="px-2 py-0.5 bg-black/30 rounded text-[10px] hover:bg-black/50 transition-colors"
+                >
+                  Sell the trade
+                </button>
+              )}
+            </div>
+            
+            {/* Entry price label */}
+            <div 
+              className={`absolute right-[10px] -translate-y-1/2 px-2 py-1 rounded text-xs font-mono text-white ${trade.direction === 'up' ? 'bg-success' : 'bg-destructive'}`}
+            >
+              {trade.entryPrice.toFixed(3)}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Notifications Stack - Bottom Left */}
+      <div className="absolute left-2 md:left-4 bottom-2 md:bottom-4 flex flex-col gap-2 z-30 max-w-[120px] md:max-w-xs">
         {notifications.map((notification) => (
           <div 
             key={notification.id}
-            className="bg-[#1a1f2e] border border-[#2a3040] rounded-lg p-3 flex items-center gap-3 animate-slide-in shadow-xl"
+            className="bg-[#1a1f2e] border border-[#2a3040] rounded-lg p-2 md:p-3 flex items-center gap-2 md:gap-3 animate-slide-in shadow-xl"
+            onMouseEnter={() => setHoveredNotificationId(notification.id)}
+            onMouseLeave={() => setHoveredNotificationId(null)}
           >
-            <Bell size={16} className="text-primary" />
-            <div className="flex-1">
-              <div className="text-xs text-gray-400">Price Alert</div>
-              <div className="text-sm font-mono text-white">{notification.price.toFixed(5)}</div>
+            {hoveredNotificationId === notification.id ? (
+              <button 
+                onClick={() => removeNotification(notification.id)}
+                className="p-1 bg-destructive rounded hover:bg-destructive/80 transition-colors"
+              >
+                <X size={12} className="text-white" />
+              </button>
+            ) : (
+              <Bell size={14} className="text-primary shrink-0" />
+            )}
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] text-gray-400">Price Alert</div>
+              <div className="text-xs md:text-sm font-mono text-white truncate">{notification.price.toFixed(5)}</div>
             </div>
-            <button 
-              onClick={() => removeNotification(notification.id)}
-              className="p-1 hover:bg-[#2a3040] rounded transition-colors"
-            >
-              <X size={14} className="text-gray-400" />
-            </button>
           </div>
         ))}
       </div>
 
-      
-       {/* Zoom Controls - Bottom Center */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-4 flex items-center gap-3 bg-[#1a1f2e]/80 rounded-lg px-3 py-1.5">
+      {/* Zoom Controls - Bottom Center */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-2 md:bottom-4 flex items-center gap-2 md:gap-3 bg-[#1a1f2e]/80 rounded-lg px-2 md:px-3 py-1 md:py-1.5">
         <button 
           onClick={() => handleZoom(-10)}
-          className="text-gray-400 hover:text-white transition-colors"
+          className="text-gray-400 hover:text-white transition-colors p-1"
         >
-          <Minus size={14} />
+          <Minus size={12} className="md:w-[14px] md:h-[14px]" />
         </button>
-        <span className="text-xs text-gray-400 font-mono min-w-[40px] text-center">{zoom}%</span>
         <button 
           onClick={() => handleZoom(10)}
-          className="text-gray-400 hover:text-white transition-colors"
+          className="text-gray-400 hover:text-white transition-colors p-1"
         >
-          <Plus size={14} />
+          <Plus size={12} className="md:w-[14px] md:h-[14px]" />
         </button>
       </div>
+
       {/* Pair Info Modal */}
       <PairInfoModal
         isOpen={showPairInfo}
@@ -592,6 +677,7 @@ const CandlestickChart = ({
     </div>
   );
 };
+
 
 
 export default CandlestickChart;

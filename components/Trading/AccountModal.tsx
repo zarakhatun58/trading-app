@@ -57,7 +57,7 @@ const AccountModal = ({
           {/* Left Content */}
           <div className="w-full md:w-[250px] p-3 bg-[#1c1f2d] rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-3 bg-[#282a38] p-2 rounded-sm w-[155px]">
+              <div className="flex items-center gap-3 bg-[#282a38] p-2 rounded-sm w-[170px]">
                 <div className="w-8 h-8 flex items-center justify-center text-white font-bold">
                   <Menu />
                 </div>
