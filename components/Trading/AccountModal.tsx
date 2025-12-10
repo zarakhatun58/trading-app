@@ -55,9 +55,9 @@ const AccountModal = ({
 
         <div className="bg-[#000000] rounded-lg shadow-xl overflow-hidden flex flex-col md:flex-row p-2">
           {/* Left Content */}
-          <div className="w-full md:w-[250px] p-5 bg-[#1c1f2d] rounded-lg">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3 bg-[#282a38] p-2 rounded-sm w-[150px]">
+          <div className="w-full md:w-[250px] p-3 bg-[#1c1f2d] rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3 bg-[#282a38] p-2 rounded-sm w-[155px]">
                 <div className="w-8 h-8 flex items-center justify-center text-white font-bold">
                   <Menu />
                 </div>
@@ -81,20 +81,20 @@ const AccountModal = ({
               </button>
             </div>
 
-            <div className="mb-3">
+            <div className="mb-2">
               <div className="text-sm font-semibold text-white">{maskValue(email)}</div>
               <div className="text-xs text-slate-500">ID: {maskValue(String(id))}</div>
             </div>
 
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-2">
               <div className="text-xs text-slate-400">Currency:</div>
               <div className="text-xs font-semibold bg-slate-700 px-2 py-1 rounded">{currency}</div>
               <button className="text-xs text-sky-400 px-2 py-1 rounded hover:bg-slate-800"
                 onClick={() => setShowExchangeModal(true)}>CHANGE</button>
             </div>
 
-            <div className="space-y-4">
-              <label className="flex items-start gap-3 bg-[#0b0d10] p-3 rounded border border-transparent hover:border-slate-700 cursor-pointer">
+            <div className="space-y-2">
+              <label className="flex items-start gap-3 bg-[#0b0d10] p-2 rounded border border-transparent hover:border-slate-700 cursor-pointer">
                 <input
                   type="radio"
                   name="acct"
@@ -110,7 +110,7 @@ const AccountModal = ({
                 </div>
               </label>
 
-              <label className={`flex items-start gap-3 bg-[#0b0d10] p-3 rounded border-2 ${!isLive ? 'border-indigo-800' : 'border-transparent'} cursor-pointer`}>
+              <label className={`flex items-start gap-3 bg-[#0b0d10] p-2 rounded border-2 ${!isLive ? 'border-indigo-800' : 'border-transparent'} cursor-pointer`}>
                 <input
                   type="radio"
                   name="acct"

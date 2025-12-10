@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling } from 'lucide-react';
+import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling, DollarSignIcon } from 'lucide-react';
 import { CurrencyPair } from '../../types/trading';
 import { cn } from '../../libs/utils';
 import { Switch } from '../ReusableUI/switch';
@@ -114,7 +114,7 @@ export default function TradingPanel({
 
   return (
     <aside className="w-[150px] md:w-[220px]  rounded-lg flex flex-col h-full mr-2">
-      <div className='rounded-lg border border-[#2a3040] bg-[#2b3040] px-4 py-2 mb-2'>
+      <div className='rounded-lg bg-[#2b3040] px-4 py-2 mb-2'>
         <div className="">
           <div className="relative">
 
@@ -146,7 +146,7 @@ export default function TradingPanel({
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               {/* <span className="text-2xl">{activePair.flag}</span> */}
-              <span className="text-green-500 rounded-full bg-[#ffffff] p-1"><PoundSterling size={12}/></span>
+              <span className='relative flex flex-row'><PoundSterling size={14} className="text-green-500 font-bold rounded-full bg-[#ffffff] p-2" /> <DollarSignIcon size={12} className="text-green-500 rounded-full bg-[#ffffff] p-2 ml-[-4px]" /></span>
               <span className="font-bold text-white text-[14px]">{activePair.name}</span>
             </div>
             <span className={cn(
@@ -283,8 +283,40 @@ export default function TradingPanel({
             />
           </div>
         </div>
-        <div className="space-y-4">
-          <div className='flex flex-row justify-between'>
+        <div className="space-y-2 mb-2">
+          <button
+            onClick={handleUpClick}
+            className=" w-full py-2 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+          >
+            <span>Up</span>
+            <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
+             <TrendingUp size={16} className="text-white" />
+            </div>
+          </button>
+
+          <div>
+            <div className="text-left text-[12px] text-[#ffffff] w-full">
+              Your payout: <span className="text-white font-bold float-right">{calculatedPayout} $</span>
+            </div>
+            {isPercentMode && (
+              <div className="text-left text-[12px] text-[#989c99] ">
+                Investment :
+                <span className="text-[#989c99] font-bold float-right">{investment}</span>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={handleDownClick}
+            className="w-full py-2 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+          >
+            <span>Down</span>
+            <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
+               <TrendingDown size={16} className="text-white" />
+            </div>
+          </button>
+
+
+          {/* <div className='flex flex-row justify-between'>
             <button
               onClick={handleUpClick}
               className="w-[90px] py-2 px-2 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
@@ -303,28 +335,16 @@ export default function TradingPanel({
                 <TrendingDown size={16} className="text-white" />
               </div>
             </button>
-          </div>
-          <div>
-            <div className="text-left text-[14px] text-[#ffffff] font-bold">
-              Your payout: <span className="text-white font-mono">{calculatedPayout} $</span>
-            </div>
-            {isPercentMode && (
-              <div className="text-left text-[12px] text-[#989c99] font-bold">
-                Investment :
-                <span className="text-[#989c99] ">{investment}</span>
-              </div>
-            )}
-          </div>
-
+          </div> */}
         </div>
       </div>
 
 
       {/* Trades Section */}
       <div className='bg-[#2b3040] rounded-lg'>
-        <div className={`flex-1  border border-[#2a3040] bg-[#2b3040]
+        <div className={`flex-1  border border-[#2a3040] bg-[#2b3040] rounded-lg
     overflow-hidden transition-all duration-500
-    ${isCollapsed ? "max-h-[80px]" : "max-h-[120px]"}
+    ${isCollapsed ? "max-h-[80px]" : "max-h-[125px]"}
   `}>
           <div className="flex items-center justify-between border-b border-[#2a3040]">
             <button

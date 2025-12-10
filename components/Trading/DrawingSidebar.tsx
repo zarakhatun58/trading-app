@@ -53,7 +53,7 @@ const DrawingSidebar = ({ isOpen, onClose }: DrawingSidebarProps) => {
         <div className="px-4 py-2">
           <span className="text-[10px] font-semibold text-muted-foreground tracking-wider">DRAWINGS</span>
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <div data-scroll className="flex-1 overflow-y-auto">
           {drawingTools.map((tool) => (
             <button
               key={tool.id}

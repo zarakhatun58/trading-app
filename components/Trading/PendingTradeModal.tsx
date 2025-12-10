@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Plus, Minus, ArrowUp, ArrowDown, Clock } from 'lucide-react';
+import HowDoesModal from './HowDoesModal';
 
 interface PendingTradeModalProps {
   isOpen: boolean;
@@ -21,16 +22,16 @@ const durationTimeOptions = [
   { label: '10:00', value: '10:00' },
   { label: '15:00', value: '15:00' },
   { label: '30:00', value: '30:00' },
-  { label: '01:00:00', value: '01:00:00' },
-  { label: '02:00:00', value: '02:00:00' },
-  { label: '04:00:00', value: '04:00:00' },
+  { label: '01:00', value: '01:00' },
+  { label: '02:00', value: '02:00' },
+  { label: '04:00', value: '04:00' },
 ];
 
 // Generate absolute time options
 const generateAbsoluteTimeOptions = () => {
   const now = new Date();
   const options = [];
-  
+
   for (let i = 0; i < 12; i++) {
     const time = new Date(now.getTime() + (i + 1) * 60000 * 5);
     const hours = time.getHours().toString().padStart(2, '0');
@@ -40,32 +41,54 @@ const generateAbsoluteTimeOptions = () => {
       value: `${hours}:${minutes}`
     });
   }
-  
+
   return options;
 };
+function getCurrentDateTime() {
+  const now = new Date();
 
- const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTradeModalProps) => {
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  return `${day}/${month} ${hours}:${minutes}:${seconds}`;
+}
+const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTradeModalProps) => {
   const [activeTab, setActiveTab] = useState<'quote' | 'time'>('quote');
   const [quoteValue, setQuoteValue] = useState(currentQuote.toFixed(3));
-   const [timeValue, setTimeValue] = useState('01:00');
+  const [timeValue, setTimeValue] = useState(getCurrentDateTime());
   const [period, setPeriod] = useState('M1');
   const [showPeriodMenu, setShowPeriodMenu] = useState(false);
   const [investment, setInvestment] = useState(100);
- const [isAbsoluteTimeMode, setIsAbsoluteTimeMode] = useState(false);
+  const [isAbsoluteTimeMode, setIsAbsoluteTimeMode] = useState(false);
+  const [currentTime, setCurrentTime] = useState(getCurrentDateTime());
   const [showTimeMenu, setShowTimeMenu] = useState(false);
-  if (!isOpen) return null;
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+
 
   const adjustInvestment = (delta: number) => {
     setInvestment(prev => Math.max(1, prev + delta));
   };
 
-  const currentTime = new Date().toLocaleTimeString('en-US', { 
-    hour12: false, 
-    hour: '2-digit', 
-    minute: '2-digit', 
-    second: '2-digit' 
-  });
- const absoluteTimeOptions = generateAbsoluteTimeOptions();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = getCurrentDateTime();
+      setCurrentTime(now);
+
+      if (!isAbsoluteTimeMode) {
+        setTimeValue(now);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!isOpen) return null;
+  const absoluteTimeOptions = generateAbsoluteTimeOptions();
   const timeOptions = isAbsoluteTimeMode ? absoluteTimeOptions : durationTimeOptions
   return (
     <div className="fixed right-[230px] top-[100px] z-50">
@@ -74,21 +97,19 @@ const generateAbsoluteTimeOptions = () => {
         <div className="flex mb-4">
           <button
             onClick={() => setActiveTab('quote')}
-            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${
-              activeTab === 'quote'
-                ? 'bg-[#2a3040] text-white'
-                : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-300'
-            }`}
+            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${activeTab === 'quote'
+              ? 'bg-[#2a3040] text-white'
+              : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-300'
+              }`}
           >
             QUOTE
           </button>
           <button
             onClick={() => setActiveTab('time')}
-            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${
-              activeTab === 'time'
-                ? 'bg-primary text-white'
-                : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-300'
-            }`}
+            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${activeTab === 'time'
+              ? 'bg-primary text-white'
+              : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-300'
+              }`}
           >
             TIME
           </button>
@@ -137,7 +158,7 @@ const generateAbsoluteTimeOptions = () => {
             >
               {period}
             </button>
-            
+
             {showPeriodMenu && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-[#191919] border border-[#2a3040] rounded-sm overflow-hidden z-50 shadow-xl">
                 <div className="grid grid-cols-3 gap-1 p-2">
@@ -148,11 +169,10 @@ const generateAbsoluteTimeOptions = () => {
                         setPeriod(p);
                         setShowPeriodMenu(false);
                       }}
-                      className={`py-2 px-3 rounded text-[10px] transition-colors ${
-                        period === p
-                          ? 'bg-primary text-white'
-                          : 'bg-[#2a3040] text-gray-300 hover:bg-[#3a4050]'
-                      }`}
+                      className={`py-2 px-3 rounded text-[10px] transition-colors ${period === p
+                        ? 'bg-primary text-white'
+                        : 'bg-[#2a3040] text-gray-300 hover:bg-[#3a4050]'
+                        }`}
                     >
                       {p}
                     </button>
@@ -209,11 +229,18 @@ const generateAbsoluteTimeOptions = () => {
               <ArrowDown size={18} />
             </button>
           </div>
-          <button className="w-full text-primary text-[10px] font-semibold hover:underline">
+          <button
+            onClick={() => setShowHowItWorks(true)}
+            className="w-full text-primary text-[10px] font-semibold hover:underline"
+          >
             HOW IT WORKS?
           </button>
         </div>
       </div>
+      <HowDoesModal
+        isOpen={showHowItWorks}
+        onClose={() => setShowHowItWorks(false)}
+      />
     </div>
   );
 };

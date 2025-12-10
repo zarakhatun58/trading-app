@@ -67,7 +67,8 @@ const TopBar = ({
       maximumFractionDigits: 2,
     });
   };
- const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : balance)}`;
+const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : balance)}`;
+//  const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? 10000000 : 10000000)}`;
   return (
     <header className="h-14 bg-[#101729] flex items-center justify-between pl-4 pr-2 pb-2 pt-4 mb-2">
 
@@ -83,7 +84,7 @@ const TopBar = ({
         </span>
       </div>
 
-     <div  className={`xl2:hidden
+     {/* <div  className={`xl2:hidden
               bg-[#27a663] rounded-full py-2 px-2 text-[12px] 
              flex items-center gap-2 h-[40px]`}>
 
@@ -92,7 +93,7 @@ const TopBar = ({
           Get a <strong className="text-[14px]">70% bonus</strong> on first deposit
         </span>
         <span className="bg-[#4c5470] text-white px-2 py-1 rounded-full text-[14px] font-bold">70%</span>
-      </div>
+      </div> */}
 
       <div className="flex items-center gap-2">
         <div ref={notificationRef} className="relative">

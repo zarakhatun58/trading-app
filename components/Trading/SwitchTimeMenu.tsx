@@ -19,9 +19,9 @@ const durationOptions = [
   { label: '10:00', value: 600 },
   { label: '15:00', value: 900 },
   { label: '30:00', value: 1800 },
-  { label: '01:00:00', value: 3600 },
-  { label: '02:00:00', value: 7200 },
-  { label: '04:00:00', value: 14400 },
+  { label: '01:00', value: 3600 },
+  { label: '02:00', value: 7200 },
+  { label: '04:00', value: 14400 },
 ];
 const generateAbsoluteTimeOptions = () => {
   const now = new Date();

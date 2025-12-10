@@ -48,7 +48,7 @@ const TradePairSelector = ({
   };
 
   return (
-    <div className="bg-[#0f1114] border border-[#2a3040] rounded-lg w-[500px] shadow-2xl max-h-[600px] overflow-hidden">
+    <div className="bg-[#0f1114] border border-[#2a3040] rounded-lg w-[600px] shadow-2xl max-h-[400px] overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between p-4 ">
         <h2 className="text-base font-semibold text-white">Select trade pair</h2>
@@ -61,12 +61,13 @@ const TradePairSelector = ({
       </div>
 
       {/* Category Tabs */}
-      <div className="flex">
+      <div className="">
+        <div className='flex flex-row bg-[#2b3040] w-[400px] ml-3 rounded-sm'>
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setCategory(cat)}
-            className={`px-4 py-2.5 text-xs font-medium transition-colors ${
+            className={`px-4 py-2.5 text-xs font-medium rounded-sm transition-colors ${
               category === cat 
                 ? 'bg-[#2a3040] text-white' 
                 : 'text-gray-500 hover:text-white hover:bg-[#1a1f2e]'
@@ -75,13 +76,14 @@ const TradePairSelector = ({
             {cat}
           </button>
         ))}
+        </div>
       </div>
 
       {/* Search and Filters */}
       <div className="p-3 flex items-center gap-3 ">
         <button 
           onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-colors ${
+          className={`flex items-center gap-1.5 px-3 py-2.5 rounded text-xs transition-colors ${
             showFavoritesOnly ? 'bg-amber-500/20 text-amber-400' : 'bg-[#2a3040] text-gray-400'
           }`}
         >
@@ -100,19 +102,20 @@ const TradePairSelector = ({
           />
         </div>
       </div>
-
+<div className='relative'>
+  <div  className=''>
       {/* Table Header */}
-      <div className="grid grid-cols-[32px_1fr_100px_80px_80px] gap-2 px-4 py-2 text-xs text-gray-500 border-b border-[#2a3040]">
-        <div></div>
-        <div className=" pb-1">Name</div>
-        <div className="text-center pb-1">24h changing</div>
-        <div className="text-center  pb-1">Profit 1+ min ▼</div>
-        <div className="text-center">5+ min</div>
+      <div className="grid grid-cols-[1fr_100px_80px_80px] gap-2 px-4 py-2 text-xs text-gray-500 border-b border-[#2a3040]">
+        
+        <div className=" pb-1 float-left max-w-[300px]">Name</div>
+        <div className="text-right float-right pb-1">24h changing</div>
+        <div className="text-center pb-1 flex flex-row justify-between">Profit 1+ min<span>▼</span></div>
+        <div className="text-center float-right">5+ min</div>
       </div>
 
       {/* Pairs List */}
-      <div className="max-h-[380px] overflow-y-auto">
-        {filteredPairs.length === 0 ? (
+      <div data-scroll className="h-[380px] overflow-y-auto ">
+        {filteredPairs.length === 0 ? ( 
           <div className="p-8 text-center text-gray-500 text-sm">
             No pairs found matching your criteria
           </div>
@@ -161,6 +164,8 @@ const TradePairSelector = ({
           })
         )}
       </div>
+      </div>
+       </div> 
     </div>
   );
 };

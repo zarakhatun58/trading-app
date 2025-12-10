@@ -1,4 +1,5 @@
 import { X, TrendingUp, Calendar, Clock } from 'lucide-react';
+import { useState } from 'react';
 
 interface PairInfoModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ const PairInfoModal = ({
   currentPrice
 }: PairInfoModalProps) => {
   if (!isOpen) return null;
+const [activeMiniTab, setActiveMiniTab] = useState("5min");
 
   const tradingSchedule = [
     { date: '9 December', day: 'Tuesday', time: '02:00 - 20:00' },
@@ -28,11 +30,12 @@ const PairInfoModal = ({
     { date: '14 December', day: 'Sunday', time: 'Market Closed' },
     { date: '15 December', day: 'Monday', time: '02:00 - 20:00' },
   ];
+  
 
   return (
     <>
       <div className="fixed inset-0 bg-black/60 z-50" onClick={onClose} />
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90vw] max-w-[600px] bg-[#1a1f2e] rounded-xl shadow-2xl border border-[#2a3040]">
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90vw] max-w-[600px] bg-[#1a1f2e] rounded-lg shadow-2xl border border-[#2a3040]">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-[#2a3040]">
           <div className="flex items-center gap-3">
@@ -119,32 +122,118 @@ const PairInfoModal = ({
           {/* Chart and Schedule */}
           <div className="grid grid-cols-2 gap-4">
             {/* Mini Chart */}
-            <div className="bg-[#0f1114] rounded-lg p-3">
-              <div className="flex items-center gap-4 mb-2">
-                <button className="text-xs font-semibold text-white border-b-2 border-primary pb-1">5 min change</button>
-                <button className="text-xs text-gray-400 pb-1">60 min change</button>
-                <button className="text-xs text-gray-400 pb-1">1 day change</button>
-              </div>
-              <div className="text-success text-lg font-semibold mb-2">0%</div>
-              <div className="h-20 flex items-end gap-0.5">
-                {Array.from({ length: 40 }).map((_, i) => {
-                  const height = 10 + Math.random() * 60;
-                  const isPositive = Math.random() > 0.5;
-                  return (
-                    <div
-                      key={i}
-                      className={`w-1 ${isPositive ? 'bg-success/50' : 'bg-destructive/50'}`}
-                      style={{ height: `${height}%` }}
-                    />
-                  );
-                })}
-              </div>
-              <div className="flex justify-between mt-2 text-[10px] text-gray-400">
-                <span>1 month change <span className="text-success">+1.34%</span></span>
-                <span>1 year change <span className="text-success">+13.19%</span></span>
-                <span>YTD change <span className="text-success">+11.47%</span></span>
-              </div>
-            </div>
+            {/* Mini Chart */}
+<div className="bg-[#0f1114] rounded-lg p-3">
+  <div className="flex items-center gap-4 mb-2">
+    <button
+      onClick={() => setActiveMiniTab("5min")}
+      className={`text-xs pb-1 font-semibold border-b-2 ${
+        activeMiniTab === "5min"
+          ? "text-white border-primary"
+          : "text-gray-400 border-transparent"
+      }`}
+    >
+      5 min change
+    </button>
+
+    <button
+      onClick={() => setActiveMiniTab("60min")}
+      className={`text-xs pb-1 font-semibold border-b-2 ${
+        activeMiniTab === "60min"
+          ? "text-white border-primary"
+          : "text-gray-400 border-transparent"
+      }`}
+    >
+      60 min change
+    </button>
+
+    <button
+      onClick={() => setActiveMiniTab("1day")}
+      className={`text-xs pb-1 font-semibold border-b-2 ${
+        activeMiniTab === "1day"
+          ? "text-white border-primary"
+          : "text-gray-400 border-transparent"
+      }`}
+    >
+      1 day change
+    </button>
+  </div>
+
+  {/* ---------- TAB CONTENT ---------- */}
+
+  {activeMiniTab === "5min" && (
+    <>
+      <div className="text-success text-lg font-semibold mb-2">+0.12%</div>
+      <div className="h-20 flex items-end gap-0.5">
+        {Array.from({ length: 40 }).map((_, i) => {
+          const height = 10 + Math.random() * 60;
+          const isPositive = Math.random() > 0.5;
+          return (
+            <div
+              key={i}
+              className={`w-1 ${isPositive ? "bg-success/50" : "bg-destructive/50"}`}
+              style={{ height: `${height}%` }}
+            />
+          );
+        })}
+      </div>
+      <div className="flex justify-between mt-2 text-[10px] text-gray-400">
+        <span>1 month change <span className="text-success">+1.34%</span></span>
+        <span>1 year change <span className="text-success">+13.19%</span></span>
+        <span>YTD change <span className="text-success">+11.47%</span></span>
+      </div>
+    </>
+  )}
+
+  {activeMiniTab === "60min" && (
+    <>
+      <div className="text-destructive text-lg font-semibold mb-2">-0.23%</div>
+      <div className="h-20 flex items-end gap-0.5">
+        {Array.from({ length: 40 }).map((_, i) => {
+          const height = 20 + Math.random() * 50;
+          const isPositive = Math.random() > 0.3;
+          return (
+            <div
+              key={i}
+              className={`w-1 ${isPositive ? "bg-success/50" : "bg-destructive/50"}`}
+              style={{ height: `${height}%` }}
+            />
+          );
+        })}
+      </div>
+      <div className="flex justify-between mt-2 text-[10px] text-gray-400">
+        <span>1 month change <span className="text-destructive">-0.55%</span></span>
+        <span>1 year change <span className="text-success">+8.03%</span></span>
+        <span>YTD change <span className="text-success">+6.14%</span></span>
+      </div>
+    </>
+  )}
+
+  {activeMiniTab === "1day" && (
+    <>
+      <div className="text-success text-lg font-semibold mb-2">+1.02%</div>
+      <div className="h-20 flex items-end gap-0.5">
+        {Array.from({ length: 40 }).map((_, i) => {
+          const height = 30 + Math.random() * 40;
+          const isPositive = Math.random() > 0.4;
+          return (
+            <div
+              key={i}
+              className={`w-1 ${isPositive ? "bg-success/50" : "bg-destructive/50"}`}
+              style={{ height: `${height}%` }}
+            />
+          );
+        })}
+      </div>
+      <div className="flex justify-between mt-2 text-[10px] text-gray-400">
+        <span>1 month change <span className="text-success">+2.44%</span></span>
+        <span>1 year change <span className="text-success">+15.92%</span></span>
+        <span>YTD change <span className="text-success">+12.36%</span></span>
+      </div>
+    </>
+  )}
+</div>
+
 
             {/* Trading Schedule */}
             <div className="bg-[#0f1114] rounded-lg p-3">
@@ -158,6 +247,7 @@ const PairInfoModal = ({
                   <span>Weekday</span>
                   <span>Trading Time</span>
                 </div>
+                  <div >
                 {tradingSchedule.map((item, i) => (
                   <div key={i} className="grid grid-cols-3 text-[10px] py-1">
                     <span className="text-gray-400">{item.date}</span>
@@ -167,6 +257,7 @@ const PairInfoModal = ({
                     </span>
                   </div>
                 ))}
+                </div>
               </div>
             </div>
           </div>

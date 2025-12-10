@@ -60,7 +60,7 @@ const CandlestickChart = ({
   const [showPairInfo, setShowPairInfo] = useState(false);
   const [zoom, setZoom] = useState(100);
   const [timeframe, setTimeframe] = useState('1m');
-  const padding = { top: 40, right: 80, bottom: 40, left: 60 };
+  const padding = { top: 40, right: 10, bottom: 40, left: 20 };
 
   useEffect(() => {
     const updateDimensions = () => {

@@ -20,7 +20,7 @@ const TopBar = dynamic(() => import('../components/Trading/TopBar'), { ssr: fals
 const CurrencyTabs = dynamic(() => import('../components/Trading/CurrencyTabs'), { ssr: false });
 const TradingSidebar = dynamic(() => import('../components/Trading/TradingSidebar'), { ssr: false });
 
-import { Plus, X } from 'lucide-react';
+import { Pin, Plus, X } from 'lucide-react';
 
 
 const TradingPage = () => {
@@ -36,13 +36,14 @@ const TradingPage = () => {
   const [balance, setBalance] = useState(0.00);
   const [pairs, setPairs] = useState<CurrencyPair[]>(currencyPairs);
   const [selectedPairIds, setSelectedPairIds] = useState<string[]>(['eur-chf']);
+  const [selectedPins, setSelectedPins] = useState<string[]>(['eur-chf']);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [sidebarCollapsedToIcons, setSidebarCollapsedToIcons] = useState(false);
   const [sentimentBuy, setSentimentBuy] = useState(77);
   const [tradeZone, setTradeZone] = useState<'up' | 'down' | null>(null);
   const activePair = pairs.find(p => p.id === activePairId) || pairs[0];
   const selectedPairs = pairs.filter(p => selectedPairIds.includes(p.id));
- const [hideBalance, setHideBalance] = useState(false);
+  const [hideBalance, setHideBalance] = useState(false);
 
   useEffect(() => {
     setCandleData(generateCandleData(30));
@@ -117,6 +118,14 @@ const TradingPage = () => {
       }
     }
   };
+  const addPinsFromTabs = (pairId: string) => {
+    if (selectedPairIds.length > 1) {
+      setSelectedPairIds(prev => prev.filter(id => id !== pairId));
+      if (activePairId === pairId) {
+        setActivePairId(selectedPairIds.find(id => id !== pairId) || selectedPairIds[0]);
+      }
+    }
+  };
 
   return (
     <div>
@@ -138,7 +147,7 @@ const TradingPage = () => {
         <div className="flex flex-col flex-1 overflow-hidden">
 
           {/* TOPBAR — NOT FULL WIDTH — STARTS AFTER SIDEBAR */}
-        <TopBar balance={balance} initialIsLive={false} hideBalance={hideBalance} onToggleHideBalance={() => setHideBalance(!hideBalance)} />
+          <TopBar balance={balance} initialIsLive={false} hideBalance={hideBalance} onToggleHideBalance={() => setHideBalance(!hideBalance)} />
 
           {/* CONTENT AREA */}
           <div className="flex flex-1 overflow-hidden pl-4">
@@ -189,15 +198,24 @@ const TradingPage = () => {
                           </div>
                         </div>
                       </button>
-
-                      {selectedPairIds.length > 1 && (
-                        <button
-                          onClick={() => removePairFromTabs(pair.id)}
-                          className="ml-1 p-1 rounded-full bg-[#000000] hover:bg-destructive/20 text-white hover:text-destructive transition-colors absolute right-[-10px] top-[-10px]"
-                        >
-                          <X size={8} />
-                        </button>
-                      )}
+                      <div className='flex flex-col'>
+                        {selectedPairIds.length > 1 && (
+                          <button
+                            onClick={() => removePairFromTabs(pair.id)}
+                            className="ml-1 p-1 rounded-full bg-[#000000] hover:bg-destructive/20 text-white hover:text-destructive transition-colors absolute right-[-10px] top-[-10px]"
+                          >
+                            <X size={8} />
+                          </button>
+                        )}
+                        {selectedPins.length > 1 && (
+                          <button
+                            onClick={() => addPinsFromTabs(pair.id)}
+                            className="ml-2 p-1 rounded-full bg-[#ffffff] hover:bg-destructive/20 text-white hover:text-destructive transition-colors absolute right-[-10px] top-[-20px]"
+                          >
+                            <Pin size={18} className="text-blue-400" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   );
                 })}
@@ -207,18 +225,18 @@ const TradingPage = () => {
               <div className="flex-1 relative">
                 <CandlestickChart
                   data={candleData}
-              currentPrice={activePair.currentPrice}
-              chartType={chartType as 'area' | 'candles' | 'bars' | 'heiken'}
-              tradeZone={tradeZone}
-              onOpenDrawing={() => setShowDrawingSidebar(true)}
-              onOpenIndicators={() => setShowIndicators(true)}
-              pairName={activePair.name}
-              pairFlag={activePair.flag}
-              pairPercentage={activePair.performance}
+                  currentPrice={activePair.currentPrice}
+                  chartType={chartType as 'area' | 'candles' | 'bars' | 'heiken'}
+                  tradeZone={tradeZone}
+                  onOpenDrawing={() => setShowDrawingSidebar(true)}
+                  onOpenIndicators={() => setShowIndicators(true)}
+                  pairName={activePair.name}
+                  pairFlag={activePair.flag}
+                  pairPercentage={activePair.performance}
                 />
                 {/* CHART TOOLBAR */}
                 <ChartToolbar
-                 onOpenIndicators={()=>setShowIndicators(true)}
+                  onOpenIndicators={() => setShowIndicators(true)}
                   onDrawingClick={() => setShowDrawingSidebar(true)}
                   onChartTypeChange={setChartType}
                   currentChartType={chartType}

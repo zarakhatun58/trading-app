@@ -16,7 +16,7 @@ interface IndicatorsPanelProps {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed top-0 left-[70px] h-full z-50 w-[220px] bg-[#101729] border-r border-[#2a3040] flex flex-col animate-slide-in">
+    <div  className="fixed top-0 left-[70px] h-full z-50 w-[220px] bg-[#101729] border-r border-[#2a3040] flex flex-col animate-slide-in">
       
       <div className="flex items-center justify-between p-4 border-b border-border">
         <h2 className="text-lg font-semibold">Indicators</h2>
@@ -27,7 +27,7 @@ interface IndicatorsPanelProps {
           <X size={18} />
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto">
+      <div data-scroll className="flex-1 overflow-y-auto">
         {indicators.map((category) => (
           <div key={category.category}>
             <div className="px-4 py-2 text-xs font-semibold text-muted-foreground tracking-wider">
