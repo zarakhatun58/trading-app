@@ -24,7 +24,7 @@ const TopBar = ({
   id = '71910310',
   currency = 'USD',
   liveBalance = 0,
-  balance = 10000,
+  balance = 100,
   initialIsLive = false,
   hideBalance = false,
   onToggleHideBalance,
@@ -70,7 +70,7 @@ const TopBar = ({
   const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : balance)}`;
   //  const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? 10000000 : 10000000)}`;
   return (
-    <header className="h-14 bg-[#101729] flex items-center justify-between pl-4 pr-2 pb-2 pt-4 mb-2">
+    <header className="h-14 bg-[#101729] flex items-center justify-between pl-4 pr-2 pb-2 pt-4">
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ const TopBar = ({
         <div ref={onlineUsersRef} className="relative">
           <button
             onClick={() => setShowOnlineUsers(!showOnlineUsers)}
-            className="btn-press bg-[#2a3040] relative p-2 rounded-lg hover:bg-[#2a3040] transition-colors"
+            className="btn-press bg-[#2a3040] relative p-2 rounded-sm hover:bg-[#2a3040] transition-colors"
           >
             <User size={20} className="text-gray-400" />
             {onlineUsers > 0 && (

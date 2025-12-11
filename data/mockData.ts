@@ -65,3 +65,19 @@ export const indicators = [
   { category: 'TREND INDICATORS', items: ['Alligator', 'Bollinger Bands', 'Envelopes', 'Fractal', 'Ichimoku Cloud', 'Keltner channel', 'Donchian channel', 'Supertrend', 'Moving Average', 'Parabolic SAR', 'Zig Zag'] },
   { category: 'OSCILLATORS', items: ['ADX', 'Aroon', 'Awesome Oscillator', 'Bears power', 'Bulls power', 'CCI', 'MACD', 'RSI', 'Stochastic'] },
 ];
+
+export const durationTimeOptions = [
+  { label: '00:05', value: '00:05' },
+  { label: '00:10', value: '00:10' },
+  { label: '00:15', value: '00:15' },
+  { label: '00:30', value: '00:30' },
+  { label: '01:00', value: '01:00' },
+  { label: '02:00', value: '02:00' },
+  { label: '05:00', value: '05:00' },
+  { label: '10:00', value: '10:00' },
+  { label: '15:00', value: '15:00' },
+  { label: '30:00', value: '30:00' },
+  { label: '01:00', value: '01:00' },
+  { label: '02:00', value: '02:00' },
+  { label: '04:00', value: '04:00' },
+];

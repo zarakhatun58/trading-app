@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { X, Plus, Minus, ArrowUp, ArrowDown, Clock } from 'lucide-react';
 import HowDoesModal from './HowDoesModal';
+import { durationTimeOptions } from '../../data/mockData';
 
 interface PendingTradeModalProps {
   isOpen: boolean;
@@ -11,21 +12,7 @@ interface PendingTradeModalProps {
 
 const periods = ['M1', 'M2', 'M5', 'M15', 'M30', 'M45', 'H1', 'H2', 'H4'];
 // Duration time options
-const durationTimeOptions = [
-  { label: '00:05', value: '00:05' },
-  { label: '00:10', value: '00:10' },
-  { label: '00:15', value: '00:15' },
-  { label: '00:30', value: '00:30' },
-  { label: '01:00', value: '01:00' },
-  { label: '02:00', value: '02:00' },
-  { label: '05:00', value: '05:00' },
-  { label: '10:00', value: '10:00' },
-  { label: '15:00', value: '15:00' },
-  { label: '30:00', value: '30:00' },
-  { label: '01:00', value: '01:00' },
-  { label: '02:00', value: '02:00' },
-  { label: '04:00', value: '04:00' },
-];
+
 
 // Generate absolute time options
 const generateAbsoluteTimeOptions = () => {
@@ -91,8 +78,8 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
   const absoluteTimeOptions = generateAbsoluteTimeOptions();
   const timeOptions = isAbsoluteTimeMode ? absoluteTimeOptions : durationTimeOptions
   return (
-    <div className="fixed right-[230px] top-[100px] z-50">
-      <div className="bg-[#191919] rounded-lg border border-[#2a3040] shadow-2xl w-[180px] overflow-hidden p-4">
+    <div className="fixed right-[237px] top-[64px] z-50">
+      <div className="bg-[#191919] rounded-sm border border-[#2a3040] shadow-2xl w-[180px] overflow-hidden px-4 py-[13px]">
         {/* Tabs */}
         <div className="flex mb-4">
           <button

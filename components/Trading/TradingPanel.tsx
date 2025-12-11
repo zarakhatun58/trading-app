@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling, DollarSignIcon } from 'lucide-react';
+import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling, DollarSignIcon, Settings, TimerReset, Signal, CircuitBoard } from 'lucide-react';
 import { CurrencyPair, Trade } from '../../types/trading';
 import { cn } from '../../libs/utils';
 import { Switch } from '../ReusableUI/switch';
 import SwitchTimeMenu from './SwitchTimeMenu';
 import InvestmentMenu from './InvestmentMenu';
 import PendingTradeModal from './PendingTradeModal';
+import LeaderBoardModal from './LeaderBoardModal';
 
 
 interface TradingPanelProps {
@@ -32,6 +33,8 @@ export default function TradingPanel({
   const [investment, setInvestment] = useState(100);
   const [tradeTime, setTradeTime] = useState(60);
   const [isPendingTrade, setIsPendingTrade] = useState(false);
+  const [isLeaderBoardOpen, setIsLeaderBoardOpen] = useState(false);
+  const [isTradeSignal, setIsTradeSignal] = useState(false);
   const [payout] = useState(1.88);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showTimeMenu, setShowTimeMenu] = useState(false);
@@ -97,16 +100,13 @@ export default function TradingPanel({
 
   const handleUpClick = () => {
     onTradeZone?.('up');
-    onTrade('up', investment, tradeTime);
+    onTrade('up', investment, tradeTime)
 
   };
 
   const handleDownClick = () => {
     onTradeZone?.('down');
-    const lastTrade = pendingTrades[pendingTrades.length - 1];
-    if (lastTrade) {
-      onSellTrade?.(lastTrade.id);
-    }
+    onTrade('down', investment, tradeTime);
   };
 
 
@@ -114,6 +114,11 @@ export default function TradingPanel({
     onTradeZone?.(direction);
     onTrade(direction, amount, tradeTime);
     setIsPendingTrade(false);
+  };
+  const handleLeaderBoard = (direction: 'up' | 'down', amount: number, type: 'quote' | 'time', value: string, period: string) => {
+    onTradeZone?.(direction);
+    onTrade(direction, amount, tradeTime);
+    setIsLeaderBoardOpen(false);
   };
 
   const accountMenuItems = [
@@ -131,39 +136,38 @@ export default function TradingPanel({
   }, {} as Record<string, Trade[]>);
 
   return (
-    <aside className="w-[150px] md:w-[220px]  rounded-lg flex flex-col h-full mr-2">
-      <div className='rounded-lg bg-[#2b3040] px-4 py-2 mb-2'>
-        <div className="">
-          <div className="relative">
+    <aside className="w-[150px] md:w-[220px]  rounded-sm flex flex-col h-full mr-2">
 
-            {showAccountMenu && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-xl z-50 overflow-hidden">
-                {accountMenuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    className=" btn-press w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
-                    onClick={() => setShowAccountMenu(false)}
-                  >
-                    <item.icon size={16} className="text-muted-foreground" />
-                    <span className="text-sm text-foreground">{item.label}</span>
-                  </button>
-                ))}
+      <div className="">
+        <div className="relative">
+
+          {showAccountMenu && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+              {accountMenuItems.map((item) => (
                 <button
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-destructive/10 transition-colors text-left border-t border-border"
+                  key={item.id}
+                  className=" btn-press w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
                   onClick={() => setShowAccountMenu(false)}
                 >
-                  <LogOut size={16} className="text-destructive" />
-                  <span className="text-sm text-destructive">Logout</span>
+                  <item.icon size={16} className="text-muted-foreground" />
+                  <span className="text-sm text-foreground">{item.label}</span>
                 </button>
-              </div>
-            )}
-          </div>
+              ))}
+              <button
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-destructive/10 transition-colors text-left border-t border-border"
+                onClick={() => setShowAccountMenu(false)}
+              >
+                <LogOut size={16} className="text-destructive" />
+                <span className="text-sm text-destructive">Logout</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        <div>
+
+        {/* <div>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              {/* <span className="text-2xl">{activePair.flag}</span> */}
               <span className='relative flex flex-row'><PoundSterling size={14} className="text-green-500 font-bold rounded-full bg-[#ffffff] p-2" /> <DollarSignIcon size={12} className="text-green-500 rounded-full bg-[#ffffff] p-2 ml-[-4px]" /></span>
               <span className="font-bold text-white text-[14px]">{activePair.name}</span>
             </div>
@@ -187,22 +191,45 @@ export default function TradingPanel({
               <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${isPendingTrade ? 'right-0.5' : 'left-0.5'}`}></span>
             </button>
           </div>
+        </div> */}
+
+        <div className="flex flex-row items-center justify-between pt-2 mb-2">
+          {/* <div  onClick={() => setIsPendingTrade(!isPendingTrade)} className='rounded-sm w-[30px] h-[30px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
+          transition font-bold btn-press flex items-center justify-center'>
+            <Settings size={18}/>
+          </div> */}
+          <div onClick={() => setIsLeaderBoardOpen(!isLeaderBoardOpen)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
+          transition font-bold btn-press flex flex-col items-center justify-center'>
+            <CircuitBoard size={18} />
+             <span className='text-[6px]'>Leader Board</span>
+          </div>
+          <div onClick={() => setIsPendingTrade(!isPendingTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
+          transition font-bold btn-press flex flex-col items-center justify-center'>
+            <Signal size={18} />
+            <span className='text-[6px]'>Trading Signal</span>
+          </div>
+          <div onClick={() => setIsPendingTrade(!isPendingTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
+          transition font-bold btn-press flex flex-col items-center justify-center'>
+            <TimerReset size={18} />
+            <span className='text-[6px]'>Pending Trade</span>
+          </div>
         </div>
-        <div className="py-3 border-b border-[#2a3040]">
-          <div className="relative">
-            <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#2b3040] z-10 font-bold">
-              Time
-            </label>
-            <div className="
+        <div className='rounded-lg bg-[#2b3040] px-4 py-2 mb-2'>
+          <div className="py-3 border-b border-[#2a3040]">
+            <div className="relative">
+              <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#2b3040] z-10 font-bold">
+                Time
+              </label>
+              <div className="
       flex items-center justify-between
       bg-[#2a3040]
       border border-[#3a4050]
-      rounded-lg
+      rounded-sm
       px-3 py-3 mt-1
     ">
-              <button
-                onClick={() => adjustTime(-30)}
-                className="
+                <button
+                  onClick={() => adjustTime(-30)}
+                  className="
           w-7 h-7 rounded-sm
           bg-[#3a4050] 
           flex items-center justify-center 
@@ -210,25 +237,25 @@ export default function TradingPanel({
           hover:bg-[#4a5060] 
           transition font-bold btn-press
         "
-              >
-                <Minus size={16} className='font-bold' />
-              </button>
-
-              {/* Time Display */}
-              <div className="flex items-center gap-1">
-                <Clock size={15} className="text-gray-400" />
-                <button
-                  onClick={() => setShowTimeMenu(!showTimeMenu)}
-                  className="flex items-center gap-1"
                 >
-                  <span className="font-mono text-white text-sm">{formatTime(tradeTime)}</span>
+                  <Minus size={16} className='font-bold' />
                 </button>
-              </div>
 
-              {/* Plus */}
-              <button
-                onClick={() => adjustTime(30)}
-                className="
+                {/* Time Display */}
+                <div className="flex items-center gap-1">
+                  <Clock size={15} className="text-gray-400" />
+                  <button
+                    onClick={() => setShowTimeMenu(!showTimeMenu)}
+                    className="flex items-center gap-1"
+                  >
+                    <span className="font-mono text-white text-sm">{formatTime(tradeTime)}</span>
+                  </button>
+                </div>
+
+                {/* Plus */}
+                <button
+                  onClick={() => adjustTime(30)}
+                  className="
           w-7 h-7 rounded-sm
           bg-[#3a4050] 
           flex items-center justify-center 
@@ -236,109 +263,110 @@ export default function TradingPanel({
           hover:bg-[#4a5060] 
           transition btn-press
         "
-              >
-                <Plus size={16} className='font-bold' />
-              </button>
-            </div>
-
-            {/* SWITCH TIME Link — Exact Look */}
-            <button
-              onClick={toggleTimeMode}
-              className="absolute -bottom-2 left-[32%] px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
-            >
-              SWITCH TIME
-            </button>
-
-            {/* Dropdown */}
-            <SwitchTimeMenu
-              isOpen={showTimeMenu}
-              onClose={() => setShowTimeMenu(false)}
-              currentTime={tradeTime}
-              onSelectTime={setTradeTime}
-              isSwitchMode={isAbsoluteTimeMode}
-            />
-          </div>
-        </div>
-        {/* Investment */}
-        <div className="py-3 border-b border-[#2a3040] mb-2">
-          <div className="relative">
-            <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#2b3040] z-10 font-bold">
-              Investment
-            </label>
-            <div className="flex items-center justify-between bg-[#2a3040] border border-[#3a4050] rounded-lg p-3 mt-1">
-              <button
-                onClick={() => adjustInvestment(isPercentMode ? -1 : -10)}
-                className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
-              >
-                <Minus size={16} className='font-bold' />
-              </button>
-
-              <button
-                onClick={() => setShowInvestmentMenu(!showInvestmentMenu)}
-                className="font-mono text-white text-sm"
-              >
-                {displayInvestment}
-              </button>
-              <button
-                onClick={() => adjustInvestment(isPercentMode ? 1 : 10)}
-                className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
-              >
-                <Plus size={16} className='font-bold' />
-              </button>
-            </div>
-            <button
-              onClick={toggleInvestmentMode}
-              className="absolute -bottom-2 left-[38%] px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
-            >
-              SWITCH
-            </button>
-            <InvestmentMenu
-              isOpen={showInvestmentMenu}
-              onClose={() => setShowInvestmentMenu(false)}
-              currentInvestment={investment}
-              onSelectInvestment={setInvestment}
-              isPercentMode={isPercentMode}
-            />
-          </div>
-        </div>
-        <div className="space-y-2 mb-2">
-          <button
-            onClick={handleUpClick}
-            onMouseEnter={() => setUpHovered(true)}
-            onMouseLeave={() => setUpHovered(false)}
-            className="btn-press relative w-full py-2 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-          >
-            <span>Up</span>
-            <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
-              <TrendingUp size={16} className="text-white" />
-            </div>
-          </button>
-          <div>
-            <div className="text-left text-[12px] text-[#ffffff] w-full">
-              Your payout: <span className="text-white font-bold float-right">{calculatedPayout} $</span>
-            </div>
-            {isPercentMode && (
-              <div className="text-left text-[12px] text-[#989c99] ">
-                Investment :
-                <span className="text-[#989c99] font-bold float-right">{investment}</span>
+                >
+                  <Plus size={16} className='font-bold' />
+                </button>
               </div>
-            )}
-          </div>
-          <button
-            onClick={handleDownClick}
-            onMouseEnter={() => setDownHovered(true)}
-            onMouseLeave={() => setDownHovered(false)}
-            className="btn-press w-full py-2 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-          >
-            <span>Down</span>
-            <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
-              <TrendingDown size={16} className="text-white" />
+
+              {/* SWITCH TIME Link — Exact Look */}
+              <button
+                onClick={toggleTimeMode}
+                className="absolute -bottom-2 left-[32%] px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
+              >
+                SWITCH TIME
+              </button>
+
+              {/* Dropdown */}
+              <SwitchTimeMenu
+                isOpen={showTimeMenu}
+                onClose={() => setShowTimeMenu(false)}
+                currentTime={tradeTime}
+                onSelectTime={setTradeTime}
+                isSwitchMode={isAbsoluteTimeMode}
+              />
             </div>
-          </button>
+          </div>
+          {/* Investment */}
+          <div className="py-3 border-b border-[#2a3040] mb-2">
+            <div className="relative">
+              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#2b3040] z-10 font-bold">
+                Investment
+              </label>
+              <div className="flex items-center justify-between bg-[#2a3040] border border-[#3a4050] rounded-sm p-3 mt-1">
+                <button
+                  onClick={() => adjustInvestment(isPercentMode ? -1 : -10)}
+                  className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+                >
+                  <Minus size={16} className='font-bold' />
+                </button>
+
+                <button
+                  onClick={() => setShowInvestmentMenu(!showInvestmentMenu)}
+                  className="font-mono text-white text-sm"
+                >
+                  {displayInvestment}
+                </button>
+                <button
+                  onClick={() => adjustInvestment(isPercentMode ? 1 : 10)}
+                  className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+                >
+                  <Plus size={16} className='font-bold' />
+                </button>
+              </div>
+              <button
+                onClick={toggleInvestmentMode}
+                className="absolute -bottom-2 left-[38%] px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
+              >
+                SWITCH
+              </button>
+              <InvestmentMenu
+                isOpen={showInvestmentMenu}
+                onClose={() => setShowInvestmentMenu(false)}
+                currentInvestment={investment}
+                onSelectInvestment={setInvestment}
+                isPercentMode={isPercentMode}
+              />
+            </div>
+          </div>
+          <div className="space-y-2 mb-2">
+            <button
+              onClick={handleUpClick}
+              onMouseEnter={() => setUpHovered(true)}
+              onMouseLeave={() => setUpHovered(false)}
+              className="btn-press relative w-full py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+            >
+              <span>Up</span>
+              <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
+                <TrendingUp size={16} className="text-white" />
+              </div>
+            </button>
+            <div>
+              <div className="text-left text-[12px] text-[#ffffff] w-full">
+                Your payout: <span className="text-white font-bold float-right">{calculatedPayout} $</span>
+              </div>
+              {isPercentMode && (
+                <div className="text-left text-[12px] text-[#989c99] ">
+                  Investment :
+                  <span className="text-[#989c99] font-bold float-right">{investment}$</span>
+                </div>
+              )}
+            </div>
+            <button
+              onClick={handleDownClick}
+              onMouseEnter={() => setDownHovered(true)}
+              onMouseLeave={() => setDownHovered(false)}
+              className="btn-press w-full py-2 px-4 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+            >
+              <span>Down</span>
+              <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
+                <TrendingDown size={16} className="text-white" />
+              </div>
+            </button>
+          </div>
         </div>
+
+
       </div>
-
-
       {/* Trades Section */}
       <div className='bg-[#2b3040] rounded-lg'>
         <div className={`flex-1  border border-[#2a3040] bg-[#2b3040] rounded-lg
@@ -421,6 +449,11 @@ export default function TradingPanel({
         onClose={() => setIsPendingTrade(false)}
         currentQuote={activePair.currentPrice}
         onTrade={handlePendingTrade}
+      />
+      <LeaderBoardModal
+        isOpen={isLeaderBoardOpen}
+        onClose={() => setIsLeaderBoardOpen(false)}
+        onTrade={handleLeaderBoard}
       />
     </aside>
   );

@@ -10,7 +10,7 @@ import SettingsPanel from '../components/Trading/SettingsPanel';
 import SocialModal from '../components/Trading/SocialModal';
 import TradePairSelector from '../components/Trading/TradePairSelector';
 import SentimentIndicator from '../components/Trading/SentimentIndicator';
-import { Pin, Plus, X,ChevronDown } from 'lucide-react';
+import { Pin, Plus, X, ChevronDown } from 'lucide-react';
 
 const ChartToolbar = dynamic(() => import('../components/Trading/ChartToolbar'), { ssr: false });
 const CandlestickChart = dynamic(() => import('../components/Trading/CandlestickChart'), { ssr: false });
@@ -35,7 +35,7 @@ const TradingPage = () => {
   const [chartType, setChartType] = useState('candles');
   const [timeframe, setTimeframe] = useState('1m');
   const [candleData, setCandleData] = useState<CandleData[]>([]);
-const [balance, setBalance] = useState(1000000);
+  const [balance, setBalance] = useState(1000000);
   const [pairs, setPairs] = useState<CurrencyPair[]>(currencyPairs);
   const [selectedPairIds, setSelectedPairIds] = useState<string[]>(['eur-chf']);
   const [pinnedPairIds, setPinnedPairIds] = useState<string[]>([]);
@@ -84,7 +84,7 @@ const [balance, setBalance] = useState(1000000);
     return () => clearInterval(interval);
   }, []);
 
- const handleTrade = useCallback((direction: 'up' | 'down', amount: number, time: number) => {
+  const handleTrade = useCallback((direction: 'up' | 'down', amount: number, time: number) => {
     if (balance < amount) {
       toast({
         title: "Insufficient Balance",
@@ -93,9 +93,9 @@ const [balance, setBalance] = useState(1000000);
       });
       return;
     }
-  
 
-   const newTrade: Trade = {
+
+    const newTrade: Trade = {
       id: Date.now().toString(),
       pair: activePair.name,
       direction,
@@ -120,7 +120,7 @@ const [balance, setBalance] = useState(1000000);
       ),
     });
   }, [balance, activePair]);
-   const handleSellTrade = useCallback((tradeId: string) => {
+  const handleSellTrade = useCallback((tradeId: string) => {
     const trade = trades.find(t => t.id === tradeId);
     if (trade) {
       setBalance(prev => prev + trade.amount);
@@ -147,7 +147,7 @@ const [balance, setBalance] = useState(1000000);
     setShowTabPairSelector(null);
   };
 
- const removePairFromTabs = (pairId: string) => {
+  const removePairFromTabs = (pairId: string) => {
     if (selectedPairIds.length > 1) {
       setSelectedPairIds(prev => prev.filter(id => id !== pairId));
       setPinnedPairIds(prev => prev.filter(id => id !== pairId));
@@ -157,8 +157,8 @@ const [balance, setBalance] = useState(1000000);
     }
   };
 
-   const togglePinPair = (pairId: string) => {
-    setPinnedPairIds(prev => 
+  const togglePinPair = (pairId: string) => {
+    setPinnedPairIds(prev =>
       prev.includes(pairId)
         ? prev.filter(id => id !== pairId)
         : [...prev, pairId]
@@ -208,88 +208,87 @@ const [balance, setBalance] = useState(1000000);
             </div>
 
             {/* CHART + TABS */}
-            <div className="flex flex-col flex-1 min-w-0">
+            <div className=" relative flex flex-col flex-1 min-w-0 ">
 
               {/* CURRENCY TABS */}
-              <div className=" flex items-center bg-[#0f1114] border-b border-[#2a3040] px-2 py-1 overflow-x-auto gap-2 min-h-[50px]">
-            {selectedPairs.map((pair) => {
-              const isActive = pair.id === activePairId;
-              const isPinned = pinnedPairIds.includes(pair.id);
-              const priceChange = pair.currentPrice - pair.previousPrice;
-              
-              return (
-                <div
-                  key={pair.id}
-                  className={`absolute flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer transition-all shrink-0 ${
-                    isActive 
-                      ? 'bg-[#1a1f2e] border border-primary' 
-                      : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
-                  }`}
-                >
-                  {/* Close button */}
-                  {selectedPairIds.length > 1 && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removePairFromTabs(pair.id);
-                      }}
-                      className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-black flex items-center justify-center text-white hover:bg-destructive transition-colors z-10"
+              <div className=" flex items-center bg-[#101729] border-b border-[#2a3040] px-2 pb-2 overflow-x-auto gap-2 min-h-[70px]">
+                {selectedPairs.map((pair) => {
+                  const isActive = pair.id === activePairId;
+                  const isPinned = pinnedPairIds.includes(pair.id);
+                  const priceChange = pair.currentPrice - pair.previousPrice;
+
+                  return (
+                    <div
+                      key={pair.id}
+                      className={`absolute flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer transition-all shrink-0 ${isActive
+                          ? 'bg-[#1a1f2e] border border-primary'
+                          : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
+                        }`}
                     >
-                      <X size={8} />
-                    </button>
-                  )}
-                  
-                  <button
-                    onClick={() => setActivePairId(pair.id)}
-                    className="flex items-center gap-2"
-                  >
-                    <span className="text-base">{pair.flag}</span>
-                    <div>
-                      <div className="text-[11px] font-bold text-white whitespace-nowrap">{pair.name}</div>
-                      <div className={`text-[10px] font-bold ${priceChange >= 0 ? 'text-success' : 'text-destructive'}`}>
-                        {pair.performance}%
-                      </div>
+                      {/* Close button */}
+                      {selectedPairIds.length > 1 && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removePairFromTabs(pair.id);
+                          }}
+                          className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-black flex items-center justify-center text-white hover:bg-destructive transition-colors z-10"
+                        >
+                          <X size={8} />
+                        </button>
+                      )}
+
+                      <button
+                        onClick={() => setActivePairId(pair.id)}
+                        className="flex items-center gap-2"
+                      >
+                        <span className="text-base">{pair.flag}</span>
+                        <div>
+                          <div className="text-[11px] font-bold text-white whitespace-nowrap">{pair.name}</div>
+                          <div className={`text-[10px] font-bold ${priceChange >= 0 ? 'text-success' : 'text-destructive'}`}>
+                            {pair.performance}%
+                          </div>
+                        </div>
+                      </button>
+
+                      {/* Dropdown arrow for pair selector */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowTabPairSelector(showTabPairSelector === pair.id ? null : pair.id);
+                        }}
+                        className="p-0.5 hover:bg-[#3a4050] rounded transition-colors"
+                      >
+                        <ChevronDown size={12} className="text-gray-400" />
+                      </button>
+
+                      {/* Pin button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          togglePinPair(pair.id);
+                        }}
+                        className={`p-0.5 rounded transition-colors ${isPinned ? 'text-primary' : 'text-gray-500 hover:text-gray-300'}`}
+                      >
+                        <Pin size={12} className={isPinned ? 'fill-primary' : ''} />
+                      </button>
+
+                      {/* Pair Selector Dropdown */}
+                      {showTabPairSelector === pair.id && (
+                        <div className="absolute top-full left-0 mt-1 z-50">
+                          <TradePairSelector
+                            isOpen={true}
+                            onClose={() => setShowTabPairSelector(null)}
+                            pairs={pairs}
+                            selectedPairs={selectedPairIds}
+                            onSelectPair={handleSelectPair}
+                          />
+                        </div>
+                      )}
                     </div>
-                  </button>
-                  
-                  {/* Dropdown arrow for pair selector */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowTabPairSelector(showTabPairSelector === pair.id ? null : pair.id);
-                    }}
-                    className="p-0.5 hover:bg-[#3a4050] rounded transition-colors"
-                  >
-                    <ChevronDown size={12} className="text-gray-400" />
-                  </button>
-                  
-                  {/* Pin button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      togglePinPair(pair.id);
-                    }}
-                    className={`p-0.5 rounded transition-colors ${isPinned ? 'text-primary' : 'text-gray-500 hover:text-gray-300'}`}
-                  >
-                    <Pin size={12} className={isPinned ? 'fill-primary' : ''} />
-                  </button>
-                  
-                  {/* Pair Selector Dropdown */}
-                  {showTabPairSelector === pair.id && (
-                    <div className="absolute top-full left-0 mt-1 z-50">
-                      <TradePairSelector 
-                        isOpen={true}
-                        onClose={() => setShowTabPairSelector(null)}
-                        pairs={pairs}
-                        selectedPairs={selectedPairIds}
-                        onSelectPair={handleSelectPair}
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
 
               {/* CHART AREA */}
               <div className="flex-1 relative">
@@ -303,8 +302,8 @@ const [balance, setBalance] = useState(1000000);
                   pairName={activePair.name}
                   pairFlag={activePair.flag}
                   pairPercentage={activePair.performance}
-              trades={trades}
-              onSellTrade={handleSellTrade}
+                  trades={trades}
+                  onSellTrade={handleSellTrade}
                 />
                 {/* CHART TOOLBAR */}
                 <ChartToolbar

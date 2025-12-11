@@ -52,19 +52,19 @@ interface TradingSidebarProps {
 }
 
 const sidebarItems: SidebarItem[] = [
-  { icon: <TrendingUp size={18} />, label: 'TRADE', active: true },
-  { icon: <HelpCircle size={18} />, label: 'SUPPORT' },
-  { icon: <User size={18} />, label: 'ACCOUNT' },
-  { icon: <Trophy size={18} />, label: 'TOURNA-MENTS', badge: 4 },
-  { icon: <BarChart3 size={18} />, label: 'MARKET' },
+  { icon: <TrendingUp size={22} />, label: 'TRADE', active: true },
+  { icon: <HelpCircle size={22} />, label: 'SUPPORT' },
+  { icon: <User size={22} />, label: 'ACCOUNT' },
+  { icon: <Trophy size={22} />, label: 'TOURNA-MENTS', badge: 4 },
+  { icon: <BarChart3 size={22} />, label: 'MARKET' },
   // { icon: <MoreHorizontal size={18} />, label: 'MORE' },
-  { icon: <Activity size={18} />, label: 'ANALYTICS' },
-  { icon: <Unplug size={18} />, label: 'TOP' },
-  { icon: <Signal size={18} />, label: 'SIGNAL' },
-  { icon: <DollarSign size={18} />, label: 'MARKET' },
-  { icon: <Users size={18} />, label: 'JOIN US' },
-  { icon: <HelpCircleIcon size={18} />, label: 'HELP' },
-  { icon: <Settings size={18} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
+  { icon: <Activity size={22} />, label: 'ANALYTICS' },
+  { icon: <Unplug size={22} />, label: 'TOP' },
+  { icon: <Signal size={22} />, label: 'SIGNAL' },
+  { icon: <DollarSign size={22} />, label: 'MARKET' },
+  { icon: <Users size={22} />, label: 'JOIN US' },
+  { icon: <HelpCircleIcon size={22} />, label: 'HELP' },
+  { icon: <Settings size={22} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
 
 
 ];
@@ -172,7 +172,7 @@ const TradingSidebar = ({
       <div className="pt-4 pl-1">
         <button
           onClick={onToggleExpand}
-          className="p-3 rounded-sm text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors"
+          className="p-3 mb-1 rounded-sm text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors"
         >
           {isExpanded ? <X size={18} /> : <Menu size={18} />}
         </button>
@@ -197,7 +197,7 @@ const TradingSidebar = ({
               {/* LEFT SIDE: Icon + Label */}
               <div
                 className={cn(
-                  "flex items-center",
+                  "flex items-center font-bold",
                   isExpanded ? "gap-2" : "flex-col gap-1"
                 )}
               >
