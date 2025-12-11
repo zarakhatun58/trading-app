@@ -189,14 +189,14 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
             <div className="flex items-center justify-between bg-[#191919] border border-[#2a3040] rounded-sm p-2">
               <button
                 onClick={() => adjustInvestment(-10)}
-                className="w-6 h-6 rounded-full bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
+                className="btn-press w-6 h-6 rounded-sm bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
               >
                 <Minus size={14} />
               </button>
               <span className="font-mono text-[14px] text-white">{investment} ₹</span>
               <button
                 onClick={() => adjustInvestment(10)}
-                className="w-6 h-6 rounded-full bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
+                className="btn-press w-6 h-6 rounded-sm bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
               >
                 <Plus size={14} />
               </button>
@@ -209,7 +209,7 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
           <div className="space-y-3">
             <button
               onClick={() => onTrade('up', investment, activeTab, activeTab === 'quote' ? quoteValue : timeValue, period)}
-              className="w-full py-1 px-2 rounded-sm text-[14px] bg-success hover:bg-success/90 text-white font-semibold flex items-center justify-between transition-colors"
+              className="btn-press w-full py-1 px-2 rounded-sm text-[14px] bg-success hover:bg-success/90 text-white font-semibold flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Clock size={16} />
@@ -220,7 +220,7 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
 
             <button
               onClick={() => onTrade('down', investment, activeTab, activeTab === 'quote' ? quoteValue : timeValue, period)}
-              className="w-full py-1 px-2 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold flex items-center justify-between transition-colors"
+              className="btn-press w-full py-1 px-2 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Clock size={16} />

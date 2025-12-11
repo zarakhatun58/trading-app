@@ -37,7 +37,7 @@ const DrawingSidebar = ({ isOpen, onClose }: DrawingSidebarProps) => {
         onClick={onClose}
       />
       <aside 
-        className="fixed top-0 left-[70px] h-full z-50 w-[220px] bg-[#101729] border-r border-[#2a3040] flex flex-col animate-slide-in"
+        className="fixed top-0 h-full z-50 w-[220px] bg-[#101729] border-r border-[#2a3040] flex flex-col animate-slide-in"
       >
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2">

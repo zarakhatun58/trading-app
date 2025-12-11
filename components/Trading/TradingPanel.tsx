@@ -16,15 +16,15 @@ interface TradingPanelProps {
   balance: number;
   isLiveAccount: boolean;
   onTradeZone?: (zone: 'up' | 'down' | null) => void;
-   trades?: Trade[];
+  trades?: Trade[];
   onSellTrade?: (tradeId: string) => void;
 }
 
 export default function TradingPanel({
- activePair, 
-  onTrade, 
-  balance, 
-  isLiveAccount, 
+  activePair,
+  onTrade,
+  balance,
+  isLiveAccount,
   onTradeZone,
   trades = [],
   onSellTrade
@@ -39,7 +39,7 @@ export default function TradingPanel({
   const [isAbsoluteTimeMode, setIsAbsoluteTimeMode] = useState(false);
   const [isPercentMode, setIsPercentMode] = useState(false);
   const [activeTradesTab, setActiveTradesTab] = useState<'trades' | 'orders'>('trades');
- const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [upHovered, setUpHovered] = useState(false);
   const [downHovered, setDownHovered] = useState(false);
 
@@ -98,13 +98,17 @@ export default function TradingPanel({
   const handleUpClick = () => {
     onTradeZone?.('up');
     onTrade('up', investment, tradeTime);
-    
+
   };
 
   const handleDownClick = () => {
     onTradeZone?.('down');
-    onTrade('down', investment, tradeTime);
+    const lastTrade = pendingTrades[pendingTrades.length - 1];
+    if (lastTrade) {
+      onSellTrade?.(lastTrade.id);
+    }
   };
+
 
   const handlePendingTrade = (direction: 'up' | 'down', amount: number, type: 'quote' | 'time', value: string, period: string) => {
     onTradeZone?.(direction);
@@ -119,7 +123,7 @@ export default function TradingPanel({
     { id: 'trades', label: 'Trades', icon: ArrowUp },
     { id: 'account', label: 'Account', icon: User },
   ];
-const groupedTrades = pendingTrades.reduce((acc, trade) => {
+  const groupedTrades = pendingTrades.reduce((acc, trade) => {
     const date = new Date(trade.timestamp).toLocaleDateString('en-US', { day: 'numeric', month: 'long' }).toUpperCase();
     if (!acc[date]) acc[date] = [];
     acc[date].push(trade);
@@ -137,7 +141,7 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
                 {accountMenuItems.map((item) => (
                   <button
                     key={item.id}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
+                    className=" btn-press w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
                     onClick={() => setShowAccountMenu(false)}
                   >
                     <item.icon size={16} className="text-muted-foreground" />
@@ -156,7 +160,7 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
           </div>
         </div>
 
-        <div className=" border-b border-border">
+        <div>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               {/* <span className="text-2xl">{activePair.flag}</span> */}
@@ -204,7 +208,7 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
           flex items-center justify-center 
           text-gray-300 
           hover:bg-[#4a5060] 
-          transition font-bold
+          transition font-bold btn-press
         "
               >
                 <Minus size={16} className='font-bold' />
@@ -230,7 +234,7 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
           flex items-center justify-center 
           text-gray-300 
           hover:bg-[#4a5060] 
-          transition 
+          transition btn-press
         "
               >
                 <Plus size={16} className='font-bold' />
@@ -264,7 +268,7 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
             <div className="flex items-center justify-between bg-[#2a3040] border border-[#3a4050] rounded-lg p-3 mt-1">
               <button
                 onClick={() => adjustInvestment(isPercentMode ? -1 : -10)}
-                className="w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+                className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
               >
                 <Minus size={16} className='font-bold' />
               </button>
@@ -277,7 +281,7 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
               </button>
               <button
                 onClick={() => adjustInvestment(isPercentMode ? 1 : 10)}
-                className="w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+                className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
               >
                 <Plus size={16} className='font-bold' />
               </button>
@@ -300,17 +304,15 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
         <div className="space-y-2 mb-2">
           <button
             onClick={handleUpClick}
-              onMouseEnter={() => setUpHovered(true)}
-              onMouseLeave={() => setUpHovered(false)}
-            className=" w-full py-2 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+            onMouseEnter={() => setUpHovered(true)}
+            onMouseLeave={() => setUpHovered(false)}
+            className="btn-press relative w-full py-2 px-4 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
           >
             <span>Up</span>
             <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
-             <TrendingUp size={16} className="text-white" />
+              <TrendingUp size={16} className="text-white" />
             </div>
-             <div className={`absolute bottom-0 left-0 right-0 h-1 bg-white/40 transition-opacity ${upHovered ? 'opacity-100' : 'opacity-0'}`} />
           </button>
-
           <div>
             <div className="text-left text-[12px] text-[#ffffff] w-full">
               Your payout: <span className="text-white font-bold float-right">{calculatedPayout} $</span>
@@ -323,39 +325,16 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
             )}
           </div>
           <button
-           onClick={handleDownClick}
-              onMouseEnter={() => setDownHovered(true)}
-              onMouseLeave={() => setDownHovered(false)}
-            className="w-full py-2 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+            onClick={handleDownClick}
+            onMouseEnter={() => setDownHovered(true)}
+            onMouseLeave={() => setDownHovered(false)}
+            className="btn-press w-full py-2 px-4 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
           >
             <span>Down</span>
             <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
-               <TrendingDown size={16} className="text-white" />
+              <TrendingDown size={16} className="text-white" />
             </div>
-            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-white/40 transition-opacity ${downHovered ? 'opacity-100' : 'opacity-0'}`} />
           </button>
-
-
-          {/* <div className='flex flex-row justify-between'>
-            <button
-              onClick={handleUpClick}
-              className="w-[90px] py-2 px-2 rounded-lg bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-            >
-              <span className='text-[14px]'>Up</span>
-              <div className="w-7 h-7 rounded-sm bg-[#57c78b] flex items-center justify-center">
-                <TrendingUp size={16} className="text-white" />
-              </div>
-            </button>
-            <button
-              onClick={handleDownClick}
-              className="w-[90px] py-2 px-2 rounded-lg bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-            >
-              <span className='text-[14px]'>Down</span>
-              <div className="w-7 h-7 rounded-sm bg-[#ff9186] flex items-center justify-center">
-                <TrendingDown size={16} className="text-white" />
-              </div>
-            </button>
-          </div> */}
         </div>
       </div>
 
@@ -393,12 +372,10 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
               <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{orderCount}</span>
             </button>
           </div>
-
           {/* Trade History Item Example */}
           {activeTradesTab === "trades" && (
             <div className="p-2 text-[10px] text-gray-500">
               <div className="mb-2">5 DECEMBER <span className="bg-[#2a3040] px-1 rounded">0</span></div>
-
               <div className="flex items-center justify-between py-2 border-b border-[#2a3040]">
                 <div className="flex items-center gap-2">
                   <span>{activePair.flag}</span>
@@ -431,12 +408,12 @@ const groupedTrades = pendingTrades.reduce((acc, trade) => {
           </div>
 
         </div>
-         <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-full flex justify-center py-1.5 md:py-2 text-gray-400 hover:text-white transition border-t border-[#2a3040]"
-          >
-            <ChevronDown size={16} className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
-          </button>
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="w-full flex justify-center py-1.5 md:py-2 text-gray-400 hover:text-white transition border-t border-[#2a3040]"
+        >
+          <ChevronDown size={16} className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
+        </button>
       </div>
       {/* Pending Trade Modal */}
       <PendingTradeModal

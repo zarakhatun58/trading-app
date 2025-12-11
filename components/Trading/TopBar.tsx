@@ -15,7 +15,7 @@ interface TopBarProps {
   liveBalance?: number;
   balance?: number;
   initialIsLive?: boolean;
-   hideBalance?: boolean;
+  hideBalance?: boolean;
   onToggleHideBalance?: () => void;
 }
 
@@ -24,7 +24,7 @@ const TopBar = ({
   id = '71910310',
   currency = 'USD',
   liveBalance = 0,
-  balance = 1000000,
+  balance = 10000,
   initialIsLive = false,
   hideBalance = false,
   onToggleHideBalance,
@@ -67,8 +67,8 @@ const TopBar = ({
       maximumFractionDigits: 2,
     });
   };
-const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : balance)}`;
-//  const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? 10000000 : 10000000)}`;
+  const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : balance)}`;
+  //  const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? 10000000 : 10000000)}`;
   return (
     <header className="h-14 bg-[#101729] flex items-center justify-between pl-4 pr-2 pb-2 pt-4 mb-2">
 
@@ -84,7 +84,7 @@ const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : b
         </span>
       </div>
 
-     {/* <div  className={`xl2:hidden
+      {/* <div  className={`xl2:hidden
               bg-[#27a663] rounded-full py-2 px-2 text-[12px] 
              flex items-center gap-2 h-[40px]`}>
 
@@ -105,6 +105,8 @@ const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : b
               else setActiveIndex(null);
             }}
             className={`
+              btn-press
+              bg-[#2a3040]
     relative p-2 rounded-sm transition-colors
     hover:bg-[#2a3040]
     ${activeIndex === 0 ? "bg-success" : ""}
@@ -131,7 +133,8 @@ const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : b
             if (nextchat) setActiveIndex(1);
             else setActiveIndex(null);
           }}
-          className={`
+          className={`btn-press
+            bg-[#2a3040]
     relative p-2 rounded-sm transition-colors
     hover:bg-[#2a3040]
     ${activeIndex === 1 ? "bg-success" : ""}
@@ -148,7 +151,7 @@ const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : b
         <div ref={onlineUsersRef} className="relative">
           <button
             onClick={() => setShowOnlineUsers(!showOnlineUsers)}
-            className="relative p-2 rounded-lg hover:bg-[#2a3040] transition-colors"
+            className="btn-press bg-[#2a3040] relative p-2 rounded-lg hover:bg-[#2a3040] transition-colors"
           >
             <User size={20} className="text-gray-400" />
             {onlineUsers > 0 && (
@@ -172,7 +175,7 @@ const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : b
               if (next) setActiveIndex(2);
               else setActiveIndex(null);
             }}
-            className="flex items-center gap-2 px-2 py-1 rounded-sm bg-[#1a1f2e] hover:bg-[#2a3040] transition-colors border border-[#2a3040] "
+            className="btn-press flex items-center gap-2 px-2 py-1 rounded-sm bg-[#1a1f2e] hover:bg-[#2a3040] transition-colors border border-[#2a3040] "
           >
             <GraduationCap className="w-5 h-5 text-gray-400" />
             <div className="flex flex-col items-start">
@@ -196,20 +199,23 @@ const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : b
             liveBalance={liveBalance}
             balance={balance}
             isLive={isLive}
-             onToggleLive={setIsLive}
+            onToggleLive={setIsLive}
             hideBalance={hideBalance}
             onToggleHideBalance={onToggleHideBalance}
           />
         </div>
 
         <div className="hidden sm:flex gap-2">
-          <button className="py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-sm transition-colors flex items-center gap-1">
+          <button className="btn-press 
+ py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-sm transition-colors flex items-center gap-1">
             <Plus size={16} />
             Deposit
           </button>
-          <button className="py-2 px-4 rounded-sm bg-[#2a3040] hover:bg-[#3a4050] text-white font-medium text-sm transition-colors border border-[#3a4050]">
+          <button className="py-2 px-4 rounded-sm bg-[#2a3040] hover:bg-[#3a4050] text-white font-medium text-sm border border-[#3a4050] btn-press">
             Withdrawal
           </button>
+
+
         </div>
       </div>
 

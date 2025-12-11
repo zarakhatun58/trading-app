@@ -39,7 +39,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      <div data-scroll className="flex-1 overflow-y-auto p-4 space-y-6">
 
         <div className="space-y-2">
           <label className="text-xs text-muted-foreground uppercase">Language</label>

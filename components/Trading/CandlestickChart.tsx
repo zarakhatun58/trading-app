@@ -536,8 +536,8 @@ interface Notification {
         onClick={() => setShowPairInfo(true)}
         className="absolute left-10 md:left-4 top-12 md:top-12 flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-primary/20 text-primary text-xs md:text-sm hover:bg-primary/30 transition-colors"
       >
-        <Info size={12} className="md:w-[14px] md:h-[14px]" />
-        <span className="font-medium hidden sm:inline text-[10px]">PAIR INFORMATION</span>
+        <Info size={12} className="md:w-[12px] md:h-[12px]" />
+        <span className="font-medium hidden sm:inline text-[9px]">PAIR INFORMATION</span>
       </button>
 
       {/* Time Display */}

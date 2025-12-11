@@ -21,6 +21,10 @@ const config: Config = {
     },
 
     extend: {
+      rotate: {
+        'x-10': '10deg', 
+        'y-10': '10deg',
+      },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
