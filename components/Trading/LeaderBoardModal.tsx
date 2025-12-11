@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUp, ArrowDown, X, Flag, IndianRupee } from "lucide-react";
+import { ArrowUp, ArrowDown, X, Flag, IndianRupee, BarChart3 } from "lucide-react";
 import { currencyPairs } from "../../data/mockData";
 
 interface LeaderBoardProps {
@@ -22,13 +22,13 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
     const [hoverUser, setHoverUser] = useState<any>(null);
 
     return (
-        <div className="relative">
+        <div className="relative pb-2">
 
             {/* MAIN MODAL */}
             <div
                 className="fixed right-[234px] top-[63px] w-[228px] h-[480px]
        bg-[#101729] border border-[#2a3040] rounded-sm shadow-xl 
-        p-3  animate-slideLeft z-50"
+        p-3 animate-slideLeft z-50"
             >
                 {/* HEADER */}
                 <div className="flex justify-between items-center mb-3">
@@ -43,9 +43,7 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
                         <X size={18} />
                     </button>
                 </div>
-                <div>
-                    <span >How does this rating work?</span>
-                </div>
+                
                 <div className="bg-[#2a3040] p-2 rounded-sm transition-colors
     hover:bg-[#2a3040] mb-1">
                     <div className="flex flex-row justify-between item-center border border-b-[#595b65] mb-1 pb-1">
@@ -68,7 +66,10 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
                         <span className="text-[10px] text-gray-400 mr-2">Your Position:</span><span className="text-[10px]">66072</span>
                     </div>
                 </div>
-                <div data-scroll className="overflow-y-auto h-[320px]">
+                <div className="bg-primary/20 text-primary p-2 rounded-sm flex flex-row mb-1">
+                    <BarChart3 size={20}/> <span className="ml-2 text-[10px] font-semibold">How does this rating work?</span>
+                </div>
+                <div data-scroll className="overflow-y-auto h-[290px]">
                     {/* ITEMS */}
                     {currencyPairs.slice(0, 12).map((item) => {
                         const isUp = item.currentPrice > item.previousPrice;
