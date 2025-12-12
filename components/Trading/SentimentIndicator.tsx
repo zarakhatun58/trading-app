@@ -23,10 +23,10 @@ const SentimentIndicator = ({
       {/* Plus → Close button */}
       <button
         onClick={onPlusClick}
-        className="w-8 h-8 mb-2 rounded-sm bg-primary text-[#ffffff] hover:bg-primary/90 transition-all flex items-center justify-center"
+        className="w-10 h-10 mb-2 rounded-sm bg-primary text-[#ffffff] hover:bg-primary/90 transition-all flex items-center justify-center"
       >
         <Plus
-          size={18}
+          size={22}
           className={`
             transition-transform duration-300
             ${showPairSelector ? "rotate-45" : "rotate-0"}

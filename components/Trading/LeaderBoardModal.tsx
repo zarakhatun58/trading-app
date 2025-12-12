@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUp, ArrowDown, X, Flag, IndianRupee, BarChart3 } from "lucide-react";
+import { ArrowUp, ArrowDown, X, Flag, IndianRupee, BarChart3, User } from "lucide-react";
 import { currencyPairs } from "../../data/mockData";
+import Image from "next/image";
 
 interface LeaderBoardProps {
     isOpen: boolean;
@@ -26,7 +27,7 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
 
             {/* MAIN MODAL */}
             <div
-                className="fixed right-[234px] top-[63px] w-[228px] h-[480px]
+                className="fixed right-[237px] top-[63px] w-[246px] h-[480px]
        bg-[#101729] border border-[#2a3040] rounded-sm shadow-xl 
         p-3 animate-slideLeft z-50"
             >
@@ -43,7 +44,7 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
                         <X size={18} />
                     </button>
                 </div>
-                
+
                 <div className="bg-[#2a3040] p-2 rounded-sm transition-colors
     hover:bg-[#2a3040] mb-1">
                     <div className="flex flex-row justify-between item-center border border-b-[#595b65] mb-1 pb-1">
@@ -67,9 +68,9 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
                     </div>
                 </div>
                 <div className="bg-primary/20 text-primary p-2 rounded-sm flex flex-row mb-1">
-                    <BarChart3 size={20}/> <span className="ml-2 text-[10px] font-semibold">How does this rating work?</span>
+                    <BarChart3 size={20} /> <span className="ml-2 text-[10px] font-semibold">How does this rating work?</span>
                 </div>
-                <div data-scroll className="overflow-y-auto h-[290px]">
+                <div data-scroll className="absolute overflow-y-auto h-[275px]">
                     {/* ITEMS */}
                     {currencyPairs.slice(0, 12).map((item) => {
                         const isUp = item.currentPrice > item.previousPrice;
@@ -84,27 +85,27 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
                                 onMouseLeave={() => setHoverUser(null)}
                             >
                                 <div className="flex items-center gap-2">
-                                    <span className="text-lg">{item.flag}</span>
+                                    <div className="rounded-full w-[20px] h-[20px] bg-yellow-300 flex items-center justify-center">
+                                        <span className="text-[8px] font-bold">{item.rank}</span>
+                                    </div>
 
+                                    <span className="relative flex flex-row">
+                                        <span
+                                            className="w-[20px] h-[20px] text-green-500 rounded-full bg-white p-2 text-[5px]"
+                                        >{item.flag}</span>
+                                        <User
+                                            size={20}
+                                            className="text-green-500 rounded-full bg-white p-2 ml-[-10px]"
+                                        />
+                                    </span>
                                     <div>
                                         <p className="text-xs text-white">{item.name}</p>
-                                        <p className="text-[10px] text-gray-400 flex items-center gap-1">
-                                            #{item.symbol}
-                                            {isUp ? (
-                                                <ArrowUp size={10} className="text-green-400" />
-                                            ) : (
-                                                <ArrowDown size={10} className="text-red-400" />
-                                            )}
-                                        </p>
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col text-right">
                                     <p className="text-green-400 text-xs font-semibold">
                                         ${item.currentPrice}
-                                    </p>
-                                    <p className="text-[9px] text-gray-400">
-                                        {new Date().toLocaleTimeString()}
                                     </p>
                                 </div>
                             </div>
@@ -116,36 +117,52 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
             {/* HOVER MODAL */}
             {hoverUser && (
                 <div
-                    className="fixed right-[455pxpx] top-[200px] w-[200px]
-          bg-[#1c1c1c] border border-[#2a3040] rounded-sm shadow-lg
+                    className="fixed right-[450px] top-[200px] w-[300px]
+          bg-[#2a3040] border border-[#2a3040] rounded-sm shadow-lg
           p-4 animate-fade z-50"
                 >
-                    <h3 className="text-white text-sm font-semibold mb-1">
-                        {hoverUser.name}
-                    </h3>
+                    <div className="flex flex-row justify-start">
+                        <div className=""><User
+                            className="rounded-full object-cover w-[40px] h-[40px] border border-[#ffffff] p-2"
+                        /></div>
+                        <div className="flex flex-col pl-4">
+                            <span className="text-gray-400 text-[12px]">{hoverUser.country}</span>
+                            <span className="text-gray-200 text-[14px]">{hoverUser.name}</span>
+                        </div>
+                    </div>
 
-                    <p className="text-gray-300 text-xs mb-2">ID: #{hoverUser.symbol}</p>
+                    <div className="text-white space-y-4 ">
+                        <div className="flex flex-row justify-between border border-b-[#595b65] mb-2 pb-2 mt-4">
+                            <div className="flex flex-col justify-start ">
+                                <span className="text-[16px] font-bold">{hoverUser.tradeCount}54</span>
+                                <span className="text-[12px]">Trade Counts</span>
+                            </div>
+                            <div className="flex flex-col justify-start">
+                                <span className="text-[16px] font-bold">{hoverUser.tradeCount}96</span>
+                                <span className="text-[12px]">Profitable Trades</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-row justify-between border border-b-[#595b65] mb-2 pb-2">
+                            <div className="flex flex-col justify-start">
+                                <span className="text-[16px] font-bold">{hoverUser.tradeCount}0</span>
+                                <span className="text-[12px]">Trade Profit</span>
+                            </div>
+                            <div className="flex flex-col justify-start">
+                                <span className="text-[16px] font-bold">{hoverUser.tradeCount}0</span>
+                                <span className="text-[12px]">Avarege Profit</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-row justify-between mb-2 pb-2">
+                            <div className="flex flex-col justify-start">
+                                <span className="text-[16px] font-bold">${hoverUser.previousPrice}</span>
+                                <span className="text-[12px]">Min Trade Amount</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[16px] font-bold">${hoverUser.currentPrice}</span>
+                                <span className="text-[12px]">Max Trade Amount</span>
+                            </div>
+                        </div>
 
-                    <div className="text-xs text-white space-y-1">
-                        <p>
-                            Current Price:{" "}
-                            <span className="text-green-400">${hoverUser.currentPrice}</span>
-                        </p>
-                        <p>
-                            Previous:{" "}
-                            <span className="text-gray-400">${hoverUser.previousPrice}</span>
-                        </p>
-                        <p>
-                            Performance:{" "}
-                            <span className="text-yellow-400">{hoverUser.performance}%</span>
-                        </p>
-
-                        <p className="mt-2 text-[10px] text-blue-300">
-                            Duration: {hoverUser.duration} min
-                        </p>
-                        <p className="text-[10px] text-purple-300">
-                            Updated: {new Date().toLocaleTimeString()}
-                        </p>
                     </div>
                 </div>
             )}

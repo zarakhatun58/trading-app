@@ -79,7 +79,7 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
   const timeOptions = isAbsoluteTimeMode ? absoluteTimeOptions : durationTimeOptions
   return (
     <div className="fixed right-[237px] top-[64px] z-50">
-      <div className="bg-[#191919] rounded-sm border border-[#2a3040] shadow-2xl w-[180px] overflow-hidden px-4 py-[13px]">
+      <div className="bg-[#101729] rounded-sm border border-[#2a3040] shadow-2xl w-[241px] overflow-hidden px-4 py-[13px]">
         {/* Tabs */}
         <div className="flex mb-4">
           <button
@@ -105,14 +105,14 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
         <div className="space-y-4">
           {activeTab === 'quote' ? (
             <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#191919]">
+              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729]">
                 Quote:
               </label>
               <input
                 type="text"
                 value={quoteValue}
                 onChange={(e) => setQuoteValue(e.target.value)}
-                className="w-full py-2 px-3 bg-[#191919] border border-[#3a4050] rounded-sm text-white text-[14px] focus:outline-none focus:border-primary"
+                className="w-full py-2 px-3 bg-[#101729] border border-[#3a4050] rounded-sm text-white text-[14px] focus:outline-none focus:border-primary"
               />
               <div className="text-xs text-gray-500 mt-1">
                 Current quote: {currentQuote.toFixed(3)}
@@ -120,14 +120,14 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
             </div>
           ) : (
             <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#191919]">
+              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729]">
                 Time:
               </label>
               <input
                 type="text"
                 value={timeValue}
                 onChange={(e) => setTimeValue(e.target.value)}
-                className="w-full py-2 px-3 bg-[#191919] border border-[#2a3040] rounded-sm text-white text-[12px] focus:outline-none focus:border-primary"
+                className="w-full py-2 px-3 bg-[#101729] border border-[#2a3040] rounded-sm text-white text-[12px] focus:outline-none focus:border-primary"
               />
               <div className="text-xs text-gray-500 mt-1">
                 Current time: {currentTime}
@@ -136,12 +136,12 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
           )}
 
           <div className="relative">
-            <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#191919] z-10">
+            <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729] z-10">
               Period:
             </label>
             <button
               onClick={() => setShowPeriodMenu(!showPeriodMenu)}
-              className="w-full p-3 bg-[#191919] border border-[#2a3040] rounded-sm text-[12px] text-white font-semibold text-left focus:outline-none focus:border-primary"
+              className="w-full py-2 px-3 bg-[#101729] border border-[#2a3040] rounded-sm text-[12px] text-white font-semibold text-left focus:outline-none focus:border-primary"
             >
               {period}
             </button>
@@ -170,10 +170,10 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
           </div>
 
           <div className="relative">
-            <label className="absolute -top-2 left-3 px-1 text-[10px] text-gray-500 bg-[#191919] z-10">
+            <label className="absolute -top-2 left-3 px-1 text-[10px] text-gray-500 bg-[#101729] z-10">
               Investment
             </label>
-            <div className="flex items-center justify-between bg-[#191919] border border-[#2a3040] rounded-sm p-2">
+            <div className="flex items-center justify-between bg-[#101729] border border-[#2a3040] rounded-sm p-2">
               <button
                 onClick={() => adjustInvestment(-10)}
                 className="btn-press w-6 h-6 rounded-sm bg-[#2a3040] flex items-center justify-center text-gray-300 hover:bg-[#3a4050] transition-colors"
@@ -188,7 +188,7 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
                 <Plus size={14} />
               </button>
             </div>
-            <button className="absolute -bottom-2 left-12 px-1 text-[10px] text-primary font-bold bg-[#191919]">
+            <button className="absolute -bottom-2 left-12 px-1 text-[10px] text-primary font-bold bg-[#101729]">
               SWITCH
             </button>
           </div>
@@ -196,7 +196,7 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
           <div className="space-y-3">
             <button
               onClick={() => onTrade('up', investment, activeTab, activeTab === 'quote' ? quoteValue : timeValue, period)}
-              className="btn-press w-full py-1 px-2 rounded-sm text-[14px] bg-success hover:bg-success/90 text-white font-semibold flex items-center justify-between transition-colors"
+              className="btn-press w-full py-2 px-2 rounded-sm text-[14px] bg-success hover:bg-success/90 text-white font-semibold flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Clock size={16} />
@@ -207,7 +207,7 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
 
             <button
               onClick={() => onTrade('down', investment, activeTab, activeTab === 'quote' ? quoteValue : timeValue, period)}
-              className="btn-press w-full py-1 px-2 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold flex items-center justify-between transition-colors"
+              className="btn-press w-full py-2 px-2 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Clock size={16} />

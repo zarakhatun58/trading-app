@@ -221,8 +221,8 @@ const TradingPage = () => {
                     <div
                       key={pair.id}
                       className={`absolute flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer transition-all shrink-0 ${isActive
-                          ? 'bg-[#1a1f2e] border border-primary'
-                          : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
+                        ? 'bg-[#1a1f2e] border border-primary'
+                        : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
                         }`}
                     >
                       {/* Close button */}
@@ -268,10 +268,19 @@ const TradingPage = () => {
                           e.stopPropagation();
                           togglePinPair(pair.id);
                         }}
-                        className={`p-0.5 rounded transition-colors ${isPinned ? 'text-primary' : 'text-gray-500 hover:text-gray-300'}`}
+                        className={`p-0.5 rounded transition-all duration-300 ${isPinned ? "text-primary" : "text-gray-500 hover:text-gray-300"
+                          }`}
                       >
-                        <Pin size={12} className={isPinned ? 'fill-primary' : ''} />
+                        <Pin
+                          size={12}
+                          className={`
+      transition-all duration-300 
+      ${isPinned ? "rotate-0" : "rotate-45"}
+      ${isPinned ? "fill-primary" : ""}
+    `}
+                        />
                       </button>
+
 
                       {/* Pair Selector Dropdown */}
                       {showTabPairSelector === pair.id && (

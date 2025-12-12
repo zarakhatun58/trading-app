@@ -9,6 +9,8 @@ import SwitchTimeMenu from './SwitchTimeMenu';
 import InvestmentMenu from './InvestmentMenu';
 import PendingTradeModal from './PendingTradeModal';
 import LeaderBoardModal from './LeaderBoardModal';
+import SignalTradeModal from './SignalTradeModal';
+import WhatIsItModal from './WhatIsItModal';
 
 
 interface TradingPanelProps {
@@ -33,6 +35,7 @@ export default function TradingPanel({
   const [investment, setInvestment] = useState(100);
   const [tradeTime, setTradeTime] = useState(60);
   const [isPendingTrade, setIsPendingTrade] = useState(false);
+  const [isSignalTrade, setIsSignalTrade] = useState(false);
   const [isLeaderBoardOpen, setIsLeaderBoardOpen] = useState(false);
   const [isTradeSignal, setIsTradeSignal] = useState(false);
   const [payout] = useState(1.88);
@@ -45,7 +48,7 @@ export default function TradingPanel({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [upHovered, setUpHovered] = useState(false);
   const [downHovered, setDownHovered] = useState(false);
-
+  const [showWhatIsIt, setShowWhatIsIt] = useState(false);
   const pendingTrades = trades.filter(t => t.status === 'pending');
   const tradeCount = pendingTrades.length;
   const orderCount = 0;
@@ -119,6 +122,16 @@ export default function TradingPanel({
     onTradeZone?.(direction);
     onTrade(direction, amount, tradeTime);
     setIsLeaderBoardOpen(false);
+  };
+  const handleSignalTrade = (direction: 'up' | 'down', amount: number, type: 'quote' | 'time', value: string, period: string) => {
+    onTradeZone?.(direction);
+    onTrade(direction, amount, tradeTime);
+    setIsSignalTrade(false);
+  };
+  const handleWhatIs = (direction: 'up' | 'down', amount: number, type: 'quote' | 'time', value: string, period: string) => {
+    onTradeZone?.(direction);
+    onTrade(direction, amount, tradeTime);
+    setShowWhatIsIt(false);
   };
 
   const accountMenuItems = [
@@ -194,25 +207,22 @@ export default function TradingPanel({
         </div> */}
 
         <div className="flex flex-row items-center justify-between pt-2 mb-2">
-          {/* <div  onClick={() => setIsPendingTrade(!isPendingTrade)} className='rounded-sm w-[30px] h-[30px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
-          transition font-bold btn-press flex items-center justify-center'>
-            <Settings size={18}/>
-          </div> */}
-          <div onClick={() => setIsLeaderBoardOpen(!isLeaderBoardOpen)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
-          transition font-bold btn-press flex flex-col items-center justify-center'>
-            <CircuitBoard size={18} />
-             <span className='text-[6px]'>Leader Board</span>
-          </div>
-          <div onClick={() => setIsPendingTrade(!isPendingTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
-          transition font-bold btn-press flex flex-col items-center justify-center'>
-            <Signal size={18} />
-            <span className='text-[6px]'>Trading Signal</span>
-          </div>
           <div onClick={() => setIsPendingTrade(!isPendingTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
           transition font-bold btn-press flex flex-col items-center justify-center'>
             <TimerReset size={18} />
             <span className='text-[6px]'>Pending Trade</span>
           </div>
+          <div onClick={() => setIsLeaderBoardOpen(!isLeaderBoardOpen)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
+          transition font-bold btn-press flex flex-col items-center justify-center'>
+            <CircuitBoard size={18} />
+            <span className='text-[6px]'>Leader Board</span>
+          </div>
+          <div onClick={() => setIsSignalTrade(!isSignalTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
+          transition font-bold btn-press flex flex-col items-center justify-center'>
+            <Signal size={18} />
+            <span className='text-[6px]'>Trading Signal</span>
+          </div>
+
         </div>
         <div className='rounded-lg bg-[#2b3040] px-4 py-2 mb-2'>
           <div className="py-3 border-b border-[#2a3040]">
@@ -455,6 +465,12 @@ export default function TradingPanel({
         onClose={() => setIsLeaderBoardOpen(false)}
         onTrade={handleLeaderBoard}
       />
+      <SignalTradeModal
+        isOpen={isSignalTrade}
+        onClose={() => setIsSignalTrade(false)}
+        onTrade={handleSignalTrade} activePair={activePair}
+      />
+      
     </aside>
   );
 }

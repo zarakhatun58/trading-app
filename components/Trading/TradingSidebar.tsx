@@ -29,6 +29,7 @@ import {
   Signal,
   Unplug,
   HelpCircleIcon,
+  ZoomIn,
 } from 'lucide-react';
 import { cn } from '../../libs/utils';
 import { Tooltip, TooltipTrigger, TooltipContent } from '../ReusableUI/tooltip';
@@ -52,19 +53,21 @@ interface TradingSidebarProps {
 }
 
 const sidebarItems: SidebarItem[] = [
-  { icon: <TrendingUp size={22} />, label: 'TRADE', active: true },
-  { icon: <HelpCircle size={22} />, label: 'SUPPORT' },
-  { icon: <User size={22} />, label: 'ACCOUNT' },
-  { icon: <Trophy size={22} />, label: 'TOURNA-MENTS', badge: 4 },
-  { icon: <BarChart3 size={22} />, label: 'MARKET' },
+  { icon: <TrendingUp size={24} />, label: 'TRADE', active: true },
+  { icon: <HelpCircle size={24} />, label: 'SUPPORT' },
+  { icon: <User size={24} />, label: 'ACCOUNT' },
+  { icon: <Trophy size={24} />, label: 'TOURNA-MENTS', badge: 4 },
+  // { icon: <BarChart3 size={24} />, label: 'MARKET' },
   // { icon: <MoreHorizontal size={18} />, label: 'MORE' },
-  { icon: <Activity size={22} />, label: 'ANALYTICS' },
-  { icon: <Unplug size={22} />, label: 'TOP' },
-  { icon: <Signal size={22} />, label: 'SIGNAL' },
-  { icon: <DollarSign size={22} />, label: 'MARKET' },
-  { icon: <Users size={22} />, label: 'JOIN US' },
-  { icon: <HelpCircleIcon size={22} />, label: 'HELP' },
-  { icon: <Settings size={22} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
+  { icon: <Activity size={24} />, label: 'ANALYTICS' },
+  // { icon: <Unplug size={22} />, label: 'TOP' },
+  // { icon: <Signal size={22} />, label: 'SIGNAL' },
+  // { icon: <DollarSign size={24} />, label: 'MARKET' },
+  { icon: <Users size={24} />, label: 'JOIN US' },
+  { icon: <Volume2 size={24} />, label: 'VOLUME' },
+  { icon: <ZoomIn size={24} />, label: 'ZOOM' },
+  { icon: <HelpCircleIcon size={24} />, label: 'HELP' },
+  { icon: <Settings size={24} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
 
 
 ];
@@ -108,7 +111,7 @@ const TradingSidebar = ({
               key={index}
               onClick={item.onClick}
               className={cn(
-                'p-2 rounded-sm transition-all duration-200 hover:bg-sidebar-accent cursor-pointer text-sidebar-foreground hover:text-sidebar-accent-foreground relative',
+                'px-2  py-3 rounded-sm transition-all duration-200 hover:bg-sidebar-accent cursor-pointer text-sidebar-foreground hover:text-sidebar-accent-foreground relative',
                 item.active && 'bg-sidebar-accent text-primary'
               )}
             >
@@ -179,7 +182,7 @@ const TradingSidebar = ({
       </div>
 
 
-      <nav className="flex-1 flex flex-col gap-1 px-1 ">
+      <nav className="flex-1 flex flex-col gap-2 px-1 ">
         {sidebarItems.map((item, index) => {
 
           // --- BUTTON ELEMENT ---

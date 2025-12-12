@@ -6,6 +6,7 @@ import NotificationModal from './NotificationModal';
 import OnlineUsersModal from './OnlineUsersModal';
 import AccountModal from './AccountModal';
 import ChatBox from './ChatBox';
+import DepositModal from '../Deposit/DepositModal';
 
 
 interface TopBarProps {
@@ -42,7 +43,7 @@ const TopBar = ({
   const notificationRef = useRef<HTMLDivElement>(null);
   const onlineUsersRef = useRef<HTMLDivElement>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+const [openDeposit, setOpenDeposit] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -206,7 +207,7 @@ const TopBar = ({
         </div>
 
         <div className="hidden sm:flex gap-2">
-          <button className="btn-press 
+          <button onClick={() => setOpenDeposit(true)} className="btn-press 
  py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-sm transition-colors flex items-center gap-1">
             <Plus size={16} />
             Deposit
@@ -225,6 +226,7 @@ const TopBar = ({
           setActiveIndex(null);
         }}
       />
+      <DepositModal isOpen={openDeposit} onClose={() => setOpenDeposit(false)} />
     </header>
   );
 };
