@@ -47,6 +47,7 @@ const TradingPage = () => {
   const selectedPairs = pairs.filter(p => selectedPairIds.includes(p.id));
   const [hideBalance, setHideBalance] = useState(false);
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     setCandleData(generateCandleData(30));
@@ -170,6 +171,7 @@ const TradingPage = () => {
       <div className="flex h-screen bg-background overflow-hidden">
 
         {/* LEFT SIDEBAR */}
+        {!isFullscreen && (
         <div className="hidden md:block">
           <TradingSidebar
             isExpanded={sidebarExpanded}
@@ -178,9 +180,19 @@ const TradingPage = () => {
             onSocialClick={() => setShowSocialModal(true)}
             onCollapseToIcons={() => setSidebarCollapsedToIcons(!sidebarCollapsedToIcons)}
             isCollapsedToIcons={sidebarCollapsedToIcons}
+            isFullscreen={isFullscreen}
+            setIsFullscreen={setIsFullscreen}
           />
         </div>
-
+        )}
+      {!isFullscreen && showSettings && (
+          <div className="hidden md:block w-[250px] border-r border-[#2a3040] bg-[#101729]">
+            <SettingsPanel
+              isOpen={true}
+              onClose={() => setShowSettings(false)}
+            />
+          </div>
+        )}
         {/* MAIN CONTENT */}
         <div className="flex flex-col flex-1 overflow-hidden">
 
@@ -328,7 +340,7 @@ const TradingPage = () => {
             </div>
 
             {/* RIGHT TRADING PANEL */}
-            <TradingPanel
+           {!isFullscreen && ( <TradingPanel
               activePair={activePair}
               onTrade={handleTrade}
               balance={balance}
@@ -337,13 +349,13 @@ const TradingPage = () => {
               trades={trades}
               onSellTrade={handleSellTrade}
             />
-
+           )}
           </div>
         </div>
       </div>
 
       {/* MODALS */}
-      <SettingsPanel isOpen={showSettings} onClose={() => setShowSettings(false)} />
+      {/* <SettingsPanel isOpen={showSettings} onClose={() => setShowSettings(false)} /> */}
       <SocialModal isOpen={showSocialModal} onClose={() => setShowSocialModal(false)} />
       <DrawingSidebar isOpen={showDrawingSidebar} onClose={() => setShowDrawingSidebar(false)} />
       <IndicatorsPanel isOpen={showIndicators} onClose={() => setShowIndicators(false)} />

@@ -210,17 +210,17 @@ export default function TradingPanel({
           <div onClick={() => setIsPendingTrade(!isPendingTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
           transition font-bold btn-press flex flex-col items-center justify-center'>
             <TimerReset size={18} />
-            <span className='text-[6px]'>Pending Trade</span>
+            <span className='text-[8px] text-[#ffffff]'>Pending Trade</span>
           </div>
           <div onClick={() => setIsLeaderBoardOpen(!isLeaderBoardOpen)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
           transition font-bold btn-press flex flex-col items-center justify-center'>
             <CircuitBoard size={18} />
-            <span className='text-[6px]'>Leader Board</span>
+            <span className='text-[8px] text-[#ffffff]'>Leader Board</span>
           </div>
           <div onClick={() => setIsSignalTrade(!isSignalTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
           transition font-bold btn-press flex flex-col items-center justify-center'>
             <Signal size={18} />
-            <span className='text-[6px]'>Trading Signal</span>
+            <span className='text-[8px] text-[#ffffff]'>Trading Signal</span>
           </div>
 
         </div>

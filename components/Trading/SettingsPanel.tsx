@@ -27,7 +27,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
   ];
 
   return (
-    <div className="fixed inset-y-0 left-0 w-80 bg-card border-r border-border z-50 flex flex-col">
+    <div className="fixed inset-y-0 left-70 w-[250px] bg-[#101729] border-r border-border z-50 flex flex-col">
  
       <div className="flex items-center justify-between p-4 border-b border-border">
         <h2 className="text-lg font-semibold text-foreground">Settings</h2>
@@ -41,12 +41,14 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
 
       <div data-scroll className="flex-1 overflow-y-auto p-4 space-y-6">
 
-        <div className="space-y-2">
-          <label className="text-xs text-muted-foreground uppercase">Language</label>
+        <div className="space-y-2 relative">
+              <label className="absolute -top-0 left-3 px-2 text-[11px] text-[#8b93a7] bg-[#101729] z-10 font-bold">
+               Language
+              </label>
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full bg-[#101729] border border-border rounded-sm px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="English">English</option>
             <option value="Spanish">Spanish</option>
@@ -56,12 +58,14 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           </select>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-xs text-muted-foreground uppercase">Timezone</label>
+       <div className="space-y-2 relative">
+              <label className="absolute -top-0 left-3 px-2 text-[11px] text-[#8b93a7] bg-[#101729] z-10 font-bold">
+                Timezone
+              </label>
           <select
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
-            className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full bg-[#101729] border border-border rounded-sm px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="(UTC+00:00)">(UTC+00:00)</option>
             <option value="(UTC+05:30)">(UTC+05:30) India</option>

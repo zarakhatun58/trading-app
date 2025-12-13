@@ -6,12 +6,9 @@ import {
   HelpCircle,
   User,
   Trophy,
-  BarChart3,
-  MoreHorizontal,
   Volume2,
   Settings,
   Grid3X3,
-  Expand,
   ChevronLeft,
   X,
   Menu,
@@ -24,12 +21,14 @@ import {
   Users,
   ChevronDown,
   Activity,
-  Settings2,
-  DollarSign,
-  Signal,
-  Unplug,
-  HelpCircleIcon,
-  ZoomIn,
+  Maximize,
+  Minimize,
+  Receipt,
+  Send,
+  Facebook,
+  Instagram,
+  VolumeX,
+  Share2,
 } from 'lucide-react';
 import { cn } from '../../libs/utils';
 import { Tooltip, TooltipTrigger, TooltipContent } from '../ReusableUI/tooltip';
@@ -50,6 +49,8 @@ interface TradingSidebarProps {
   onSocialClick: () => void;
   onCollapseToIcons: () => void;
   isCollapsedToIcons: boolean;
+  isFullscreen: boolean;
+  setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const sidebarItems: SidebarItem[] = [
@@ -64,10 +65,8 @@ const sidebarItems: SidebarItem[] = [
   // { icon: <Signal size={22} />, label: 'SIGNAL' },
   // { icon: <DollarSign size={24} />, label: 'MARKET' },
   { icon: <Users size={24} />, label: 'JOIN US' },
-  { icon: <Volume2 size={24} />, label: 'VOLUME' },
-  { icon: <ZoomIn size={24} />, label: 'ZOOM' },
-  { icon: <HelpCircleIcon size={24} />, label: 'HELP' },
-  { icon: <Settings size={24} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
+  // { icon: <HelpCircleIcon size={24} />, label: 'HELP' },
+  // { icon: <Settings size={24} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
 
 
 ];
@@ -75,9 +74,11 @@ const sidebarItems: SidebarItem[] = [
 const expandedMenuItems = [
   { icon: <Wallet size={18} />, label: 'Deposit' },
   { icon: <ArrowDownCircle size={18} />, label: 'Withdrawal' },
-  { icon: <History size={18} />, label: 'Transactions' },
+  { icon: <Receipt size={18} />, label: 'Transaction', },
   { icon: <LineChart size={18} />, label: 'Trades' },
   { icon: <User size={18} />, label: 'Account' },
+
+
 ];
 
 const expandedBottomItems = [
@@ -91,7 +92,9 @@ const TradingSidebar = ({
   onSettingsClick,
   onSocialClick,
   onCollapseToIcons,
+  isFullscreen,
   isCollapsedToIcons,
+  setIsFullscreen
 }: TradingSidebarProps) => {
   if (isCollapsedToIcons) {
     return (
@@ -126,11 +129,9 @@ const TradingSidebar = ({
         </nav>
 
 
-        {/* <div className="my-4 p-2 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-600/20 border border-amber-500/30">
+        <div className="my-4 p-2 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-600/20 border border-amber-500/30">
           <Trophy className="text-amber-400" size={16} />
         </div>
-
-
         <div className="flex flex-col gap-2 mt-auto">
           <button className="p-2 rounded-lg text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors">
             <Grid3X3 size={16} />
@@ -157,15 +158,15 @@ const TradingSidebar = ({
           className="mt-4 p-2 rounded-lg bg-success/20 border border-success/30 text-success hover:bg-success/30 transition-colors"
         >
           <Users size={16} />
-        </button> */}
+        </button>
 
-        {/* <button className="mt-2 w-10 h-10 rounded-lg bg-green text-primary-foreground flex items-center justify-center text-xs font-semibold hover:bg-primary/90 transition-colors">
+        <button className="mt-2 w-10 h-10 rounded-lg bg-green text-primary-foreground flex items-center justify-center text-xs font-semibold hover:bg-primary/90 transition-colors">
           Help
-        </button> */}
+        </button>
       </aside>
     );
   }
-
+  const [isMuted, setIsMuted] = useState(false);
   return (
     <aside className={cn(
       "bg-[#101729] flex flex-col h-screen transition-all duration-300 pl-2",
@@ -184,8 +185,6 @@ const TradingSidebar = ({
 
       <nav className="flex-1 flex flex-col gap-2 px-1 ">
         {sidebarItems.map((item, index) => {
-
-          // --- BUTTON ELEMENT ---
           const ButtonContent = (
             <button
               key={index}
@@ -197,7 +196,6 @@ const TradingSidebar = ({
                 isExpanded ? "flex-row px-2 py-2 gap-2" : "flex-col px-1 py-2 gap-1"
               )}
             >
-              {/* LEFT SIDE: Icon + Label */}
               <div
                 className={cn(
                   "flex items-center font-bold",
@@ -205,7 +203,6 @@ const TradingSidebar = ({
                 )}
               >
                 {item.icon}
-                {/* BADGE */}
                 {item.badge && (
                   <span
                     className={cn(
@@ -224,8 +221,6 @@ const TradingSidebar = ({
                   </span>
                 )}
               </div>
-
-              {/* RIGHT SIDE: Chevron (when expanded) */}
               {isExpanded && (
                 <ChevronDown
                   size={16}
@@ -237,10 +232,6 @@ const TradingSidebar = ({
               )}
             </button>
           );
-
-
-
-          // --- SHOW TOOLTIP WHEN COLLAPSED ---
           if (!isExpanded) {
             return (
               <Tooltip key={index}>
@@ -254,16 +245,49 @@ const TradingSidebar = ({
 
           return <div key={index}>{ButtonContent}</div>;
         })}
+        {!isExpanded && (
+
+          <div className='flex flex-col'>
+            <div className='flex flex-row text-gray-400 justify-between mb-2'>
+              {isFullscreen ? (
+                <Minimize size={16} className="cursor-pointer" onClick={() => setIsFullscreen(false)} />
+              ) : (
+                <Maximize size={16} className="cursor-pointer" onClick={() => setIsFullscreen(true)} />
+              )}
+              <History size={16} /></div>
+            <div className='flex flex-row text-gray-400 justify-between mb-4'>
+              <Settings size={16} className="cursor-pointer" onClick={onSettingsClick} />
+              {isMuted ? (
+                <VolumeX
+                  size={16}
+                  className="cursor-pointer"
+                  onClick={() => setIsMuted(false)}
+                />
+              ) : (
+                <Volume2
+                  size={16}
+                  className="cursor-pointer"
+                  onClick={() => setIsMuted(true)}
+                />
+              )}
+            </div>
+            <div className='border border-[#2a3040] h-[50px] w-full p-2'>
+              <span className='flex flex-row'><Share2 size={14} className='w-[20px] h-[20px] text-gray-400' />
+                <Send size={20} /></span>
+              <Instagram size={12} className='flex felx-row justify-center items-center ml-2' />
+            </div>
+          </div>
+        )}
       </nav>
 
 
-      {/* {isExpanded && (
+      {isExpanded && (
         <div className="px-2 py-4 border-t border-sidebar-border">
           <div className="text-xs text-muted-foreground mb-2 px-4">jkhatun258@gmail.com</div>
           {expandedMenuItems.map((item, index) => (
             <button
               key={index}
-              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent rounded-lg transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-2 text-xs text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent rounded-lg transition-colors"
             >
               {item.icon}
               <span>{item.label}</span>
@@ -274,26 +298,34 @@ const TradingSidebar = ({
             {expandedBottomItems.map((item, index) => (
               <button
                 key={index}
-                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent rounded-lg transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-2 text-xs text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent rounded-lg transition-colors"
               >
                 {item.icon}
-                <span>{item.label}</span>
+                <span className='text-xs'>{item.label}</span>
               </button>
             ))}
-            <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-destructive hover:bg-sidebar-accent rounded-lg transition-colors">
+            <button className="w-full flex items-center gap-3 px-4 py-2 text-xs text-destructive hover:bg-sidebar-accent rounded-lg transition-colors">
               <LogOut size={16} />
               <span>Logout</span>
             </button>
           </div>
         </div>
-      )} */}
+      )}
 
-      {/* {!isExpanded && (
-        <div className="mx-auto my-4 p-2 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-600/20 border border-amber-500/30">
-          <Trophy className="text-amber-400" size={20} />
-          <span className="text-[8px] text-amber-400 font-bold">2025</span>
+      {!isExpanded && (
+        <div className="pb-2">
+          <button className={cn(
+            "rounded-sm bg-green-500 text-[#ffffff] text-[14px] flex items-center justify-center font-semibold hover:bg-primary/90 transition-colors",
+            isExpanded ? "w-full p-3" : "w-10 h-10 mx-auto"
+          )}>
+            Help
+          </button>
         </div>
-      )} */}
+        // <div className="mx-auto my-4 p-2 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-600/20 border border-amber-500/30">
+        //   <Trophy className="text-amber-400" size={20} />
+
+        // </div>
+      )}
 
       {/* <div className={cn(
         "flex gap-2 mt-auto p-4",
@@ -340,6 +372,7 @@ const TradingSidebar = ({
           Help
         </button>
       </div> */}
+      
     </aside>
   );
 };

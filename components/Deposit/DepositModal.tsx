@@ -139,15 +139,15 @@ const [activeCategory, setActiveCategory] = useState("popular");
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
 
               {currentCategory?.payments.map((m) => (
                 <div
                   key={m.name}
-                  className="bg-[#14171f] border border-[#2a3040] rounded-lg py-3 px-4 flex items-center justify-between hover:bg-[#1c1f28] cursor-pointer transition"
+                  className="bg-[#ffffff] border border-[#2a3040] rounded-lg py-3 px-4 flex items-center justify-between hover:bg-[#1c1f28] cursor-pointer transition"
                 >
                   <div>
-                    <p className="text-white text-sm">{m.name}</p>
+                    <p className="text-gray-400 text-sm">{m.name}</p>
                     <p className="text-xs text-gray-400">Min. ${m.min}.00</p>
                   </div>
 
