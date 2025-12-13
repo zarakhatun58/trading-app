@@ -11,6 +11,8 @@ import SocialModal from '../components/Trading/SocialModal';
 import TradePairSelector from '../components/Trading/TradePairSelector';
 import SentimentIndicator from '../components/Trading/SentimentIndicator';
 import { Pin, Plus, X, ChevronDown } from 'lucide-react';
+import { cn } from '../libs/utils';
+import AccountPage from './account';
 
 const ChartToolbar = dynamic(() => import('../components/Trading/ChartToolbar'), { ssr: false });
 const CandlestickChart = dynamic(() => import('../components/Trading/CandlestickChart'), { ssr: false });
@@ -172,20 +174,20 @@ const TradingPage = () => {
 
         {/* LEFT SIDEBAR */}
         {!isFullscreen && (
-        <div className="hidden md:block">
-          <TradingSidebar
-            isExpanded={sidebarExpanded}
-            onToggleExpand={() => setSidebarExpanded(!sidebarExpanded)}
-            onSettingsClick={() => setShowSettings(true)}
-            onSocialClick={() => setShowSocialModal(true)}
-            onCollapseToIcons={() => setSidebarCollapsedToIcons(!sidebarCollapsedToIcons)}
-            isCollapsedToIcons={sidebarCollapsedToIcons}
-            isFullscreen={isFullscreen}
-            setIsFullscreen={setIsFullscreen}
-          />
-        </div>
+          <div className="hidden md:block">
+            <TradingSidebar
+              isExpanded={sidebarExpanded}
+              onToggleExpand={() => setSidebarExpanded(!sidebarExpanded)}
+              onSettingsClick={() => setShowSettings(true)}
+              onSocialClick={() => setShowSocialModal(true)}
+              onCollapseToIcons={() => setSidebarCollapsedToIcons(!sidebarCollapsedToIcons)}
+              isCollapsedToIcons={sidebarCollapsedToIcons}
+              isFullscreen={isFullscreen}
+              setIsFullscreen={setIsFullscreen}
+            />
+          </div>
         )}
-      {!isFullscreen && showSettings && (
+        {!isFullscreen && showSettings && (
           <div className="hidden md:block w-[250px] border-r border-[#2a3040] bg-[#101729]">
             <SettingsPanel
               isOpen={true}
@@ -194,7 +196,12 @@ const TradingPage = () => {
           </div>
         )}
         {/* MAIN CONTENT */}
-        <div className="flex flex-col flex-1 overflow-hidden">
+        <div
+          className={cn(
+            "flex flex-col flex-1 overflow-hidden transition-all duration-300",
+            showSettings && "md:ml-0"
+          )}
+        >
 
           {/* TOPBAR — NOT FULL WIDTH — STARTS AFTER SIDEBAR */}
           <TopBar balance={balance} initialIsLive={false} hideBalance={hideBalance} onToggleHideBalance={() => setHideBalance(!hideBalance)} />
@@ -340,7 +347,7 @@ const TradingPage = () => {
             </div>
 
             {/* RIGHT TRADING PANEL */}
-           {!isFullscreen && ( <TradingPanel
+            {!isFullscreen && (<TradingPanel
               activePair={activePair}
               onTrade={handleTrade}
               balance={balance}
@@ -349,7 +356,7 @@ const TradingPage = () => {
               trades={trades}
               onSellTrade={handleSellTrade}
             />
-           )}
+            )}
           </div>
         </div>
       </div>

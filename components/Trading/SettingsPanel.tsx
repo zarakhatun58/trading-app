@@ -27,9 +27,9 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
   ];
 
   return (
-    <div className="fixed inset-y-0 left-70 w-[250px] bg-[#101729] border-r border-border z-50 flex flex-col">
+    <div className="fixed inset-y-0 left-70 w-[220px] bg-[#101729] border-r border-border z-50 flex flex-col p-4">
  
-      <div className="flex items-center justify-between p-4 border-b border-border">
+      <div className="flex items-center justify-between mb-2">
         <h2 className="text-lg font-semibold text-foreground">Settings</h2>
         <button
           onClick={onClose}
@@ -38,9 +38,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           <X size={20} />
         </button>
       </div>
-
-      <div data-scroll className="flex-1 overflow-y-auto p-4 space-y-6">
-
+      <div data-scroll className="flex-1 overflow-y-auto space-y-6">
         <div className="space-y-2 relative">
               <label className="absolute -top-0 left-3 px-2 text-[11px] text-[#8b93a7] bg-[#101729] z-10 font-bold">
                Language
@@ -48,7 +46,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="w-full bg-[#101729] border border-border rounded-sm px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full bg-[#101729] border text-xs border-border rounded-sm px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="English">English</option>
             <option value="Spanish">Spanish</option>
@@ -65,7 +63,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           <select
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
-            className="w-full bg-[#101729] border border-border rounded-sm px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full bg-[#101729] border border-border text-xs rounded-sm px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="(UTC+00:00)">(UTC+00:00)</option>
             <option value="(UTC+05:30)">(UTC+05:30) India</option>
@@ -81,7 +79,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
             <button
               key={t.id}
               onClick={() => setTheme(t.id)}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-colors ${
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-sm border transition-colors ${
                 theme === t.id
                   ? 'bg-primary/20 border-primary'
                   : 'bg-secondary border-border hover:bg-secondary/80'
@@ -89,7 +87,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
             >
               <div className="flex items-center gap-3">
                 {t.icon}
-                <span className="text-foreground">{t.label}</span>
+                <span className="text-foreground text-xs">{t.label}</span>
               </div>
               <div className={`w-12 h-6 rounded-full relative transition-colors ${
                 theme === t.id ? 'bg-primary' : 'bg-muted'

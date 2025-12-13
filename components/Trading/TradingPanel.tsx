@@ -208,21 +208,20 @@ export default function TradingPanel({
 
         <div className="flex flex-row items-center justify-between pt-2 mb-2">
           <div onClick={() => setIsPendingTrade(!isPendingTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
-          transition font-bold btn-press flex flex-col items-center justify-center'>
+          transition font-semibold btn-press flex flex-col items-center justify-center'>
             <TimerReset size={18} />
             <span className='text-[8px] text-[#ffffff]'>Pending Trade</span>
           </div>
           <div onClick={() => setIsLeaderBoardOpen(!isLeaderBoardOpen)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
-          transition font-bold btn-press flex flex-col items-center justify-center'>
+          transition font-semibold btn-press flex flex-col items-center justify-center'>
             <CircuitBoard size={18} />
             <span className='text-[8px] text-[#ffffff]'>Leader Board</span>
           </div>
           <div onClick={() => setIsSignalTrade(!isSignalTrade)} className='rounded-sm w-[70px] h-[38px] bg-[#3a4050] text-sidebar-foreground hover:bg-[#4a5060] 
-          transition font-bold btn-press flex flex-col items-center justify-center'>
+          transition font-semibold btn-press flex flex-col items-center justify-center'>
             <Signal size={18} />
             <span className='text-[8px] text-[#ffffff]'>Trading Signal</span>
           </div>
-
         </div>
         <div className='rounded-lg bg-[#2b3040] px-4 py-2 mb-2'>
           <div className="py-3 border-b border-[#2a3040]">

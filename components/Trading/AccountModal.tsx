@@ -1,6 +1,7 @@
 import { Eye, EyeOff, Menu, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import ExchangeModal from './ExchangeModal';
+import DailyLimitModal from './DailyLimitModal';
 
 interface AccountModalProps {
   isOpen: boolean;
@@ -29,9 +30,10 @@ const AccountModal = ({
   hideBalance = false,
   onToggleHideBalance,
 }: AccountModalProps) => {
-  const [showExchangeModal, setShowExchangeModal] = useState(false)
   if (!isOpen) return null;
-
+const [showLimitModal, setShowLimitModal] = useState(false);
+ const [showExchangeModal, setShowExchangeModal] = useState(false)
+  const [demoBalance, setDemoBalance] = useState(1000000);
   const fmt = (n?: number) => {
     const num = typeof n === 'number' ? n : 0;
     return num.toLocaleString(undefined, {
@@ -45,6 +47,10 @@ const AccountModal = ({
     }
     return value;
   };
+
+const handleRefreshDemo = () => {
+  setDemoBalance(1000000); 
+};
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
@@ -106,7 +112,7 @@ const AccountModal = ({
                   <div className="text-sm font-semibold text-white">Live Account</div>
                   <div className="text-xs text-slate-500">{hideBalance ? '******' : `₹${fmt(liveBalance)}`}</div>
                   <div className="text-xs text-slate-500 mt-1">The daily limit is not set</div>
-                  <div className="text-xs text-sky-400 mt-1 cursor-pointer hover:underline">SET LIMIT</div>
+                  <div className="text-[10px] text-sky-400 mt-1 cursor-pointer hover:underline" onClick={() => setShowLimitModal(true)}>SET LIMIT</div>
                 </div>
               </label>
 
@@ -121,7 +127,7 @@ const AccountModal = ({
                 <div className="flex-1">
                   <div className="text-sm font-semibold text-white">Demo Account</div>
                   <div className="text-xs text-white font-bold mt-1">${fmt(balance)}</div>
-                  <button className="text-xs text-slate-400 mt-1 flex items-center gap-2 hover:text-white">
+                  <button  onClick={handleRefreshDemo} className="text-xs text-slate-400 mt-1 flex items-center gap-2 hover:text-white ">
                     <RefreshCw className="w-3 h-3" />
                     <span>Refresh</span>
                   </button>
@@ -140,11 +146,38 @@ const AccountModal = ({
                   </button>
                 </li>
               ))}
-              <li className="pt-2 border-t border-gray-800">
-                <button className="w-full text-left px-3 py-2 rounded hover:bg-red-900/30 transition-colors text-red-400 text-sm">
-                  Logout
-                </button>
+              <li className="pt-2 border-t border-gray-800 space-y-1">
+                {isLive ? (
+                  /* LIVE ACCOUNT → LOGOUT */
+                  <button
+                    className="w-full text-left px-3 py-2 rounded 
+                 hover:bg-red-900/30 transition-colors 
+                 text-red-400 text-sm"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  /* DEMO ACCOUNT → SIGN IN / SIGN UP */
+                  <>
+                    <button
+                      className="w-full text-left px-3 py-2 rounded 
+                   hover:bg-slate-900 transition-colors 
+                   text-white text-sm"
+                    >
+                      Sign In
+                    </button>
+
+                    <button
+                      className="w-full text-left px-3 py-2 rounded 
+                   hover:bg-indigo-900/30 transition-colors 
+                   text-primary text-sm"
+                    >
+                      Sign Up
+                    </button>
+                  </>
+                )}
               </li>
+
             </ul>
           </div>
         </div>
@@ -155,6 +188,12 @@ const AccountModal = ({
         onClose={() => setShowExchangeModal(false)}
         currentCurrency={currency}
       />
+      <DailyLimitModal
+        isOpen={showLimitModal}
+        onClose={() => setShowLimitModal(false)}
+        balance={liveBalance}
+      />
+
     </>
   );
 };

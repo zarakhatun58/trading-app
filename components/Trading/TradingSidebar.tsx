@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../libs/utils';
 import { Tooltip, TooltipTrigger, TooltipContent } from '../ReusableUI/tooltip';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface SidebarItem {
   icon: React.ReactNode;
@@ -53,23 +54,7 @@ interface TradingSidebarProps {
   setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const sidebarItems: SidebarItem[] = [
-  { icon: <TrendingUp size={24} />, label: 'TRADE', active: true },
-  { icon: <HelpCircle size={24} />, label: 'SUPPORT' },
-  { icon: <User size={24} />, label: 'ACCOUNT' },
-  { icon: <Trophy size={24} />, label: 'TOURNA-MENTS', badge: 4 },
-  // { icon: <BarChart3 size={24} />, label: 'MARKET' },
-  // { icon: <MoreHorizontal size={18} />, label: 'MORE' },
-  { icon: <Activity size={24} />, label: 'ANALYTICS' },
-  // { icon: <Unplug size={22} />, label: 'TOP' },
-  // { icon: <Signal size={22} />, label: 'SIGNAL' },
-  // { icon: <DollarSign size={24} />, label: 'MARKET' },
-  { icon: <Users size={24} />, label: 'JOIN US' },
-  // { icon: <HelpCircleIcon size={24} />, label: 'HELP' },
-  // { icon: <Settings size={24} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
 
-
-];
 
 const expandedMenuItems = [
   { icon: <Wallet size={18} />, label: 'Deposit' },
@@ -85,6 +70,15 @@ const expandedBottomItems = [
   { icon: <Info size={16} />, label: 'About us' },
   { icon: <HelpCircle size={16} />, label: 'Support' },
 ];
+const SIDEBAR_ROUTES: Record<string, string> = {
+  TRADE: '/trading',
+  ACCOUNT: '/account/account',
+  ANALYTICS: '/account/analytics',
+  'TOURNA-MENTS': '/account/tournaments',
+  SUPPORT: '/support',
+  'JOIN US': '/join-us',
+};
+
 
 const TradingSidebar = ({
   isExpanded,
@@ -96,6 +90,51 @@ const TradingSidebar = ({
   isCollapsedToIcons,
   setIsFullscreen
 }: TradingSidebarProps) => {
+ const router = useRouter();
+  const pathname = usePathname();
+
+  const sidebarItems: SidebarItem[] = [
+    {
+      icon: <TrendingUp size={24} />,
+      label: 'TRADE',
+      onClick: () => router.push('/trading'),
+      active: pathname === '/trading',
+    },
+    {
+      icon: <HelpCircle size={24} />,
+      label: 'SUPPORT',
+      onClick: () => router.push('/support'),
+      active: pathname.startsWith('/support'),
+    },
+    {
+      icon: <User size={24} />,
+      label: 'ACCOUNT',
+       onClick: () => router.push('/account?tab=account'),
+  active: pathname.startsWith('/account'),
+    },
+    {
+      icon: <Trophy size={24} />, label: 'TOURNA-MENTS',
+      badge: 4,
+      onClick: () => router.push('/account/tournaments'),
+      active: pathname.includes('tournaments'),
+    },
+    // { icon: <BarChart3 size={24} />, label: 'MARKET' },
+    // { icon: <MoreHorizontal size={18} />, label: 'MORE' },
+    {
+      icon: <Activity size={24} />, label: 'ANALYTICS',
+      onClick: () => router.push('/account/analytics'),
+      active: pathname.includes('analytics'),
+    },
+    // { icon: <Unplug size={22} />, label: 'TOP' },
+    // { icon: <Signal size={22} />, label: 'SIGNAL' },
+    // { icon: <DollarSign size={24} />, label: 'MARKET' },
+    { icon: <Users size={24} />, label: 'JOIN US', onClick: onSocialClick, },
+    // { icon: <HelpCircleIcon size={24} />, label: 'HELP' },
+    // { icon: <Settings size={24} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
+
+
+  ];
+  const [isMuted, setIsMuted] = useState(false);
   if (isCollapsedToIcons) {
     return (
       <aside className="w-14 bg-[#101729] flex flex-col items-center py-2 h-screen">
@@ -166,7 +205,7 @@ const TradingSidebar = ({
       </aside>
     );
   }
-  const [isMuted, setIsMuted] = useState(false);
+ 
   return (
     <aside className={cn(
       "bg-[#101729] flex flex-col h-screen transition-all duration-300 pl-2",
@@ -372,7 +411,7 @@ const TradingSidebar = ({
           Help
         </button>
       </div> */}
-      
+
     </aside>
   );
 };
