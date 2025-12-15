@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling, DollarSignIcon, Settings, TimerReset, Signal, CircuitBoard } from 'lucide-react';
-import { CurrencyPair, Trade } from '../../types/trading';
-import { cn } from '../../libs/utils';
-import { Switch } from '../ReusableUI/switch';
-import SwitchTimeMenu from './SwitchTimeMenu';
-import InvestmentMenu from './InvestmentMenu';
-import PendingTradeModal from './PendingTradeModal';
-import LeaderBoardModal from './LeaderBoardModal';
-import SignalTradeModal from './SignalTradeModal';
-import WhatIsItModal from './WhatIsItModal';
+import { CurrencyPair, Trade } from '../../../types/trading';
+import { cn } from '../../../libs/utils';
+import { Switch } from '../../ReusableUI/switch';
+import SwitchTimeMenu from '../SwitchTimeMenu';
+import InvestmentMenu from '../InvestmentMenu';
+import PendingTradeModal from '../PendingTradeModal';
+import LeaderBoardModal from '../LeaderBoardModal';
+import SignalTradeModal from '../SignalTradeModal';
+import WhatIsItModal from '../WhatIsItModal';
 
 
 interface TradingPanelProps {
@@ -22,8 +22,7 @@ interface TradingPanelProps {
   trades?: Trade[];
   onSellTrade?: (tradeId: string) => void;
 }
-
-export default function TradingPanel({
+export default function MobileTradeBottomSheet({
   activePair,
   onTrade,
   balance,
@@ -32,6 +31,7 @@ export default function TradingPanel({
   trades = [],
   onSellTrade
 }: TradingPanelProps) {
+      const [expanded, setExpanded] = useState(false);
   const [investment, setInvestment] = useState(100);
   const [tradeTime, setTradeTime] = useState(60);
   const [isPendingTrade, setIsPendingTrade] = useState(false);
@@ -148,113 +148,29 @@ export default function TradingPanel({
     return acc;
   }, {} as Record<string, Trade[]>);
 
+
+
   return (
-   <aside className="hidden md:flex w-[220px] rounded-sm flex-col h-full mr-2">
+    <div
+      className={cn(
+        'fixed bottom-[60px] left-0 right-0 z-50 md:hidden',
+        'bg-[#2b3040] border-t border-[#2a3040]',
+        'transition-transform duration-300',
+        expanded ? 'translate-y-0' : 'translate-y-[60%]'
+      )}
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+    >
+      {/* HANDLE */}
+      <div
+        className="flex justify-center py-2 cursor-pointer"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="w-10 h-1.5 bg-[#4a5060] rounded-full" />
+      </div>
 
-      <div className="">
-        <div className="relative">
-
-          {showAccountMenu && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-xl z-50 overflow-hidden">
-              {accountMenuItems.map((item) => (
-                <button
-                  key={item.id}
-                  className=" btn-press w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
-                  onClick={() => setShowAccountMenu(false)}
-                >
-                  <item.icon size={16} className="text-muted-foreground" />
-                  <span className="text-sm text-foreground">{item.label}</span>
-                </button>
-              ))}
-              <button
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-destructive/10 transition-colors text-left border-t border-border"
-                onClick={() => setShowAccountMenu(false)}
-              >
-                <LogOut size={16} className="text-destructive" />
-                <span className="text-sm text-destructive">Logout</span>
-              </button>
-            </div>
-          )}
-        </div>
-
-
-        {/* <div>
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <span className='relative flex flex-row'><PoundSterling size={14} className="text-green-500 font-bold rounded-full bg-[#ffffff] p-2" /> <DollarSignIcon size={12} className="text-green-500 rounded-full bg-[#ffffff] p-2 ml-[-4px]" /></span>
-              <span className="font-bold text-white text-[14px]">{activePair.name}</span>
-            </div>
-            <span className={cn(
-              'text-sm font-bold',
-              activePair.performance >= 50 ? 'text-success' : 'text-[#757885]'
-            )}>
-              {activePair.performance}%
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-primary"></span>
-              <span className="text-[10px] text-primary font-semibold">PENDING TRADE</span>
-            </div>
-            <button
-              onClick={() => setIsPendingTrade(!isPendingTrade)}
-              className={`w-10 h-5 rounded-full transition-colors relative ${isPendingTrade ? 'bg-primary' : 'bg-[#3a4050]'}`}
-            >
-              <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${isPendingTrade ? 'right-0.5' : 'left-0.5'}`}></span>
-            </button>
-          </div>
-        </div> */}
-
-        <div className="flex items-center justify-between pt-2 mb-2 gap-2">
-          <div
-            onClick={() => setIsPendingTrade(!isPendingTrade)}
-            className="
-      btn-press flex flex-col items-center justify-center
-      rounded-sm bg-[#3a4050] hover:bg-[#4a5060] transition font-semibold text-sidebar-foreground
-      w-[60px] h-[38px]
-      sm:w-[70px] sm:h-[38px]
-    "
-          >
-            <TimerReset className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
-            <span className="text-[6px] sm:text-[8px] text-white leading-tight pt-1">
-              Pending Trade
-            </span>
-          </div>
-
-          {/* Leader Board */}
-          <div
-            onClick={() => setIsLeaderBoardOpen(!isLeaderBoardOpen)}
-            className="
-      btn-press flex flex-col items-center justify-center
-      rounded-sm bg-[#3a4050] hover:bg-[#4a5060] transition font-semibold text-sidebar-foreground
-      w-[60px] h-[38px]
-      sm:w-[70px] sm:h-[38px]
-    "
-          >
-            <CircuitBoard className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
-            <span className="text-[6px] sm:text-[8px] text-white leading-tight pt-1">
-              Leader Board
-            </span>
-          </div>
-          <div
-            onClick={() => setIsSignalTrade(!isSignalTrade)}
-            className="
-      btn-press flex flex-col items-center justify-center
-      rounded-sm bg-[#3a4050] hover:bg-[#4a5060] transition font-semibold text-sidebar-foreground
-      w-[56px] h-[38px]
-      sm:w-[70px] sm:h-[38px]
-    "
-          >
-            <Signal className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
-            <span className="text-[6px] sm:text-[8px] text-white leading-tight pt-1">
-              Trading Signal
-            </span>
-          </div>
-
-        </div>
-
-        <div className='rounded-lg bg-[#2b3040] px-4 py-2 mb-2 hidden md:block'>
+      <div className="px-3 pb-3 space-y-3">
+        {/* TIME + INVESTMENT */}
+        <div className="grid grid-cols-2 gap-2">
           <div className="py-3 border-b border-[#2a3040]">
             <div className="relative">
               <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#2b3040] z-10 font-bold">
@@ -326,7 +242,6 @@ export default function TradingPanel({
               />
             </div>
           </div>
-          {/* Investment */}
           <div className="py-3 border-b border-[#2a3040] mb-2">
             <div className="relative">
               <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#2b3040] z-10 font-bold">
@@ -368,19 +283,10 @@ export default function TradingPanel({
               />
             </div>
           </div>
-          <div className="space-y-2 mb-2">
-            <button
-              onClick={handleUpClick}
-              onMouseEnter={() => setUpHovered(true)}
-              onMouseLeave={() => setUpHovered(false)}
-              className="btn-press relative w-full py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-            >
-              <span>Up</span>
-              <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
-                <TrendingUp size={16} className="text-white" />
-              </div>
-            </button>
-            <div>
+        </div>
+
+        {/* PAYOUT */}
+        <div>
               <div className="text-left text-[12px] text-[#ffffff] w-full">
                 Your payout: <span className="text-white font-bold float-right">{calculatedPayout} $</span>
               </div>
@@ -391,7 +297,10 @@ export default function TradingPanel({
                 </div>
               )}
             </div>
-            <button
+
+        {/* BUTTONS */}
+        <div className="grid grid-cols-2 gap-2">
+           <button
               onClick={handleDownClick}
               onMouseEnter={() => setDownHovered(true)}
               onMouseLeave={() => setDownHovered(false)}
@@ -402,105 +311,19 @@ export default function TradingPanel({
                 <TrendingDown size={16} className="text-white" />
               </div>
             </button>
-          </div>
-        </div>
-
-
-      </div>
-      {/* Trades Section */}
-      <div className='bg-[#2b3040] rounded-lg hidden md:block'>
-        <div className={`flex-1  border border-[#2a3040] bg-[#2b3040] rounded-lg
-    overflow-hidden transition-all duration-500
-    ${isCollapsed ? "max-h-[80px]" : "max-h-[125px]"}
-  `}>
-          <div className="flex items-center justify-between border-b border-[#2a3040]">
-            <button
-              onClick={() => setActiveTradesTab('trades')}
-              className={`flex items-center gap-2 p-2 rounded-lg 
-    ${activeTradesTab === 'trades'
-                  ? 'text-white border-t-2 border-[#3b82f6]'
-                  : 'text-gray-500 border-t-2 border-transparent'
-                }`}
+          <button
+              onClick={handleUpClick}
+              onMouseEnter={() => setUpHovered(true)}
+              onMouseLeave={() => setUpHovered(false)}
+              className="btn-press relative w-full py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
             >
-              <ArrowRightLeft size={14} />
-              <span className="text-xs font-medium">Trades</span>
-              <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{tradeCount}</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTradesTab('orders')}
-              className={`flex items-center gap-2 p-2 rounded-lg 
-    ${activeTradesTab === 'orders'
-                  ? 'text-white border-t-2 border-[#3b82f6]'
-                  : 'text-gray-500 border-t-2 border-transparent'
-                }`}
-            >
-              <Clock size={14} />
-              <span className="text-xs font-medium">Orders</span>
-              <span className="text-[10px] bg-[#2a3040] px-2 py-0.5 rounded">{orderCount}</span>
-            </button>
-          </div>
-          {/* Trade History Item Example */}
-          {activeTradesTab === "trades" && (
-            <div className="p-2 text-[10px] text-gray-500">
-              <div className="mb-2">5 DECEMBER <span className="bg-[#2a3040] px-1 rounded">0</span></div>
-              <div className="flex items-center justify-between py-2 border-b border-[#2a3040]">
-                <div className="flex items-center gap-2">
-                  <span>{activePair.flag}</span>
-                  <span className="text-white text-xs">{activePair.name}</span>
-                </div>
-                <div className="text-right">
-                  <div className="text-gray-400">{formatTime(tradeTime)}</div>
-                  <div className="text-success text-xs">0.00 $</div>
-                </div>
+              <span>Up</span>
+              <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
+                <TrendingUp size={16} className="text-white" />
               </div>
-
-              <div className="h-16 mt-2 flex items-end justify-around">
-                {[20, 35, 25, 40, 30, 45, 35, 50, 40, 55].map((h, i) => (
-                  <div key={i} className="w-1 bg-primary/50 rounded-t" style={{ height: `${h}%` }} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Empty State */}
-          <div className="flex flex-col items-center justify-center p-6 text-center">
-            <div className="w-12 h-12 rounded-full bg-[#2a3040] flex items-center justify-center mb-3">
-              <ShoppingCart size={20} className="text-gray-500" />
-            </div>
-            <p className="text-[10px] text-gray-500 leading-relaxed">
-              {activeTradesTab === 'trades'
-                ? "You don't have a trade history yet. You can open a trade using the form above."
-                : "Order list is empty. Create a pending trade using the form above."}
-            </p>
-          </div>
-
+            </button>
         </div>
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="w-full flex justify-center py-1.5 md:py-2 text-gray-400 hover:text-white transition border-t border-[#2a3040]"
-        >
-          <ChevronDown size={16} className={`transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`} />
-        </button>
       </div>
-      {/* Pending Trade Modal */}
-      <PendingTradeModal
-        isOpen={isPendingTrade}
-        onClose={() => setIsPendingTrade(false)}
-        currentQuote={activePair.currentPrice}
-        onTrade={handlePendingTrade}
-      />
-      <LeaderBoardModal
-        isOpen={isLeaderBoardOpen}
-        onClose={() => setIsLeaderBoardOpen(false)}
-        onTrade={handleLeaderBoard}
-      />
-      <SignalTradeModal
-        isOpen={isSignalTrade}
-        onClose={() => setIsSignalTrade(false)}
-        onTrade={handleSignalTrade} activePair={activePair}
-      />
-
-    </aside>
+    </div>
   );
 }

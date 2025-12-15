@@ -29,6 +29,7 @@ import {
   Instagram,
   VolumeX,
   Share2,
+  BarChart3,
 } from 'lucide-react';
 import { cn } from '../../libs/utils';
 import { Tooltip, TooltipTrigger, TooltipContent } from '../ReusableUI/tooltip';
@@ -100,12 +101,7 @@ const TradingSidebar = ({
       onClick: () => router.push('/trading'),
       active: pathname === '/trading',
     },
-    {
-      icon: <HelpCircle size={24} />,
-      label: 'SUPPORT',
-      onClick: () => router.push('/support'),
-      active: pathname.startsWith('/support'),
-    },
+    
     {
       icon: <User size={24} />,
       label: 'ACCOUNT',
@@ -118,20 +114,21 @@ const TradingSidebar = ({
       onClick: () => router.push('/account/tournaments'),
       active: pathname.includes('tournaments'),
     },
-    // { icon: <BarChart3 size={24} />, label: 'MARKET' },
+    
     // { icon: <MoreHorizontal size={18} />, label: 'MORE' },
     {
       icon: <Activity size={24} />, label: 'ANALYTICS',
       onClick: () => router.push('/account/analytics'),
       active: pathname.includes('analytics'),
     },
-    // { icon: <Unplug size={22} />, label: 'TOP' },
-    // { icon: <Signal size={22} />, label: 'SIGNAL' },
-    // { icon: <DollarSign size={24} />, label: 'MARKET' },
-    { icon: <Users size={24} />, label: 'JOIN US', onClick: onSocialClick, },
-    // { icon: <HelpCircleIcon size={24} />, label: 'HELP' },
-    // { icon: <Settings size={24} />, label: 'SETTINGS', onClick: () => console.log("Settings clicked!") }
-
+    { icon: <BarChart3 size={24} />, label: 'MARKET' },
+    {
+      icon: <HelpCircle size={24} />,
+      label: 'SUPPORT',
+      onClick: () => router.push('/support'),
+      active: pathname.startsWith('/support'),
+    },
+   
 
   ];
   const [isMuted, setIsMuted] = useState(false);
@@ -260,15 +257,7 @@ const TradingSidebar = ({
                   </span>
                 )}
               </div>
-              {isExpanded && (
-                <ChevronDown
-                  size={16}
-                  className={cn(
-                    "ml-auto text-muted-foreground transition-transform duration-300",
-                    item.label === "" ? "rotate-180" : "rotate-0"
-                  )}
-                />
-              )}
+              
             </button>
           );
           if (!isExpanded) {
@@ -284,44 +273,11 @@ const TradingSidebar = ({
 
           return <div key={index}>{ButtonContent}</div>;
         })}
-        {!isExpanded && (
-
-          <div className='flex flex-col'>
-            <div className='flex flex-row text-gray-400 justify-between mb-2'>
-              {isFullscreen ? (
-                <Minimize size={16} className="cursor-pointer" onClick={() => setIsFullscreen(false)} />
-              ) : (
-                <Maximize size={16} className="cursor-pointer" onClick={() => setIsFullscreen(true)} />
-              )}
-              <History size={16} /></div>
-            <div className='flex flex-row text-gray-400 justify-between mb-4'>
-              <Settings size={16} className="cursor-pointer" onClick={onSettingsClick} />
-              {isMuted ? (
-                <VolumeX
-                  size={16}
-                  className="cursor-pointer"
-                  onClick={() => setIsMuted(false)}
-                />
-              ) : (
-                <Volume2
-                  size={16}
-                  className="cursor-pointer"
-                  onClick={() => setIsMuted(true)}
-                />
-              )}
-            </div>
-            <div className='border border-[#2a3040] h-[50px] w-full p-2'>
-              <span className='flex flex-row'><Share2 size={14} className='w-[20px] h-[20px] text-gray-400' />
-                <Send size={20} /></span>
-              <Instagram size={12} className='flex felx-row justify-center items-center ml-2' />
-            </div>
-          </div>
-        )}
+        
       </nav>
-
-
+ 
       {isExpanded && (
-        <div className="px-2 py-4 border-t border-sidebar-border">
+        <div data-scroll className="px-2 py-4 border-t border-sidebar-border overflow-y-auto ">
           <div className="text-xs text-muted-foreground mb-2 px-4">jkhatun258@gmail.com</div>
           {expandedMenuItems.map((item, index) => (
             <button
@@ -350,68 +306,49 @@ const TradingSidebar = ({
           </div>
         </div>
       )}
-
       {!isExpanded && (
-        <div className="pb-2">
+        <div className="pb-2 ">
+          <div className='flex flex-col mb-2 p-1'>
+            <div className='flex flex-row text-gray-400 justify-between mb-2'>
+              {isFullscreen ? (
+                <Minimize size={16} className="cursor-pointer" onClick={() => setIsFullscreen(false)} />
+              ) : (
+                <Maximize size={16} className="cursor-pointer" onClick={() => setIsFullscreen(true)} />
+              )}
+              <History size={16} /></div>
+            <div className='flex flex-row text-gray-400 justify-between mb-4'>
+              <Settings size={16} className="cursor-pointer" onClick={onSettingsClick} />
+              {isMuted ? (
+                <VolumeX
+                  size={16}
+                  className="cursor-pointer"
+                  onClick={() => setIsMuted(false)}
+                />
+              ) : (
+                <Volume2
+                  size={16}
+                  className="cursor-pointer"
+                  onClick={() => setIsMuted(true)}
+                />
+              )}
+            </div>
+            <div className='border border-[#2a3040] h-[47px] w-full p-2 rounded-sm'>
+              <span className='flex flex-row'><Share2 size={14} className='w-[20px] h-[20px] text-gray-400' />
+                <Send size={20} /></span>
+              <Instagram size={12} className='flex felx-row justify-center items-center ml-2' />
+            </div>
+          </div>
           <button className={cn(
-            "rounded-sm bg-green-500 text-[#ffffff] text-[14px] flex items-center justify-center font-semibold hover:bg-primary/90 transition-colors",
-            isExpanded ? "w-full p-3" : "w-10 h-10 mx-auto"
+            "rounded-sm bg-green-500 text-[#ffffff] w-[44px] text-[10px] flex items-center justify-center font-semibold hover:bg-primary/90 transition-colors",
+            isExpanded ? "w-full p-1" : "w-[44px] h-[40px] mx-auto"
           )}>
             Help
           </button>
         </div>
-        // <div className="mx-auto my-4 p-2 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-600/20 border border-amber-500/30">
-        //   <Trophy className="text-amber-400" size={20} />
-
-        // </div>
+       
       )}
 
-      {/* <div className={cn(
-        "flex gap-2 mt-auto p-4",
-        isExpanded ? "flex-row justify-center" : "flex-col items-center"
-      )}>
-        <button className="p-2 rounded-lg text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors">
-          <Grid3X3 size={18} />
-        </button>
-        <button
-          onClick={onCollapseToIcons}
-          className="p-2 rounded-lg text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors"
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          onClick={onSettingsClick}
-          className="p-2 rounded-lg text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors"
-        >
-          <Settings size={18} />
-        </button>
-        <button className="p-2 rounded-lg text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors">
-          <Volume2 size={18} />
-        </button>
-      </div> */}
-
-      {/* <div className="px-4 pb-2">
-        <button
-          onClick={onSocialClick}
-          className={cn(
-            "rounded-lg bg-success/20 border border-success/30 text-success hover:bg-success/30 transition-colors flex items-center justify-center gap-2",
-            isExpanded ? "w-full py-2 px-4" : "w-full p-2"
-          )}
-        >
-          <Users size={18} />
-          {isExpanded && <span className="text-sm font-medium">JOIN US</span>}
-        </button>
-      </div> */}
-
-      {/* <div className="px-4 pb-4">
-        <button className={cn(
-          "rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold hover:bg-primary/90 transition-colors",
-          isExpanded ? "w-full py-3" : "w-12 h-12 mx-auto"
-        )}>
-          Help
-        </button>
-      </div> */}
-
+     
     </aside>
   );
 };

@@ -35,7 +35,7 @@ const SentimentIndicator = ({
       </button>
 
       {showPairSelector && children && (
-        <div className="absolute top-12 left-0 z-50">
+        <div className="absolute top-14 left-0 z-50">
           {children}
         </div>
       )}

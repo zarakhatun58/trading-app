@@ -43,7 +43,7 @@ const TopBar = ({
   const notificationRef = useRef<HTMLDivElement>(null);
   const onlineUsersRef = useRef<HTMLDivElement>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-const [openDeposit, setOpenDeposit] = useState(false);
+  const [openDeposit, setOpenDeposit] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -71,16 +71,16 @@ const [openDeposit, setOpenDeposit] = useState(false);
   const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? liveBalance : balance)}`;
   //  const displayBalance = hideBalance ? '******' : `$${fmt(isLive ? 10000000 : 10000000)}`;
   return (
-    <header className="h-14 bg-[#101729] flex items-center justify-between pl-4 pr-2 pb-2 pt-4">
+    <header className="h-14 bg-[#101729] flex items-center justify-between pl-2 sm:pl-4 pr-2 pb-2 pt-4 ">
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 ">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded flex items-center justify-center">
+          <div className="w-8 h-8 rounded flex items-center justify-center ">
             <span className="text-white font-bold text-lg"><Hexagon size={22} className="text-[#ffffff]" /></span>
           </div>
           <span className="font-bold text-lg tracking-tight hidden sm:inline text-white">RexOption</span>
         </div>
-        <span className="text-[14px] text-[#595b65] pl-3 ml-1 hidden md:inline font-bold">
+        <span className="text-[14px] text-[#595b65] pl-3 ml-1 hidden md:inline font-bold hidden sm:inline">
           WEB TRADING PLATFORM
         </span>
       </div>
@@ -108,14 +108,17 @@ const [openDeposit, setOpenDeposit] = useState(false);
             className={`
               btn-press
               bg-[#2a3040]
-    relative p-2 rounded-sm transition-colors
+    relative sm:p-2 p-1.5 rounded-sm transition-colors
     hover:bg-[#2a3040]
     ${activeIndex === 0 ? "bg-success" : ""}
   `}
           >
-            <Bell size={20} className="text-[#ffffff]" />
+            <Bell size={20} className="text-white w-4 h-4 sm:w-5 sm:h-5" />
             {notifications > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 min-w-4 flex items-center justify-center px-1">
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white font-bold rounded-full
+          flex items-center justify-center
+          text-[9px] h-3 min-w-3 px-0.5
+          sm:text-[10px] sm:h-4 sm:min-w-4 sm:px-1">
                 {notifications}
               </span>
             )}
@@ -125,8 +128,6 @@ const [openDeposit, setOpenDeposit] = useState(false);
             setActiveIndex(null);
           }} />
         </div>
-
-        {/* Chat */}
         <button
           onClick={() => {
             const nextchat = !showChat;
@@ -134,16 +135,19 @@ const [openDeposit, setOpenDeposit] = useState(false);
             if (nextchat) setActiveIndex(1);
             else setActiveIndex(null);
           }}
-          className={`btn-press
-            bg-[#2a3040]
-    relative p-2 rounded-sm transition-colors
-    hover:bg-[#2a3040]
+          className={` btn-press bg-[#2a3040] relative rounded-sm transition-colors hover:bg-[#2a3040]
+    p-1.5
+    sm:p-2
+
     ${activeIndex === 1 ? "bg-success" : ""}
   `}
         >
-          <MessageCircle size={20} className="text-[#ffffff]" />
+          <MessageCircle size={20} className="text-white w-4 h-4 sm:w-5 sm:h-5" />
           {unreadMessages > 0 && (
-            <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-[10px] font-bold rounded-full h-4 min-w-4 flex items-center justify-center px-1">
+            <span className="absolute -top-1 -right-1 bg-blue-500 text-white font-bold rounded-full
+        flex items-center justify-center
+        text-[9px] h-3 min-w-3 px-0.5
+        sm:text-[10px] sm:h-4 sm:min-w-4 sm:px-1">
               {unreadMessages}
             </span>
           )}
@@ -152,11 +156,16 @@ const [openDeposit, setOpenDeposit] = useState(false);
         <div ref={onlineUsersRef} className="relative">
           <button
             onClick={() => setShowOnlineUsers(!showOnlineUsers)}
-            className="btn-press bg-[#2a3040] relative p-2 rounded-sm hover:bg-[#2a3040] transition-colors"
+            className=" btn-press bg-[#2a3040] relative rounded-sm transition-colors hover:bg-[#2a3040]
+      p-1.5
+      sm:p-2"
           >
-            <User size={20} className="text-gray-400" />
+            <User size={20} className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
             {onlineUsers > 0 && (
-              <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] font-bold rounded-full h-4 min-w-4 flex items-center justify-center px-1">
+              <span className="absolute -top-1 -right-1 bg-green-500 text-white font-bold rounded-full
+          flex items-center justify-center
+          text-[9px] h-3 min-w-3 px-0.5
+          sm:text-[10px] sm:h-4 sm:min-w-4 sm:px-1">
                 {onlineUsers > 999 ? '9k+' : onlineUsers}
               </span>
             )}
@@ -173,24 +182,44 @@ const [openDeposit, setOpenDeposit] = useState(false);
             onClick={() => {
               const next = !showAccountMenu;
               setShowAccountMenu(next);
-              if (next) setActiveIndex(2);
-              else setActiveIndex(null);
+              setActiveIndex(next ? 2 : null);
             }}
-            className="btn-press flex items-center gap-2 px-2 py-1 rounded-sm bg-[#1a1f2e] hover:bg-[#2a3040] transition-colors border border-[#2a3040] "
+            className="
+      btn-press flex items-center rounded-sm
+      bg-[#1a1f2e] hover:bg-[#2a3040] transition-colors
+      border border-[#2a3040]
+      gap-1 px-2 py-1
+      sm:gap-2 sm:px-3 sm:py-2 ml-1 sm:ml-1
+    "
           >
-            <GraduationCap className="w-5 h-5 text-gray-400" />
-            <div className="flex flex-col items-start">
-              <span className={`text-[8px] font-bold rounded ${isLive ? ' text-success' : ' text-orange-400'} `}>
-                {isLive ? 'LIVE ACCOUNT' : 'DEMO ACCOUNT'}
+            <GraduationCap className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="flex flex-col items-start leading-tight">
+              <span
+                className={`
+          font-bold rounded
+          text-[9px] sm:text-[8px]
+          ${isLive ? 'text-success' : 'text-orange-400'}
+        `}
+              >
+                <span className="sm:hidden text-[6px]">
+                  {isLive ? 'LIVE ACCOUNT' : 'DEMO ACCOUNT'}
+                </span>
+                <span className="hidden sm:inline">
+                  {isLive ? 'LIVE ACCOUNT' : 'DEMO ACCOUNT'}
+                </span>
               </span>
-              <span className="font-semibold text-white text-[12px]">{displayBalance}</span>
+
+              <span className="font-semibold text-white text-[8px] sm:text-[10px]">
+                {displayBalance}
+              </span>
             </div>
             {showAccountMenu ? (
-              <ChevronUp className="w-4 h-4 text-gray-400" />
+              <ChevronUp className="text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-gray-400" />
+              <ChevronDown className="text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
             )}
           </button>
+
           <AccountModal
             isOpen={showAccountMenu}
             onClose={() => setShowAccountMenu(false)}
@@ -206,17 +235,25 @@ const [openDeposit, setOpenDeposit] = useState(false);
           />
         </div>
 
-        <div className="hidden sm:flex gap-2">
-          <button onClick={() => setOpenDeposit(true)} className="btn-press 
- py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-sm transition-colors flex items-center gap-1">
+
+        <div className="sm:flex gap-2">
+          <button onClick={() => setOpenDeposit(true)} className="btn-press
+      flex items-center gap-1
+      bg-success hover:bg-success/90 text-white font-semibold transition-colors
+      rounded-sm
+      px-1 py-2 text-[11px]
+      sm:px-4 sm:py-2 sm:text-sm">
             <Plus size={16} />
             Deposit
           </button>
-          <button className="py-2 px-4 rounded-sm bg-[#2a3040] hover:bg-[#3a4050] text-white font-medium text-sm border border-[#3a4050] btn-press">
+          <button className=" hidden sm:flex
+      py-2 px-4 rounded-sm
+      bg-[#2a3040] hover:bg-[#3a4050]
+      text-white font-medium text-sm
+      border border-[#3a4050]
+      btn-press">
             Withdrawal
           </button>
-
-
         </div>
       </div>
 

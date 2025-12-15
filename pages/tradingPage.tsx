@@ -10,9 +10,13 @@ import SettingsPanel from '../components/Trading/SettingsPanel';
 import SocialModal from '../components/Trading/SocialModal';
 import TradePairSelector from '../components/Trading/TradePairSelector';
 import SentimentIndicator from '../components/Trading/SentimentIndicator';
-import { Pin, Plus, X, ChevronDown } from 'lucide-react';
+import { Pin, Plus, X, ChevronDown, PoundSterling, DollarSignIcon } from 'lucide-react';
 import { cn } from '../libs/utils';
 import AccountPage from './account';
+import MobileChartActions from '../components/Trading/MobileView/MobileChartActions';
+import MobileBottomNav from '../components/Trading/MobileView/MobileBottomNav';
+import { MobileMoreSheet } from '../components/Trading/MobileView/MobileMoreSheet';
+import MobileBottomSidebar from '../components/Trading/MobileView/MobileBottomSidebar';
 
 const ChartToolbar = dynamic(() => import('../components/Trading/ChartToolbar'), { ssr: false });
 const CandlestickChart = dynamic(() => import('../components/Trading/CandlestickChart'), { ssr: false });
@@ -22,7 +26,10 @@ const IndicatorsPanel = dynamic(() => import('../components/Trading/IndicatorsPa
 const TopBar = dynamic(() => import('../components/Trading/TopBar'), { ssr: false });
 const CurrencyTabs = dynamic(() => import('../components/Trading/CurrencyTabs'), { ssr: false });
 const TradingSidebar = dynamic(() => import('../components/Trading/TradingSidebar'), { ssr: false });
-
+const MobileTradeBottomSheet = dynamic(
+  () => import('../components/Trading/MobileView/MobileTradeBottomSheet'),
+  { ssr: false }
+);
 
 
 
@@ -50,6 +57,7 @@ const TradingPage = () => {
   const [hideBalance, setHideBalance] = useState(false);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
+const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   useEffect(() => {
     setCandleData(generateCandleData(30));
@@ -167,7 +175,15 @@ const TradingPage = () => {
         : [...prev, pairId]
     );
   };
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      document.body.style.overflow = "hidden";
+    }
 
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
   return (
     <div>
       <div className="flex h-screen bg-background overflow-hidden">
@@ -195,6 +211,10 @@ const TradingPage = () => {
             />
           </div>
         )}
+       
+        {/* MOBILE */}
+  <MobileBottomNav onMoreClick={() => setIsMoreOpen(true)} />
+  <MobileMoreSheet open={isMoreOpen} onClose={() => setIsMoreOpen(false)} />
         {/* MAIN CONTENT */}
         <div
           className={cn(
@@ -207,10 +227,10 @@ const TradingPage = () => {
           <TopBar balance={balance} initialIsLive={false} hideBalance={hideBalance} onToggleHideBalance={() => setHideBalance(!hideBalance)} />
 
           {/* CONTENT AREA */}
-          <div className="flex flex-1 overflow-hidden pl-4">
+          <div className="flex flex-1 overflow-hidden sm:pl-4 pl-2 pb-[60px] md:pb-0">
 
             {/* SENTIMENT INDICATOR */}
-            <div className="hidden md:flex mr-2">
+            <div className="md:flex mr-2">
               <SentimentIndicator
                 buyPercentage={Math.round(sentimentBuy)}
                 onPlusClick={() => setShowPairSelector(!showPairSelector)}
@@ -230,7 +250,12 @@ const TradingPage = () => {
             <div className=" relative flex flex-col flex-1 min-w-0 ">
 
               {/* CURRENCY TABS */}
-              <div className=" flex items-center bg-[#101729] border-b border-[#2a3040] px-2 pb-2 overflow-x-auto gap-2 min-h-[70px]">
+              <div className="flex items-center
+    bg-[#101729] border-b border-[#2a3040]
+    overflow-x-auto
+    gap-1 sm:gap-2
+    px-1 pb-1 min-h-[56px]
+    sm:px-2 sm:pb-2 sm:min-h-[70px]">
                 {selectedPairs.map((pair) => {
                   const isActive = pair.id === activePairId;
                   const isPinned = pinnedPairIds.includes(pair.id);
@@ -239,10 +264,16 @@ const TradingPage = () => {
                   return (
                     <div
                       key={pair.id}
-                      className={`absolute flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer transition-all shrink-0 ${isActive
-                        ? 'bg-[#1a1f2e] border border-primary'
-                        : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
-                        }`}
+                      className={`shrink-0 flex items-center
+          rounded cursor-pointer transition-all
+          gap-1 px-1.5 py-1
+          sm:gap-2 sm:px-2 sm:py-1
+
+          ${isActive
+                          ? 'bg-[#1a1f2e] border border-primary'
+                          : 'bg-[#1a1f2e]/50 border border-[#2a3040] hover:bg-[#1a1f2e]'
+                        }
+        `}
                     >
                       {/* Close button */}
                       {selectedPairIds.length > 1 && (
@@ -251,19 +282,24 @@ const TradingPage = () => {
                             e.stopPropagation();
                             removePairFromTabs(pair.id);
                           }}
-                          className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-black flex items-center justify-center text-white hover:bg-destructive transition-colors z-10"
+                          className="absolute -top-1 -right-1
+              rounded-full bg-black text-white z-10
+              flex items-center justify-center
+              w-3 h-3
+              sm:w-4 sm:h-4"
                         >
-                          <X size={8} />
+                          <X size={8} className='w-2 h-2 sm:w-2.5 sm:h-2.5' />
                         </button>
                       )}
 
                       <button
                         onClick={() => setActivePairId(pair.id)}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-1 sm:gap-2"
                       >
-                        <span className="text-base">{pair.flag}</span>
+                        <span className='pb-2 flex flex-row'><PoundSterling size={10} className="text-green-500 font-bold rounded-full bg-[#ffffff] p-1 sm:p-2" /> <DollarSignIcon size={9} className="text-green-500 rounded-full bg-[#ffffff]  p-1 sm:p-2 -ml-1" /></span>
+                        {/* <span className="text-base">{pair.flag}</span> */}
                         <div>
-                          <div className="text-[11px] font-bold text-white whitespace-nowrap">{pair.name}</div>
+                          <div className="text-[9px] sm:text-[11px] font-bold text-white whitespace-nowrap">{pair.name}</div>
                           <div className={`text-[10px] font-bold ${priceChange >= 0 ? 'text-success' : 'text-destructive'}`}>
                             {pair.performance}%
                           </div>
@@ -317,9 +353,22 @@ const TradingPage = () => {
                   );
                 })}
               </div>
-
+              {/* MOBILE ACTION BUTTONS */}
+              <MobileChartActions
+               activePair={activePair}
+                onTrade={handleTrade}
+                balance={balance}
+                isLiveAccount={false}
+                onTradeZone={setTradeZone}
+                trades={trades}
+                onSellTrade={handleSellTrade}
+              />
               {/* CHART AREA */}
-              <div className="flex-1 relative">
+              <div className="relative flex-1
+    fixed inset-0 z-40
+    md:static md:z-auto
+    h-screen md:h-auto
+    pb-0 md:pb-[140px]">
                 <CandlestickChart
                   data={candleData}
                   currentPrice={activePair.currentPrice}
@@ -347,17 +396,30 @@ const TradingPage = () => {
             </div>
 
             {/* RIGHT TRADING PANEL */}
-            {!isFullscreen && (<TradingPanel
-              activePair={activePair}
-              onTrade={handleTrade}
-              balance={balance}
-              isLiveAccount={false}
-              onTradeZone={setTradeZone}
-              trades={trades}
-              onSellTrade={handleSellTrade}
-            />
+            {!isFullscreen && (
+              <TradingPanel
+                activePair={activePair}
+                onTrade={handleTrade}
+                balance={balance}
+                isLiveAccount={false}
+                onTradeZone={setTradeZone}
+                trades={trades}
+                onSellTrade={handleSellTrade}
+              />
             )}
           </div>
+          {/* MOBILE BOTTOM TRADE PANEL */}
+          <MobileTradeBottomSheet
+            activePair={activePair}
+            onTrade={handleTrade}
+            balance={balance}
+            isLiveAccount={false}
+            onTradeZone={setTradeZone}
+            trades={trades}
+            onSellTrade={handleSellTrade}
+          />
+           <MobileBottomNav onMoreClick={() => setIsMoreOpen(true)} />
+  <MobileMoreSheet open={isMoreOpen} onClose={() => setIsMoreOpen(false)} />
         </div>
       </div>
 

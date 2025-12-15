@@ -14,7 +14,7 @@ export default function AccountLayout({
   const [sidebarCollapsedToIcons, setSidebarCollapsedToIcons] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showSocialModal, setShowSocialModal] = useState(false);
+  const [showSocialModal, setShowSocialModal] = useState(false);``
 
   return (
     <div className="flex h-screen bg-[#1b2230] overflow-hidden text-white">

@@ -32,7 +32,7 @@ export const ChartToolbar = ({
   const [showTimeframes, setShowTimeframes] = useState(false);
 
   return (
-    <div className="absolute bottom-4 left-4 z-20 flex flex-col gap-2">
+    <div className="absolute bottom-1 sm:bottom-4 left-2 sm:left-4 z-20 flex flex-col gap-2">
       <button
         onClick={onDrawingClick}
         className="w-10 h-10 rounded-lg bg-card/90 backdrop-blur border border-border flex items-center justify-center hover:bg-accent transition-colors"

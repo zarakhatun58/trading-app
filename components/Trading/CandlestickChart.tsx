@@ -532,13 +532,30 @@ interface Notification {
       )}
 
       {/* Pair Info Button */}
-      <button 
-        onClick={() => setShowPairInfo(true)}
-        className="absolute left-10 md:left-4 top-12 md:top-12 flex items-center gap-2 px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-primary/20 text-primary text-xs md:text-sm hover:bg-primary/30 transition-colors"
-      >
-        <Info size={12} className="md:w-[12px] md:h-[12px]" />
-        <span className="font-medium hidden sm:inline text-[9px]">PAIR INFORMATION</span>
-      </button>
+      <button
+  onClick={() => setShowPairInfo(true)}
+  className="
+    absolute
+    left-3 md:left-4
+    top-10 md:top-12
+    flex items-center gap-1.5 md:gap-2
+    px-2 md:px-3
+    py-1 md:py-1.5
+    rounded-full
+    bg-primary/20 text-primary
+    text-[10px] md:text-sm
+    hover:bg-primary/30
+    transition-colors
+  "
+>
+  <Info size={12} className="w-3 h-3 md:w-3.5 md:h-3.5" />
+
+  {/* Hide text on very small screens */}
+  <span className="font-medium hidden sm:inline text-[9px] md:text-sm">
+    PAIR INFO
+  </span>
+</button>
+
 
       {/* Time Display */}
       <div className="absolute left-10 md:left-4 top-2 md:top-4 flex items-center gap-2 text-success text-xs md:text-sm">
