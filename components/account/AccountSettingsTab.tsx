@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { AlertCircle, Check, Globe, Clock, ChevronDown } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { AlertCircle, Check, Globe, Clock, ChevronDown, Camera } from 'lucide-react';
 
 export default function AccountSettingsTab() {
   const [personalData, setPersonalData] = useState({
@@ -19,7 +19,16 @@ export default function AccountSettingsTab() {
     platformAuth: true,
     withdrawAuth: true,
   });
+ const fileInputRef = useRef<HTMLInputElement>(null);
+  const [image, setImage] = useState<string | null>(null);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    setImage(url);
+  };
   return (
     <div className="p-6">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -32,9 +41,45 @@ export default function AccountSettingsTab() {
 
             {/* PROFILE */}
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-[#2a3040] flex items-center justify-center text-xl">
-                👤
-              </div>
+              <div className="relative w-20 h-20">
+      {/* PROFILE CIRCLE */}
+      <div className="w-80 h-80 rounded-full bg-[#2a3040] overflow-hidden flex items-center justify-center">
+        {image ? (
+          <img
+            src={image}
+            alt="Profile"
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <span className="text-2xl">👤</span>
+        )}
+      </div>
+
+      {/* UPLOAD ICON */}
+      <button
+        onClick={() => fileInputRef.current?.click()}
+        className="
+          absolute -top-1 -right-1
+          w-7 h-7 rounded-full
+          bg-primary
+          flex items-center justify-center
+          border-2 border-[#101729]
+          hover:bg-primary/90
+          transition
+        "
+      >
+        <Camera size={14} className="text-white" />
+      </button>
+
+      {/* HIDDEN FILE INPUT */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+      />
+    </div>
               <div>
                 <p className="text-sm font-medium text-white">{personalData.email}</p>
                 <p className="text-xs text-gray-400">ID: 71230591</p>

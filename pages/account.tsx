@@ -1,19 +1,17 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+
 import { WithdrawalTab } from '../components/account/WithdrawalTab';
 import { TransactionsTab } from '../components/account/TransactionsTab';
-import { TradesTab } from './../components/account/TradesTab';
+import { TradesTab } from '../components/account/TradesTab';
 import AccountSettingsTab from '../components/account/AccountSettingsTab';
 import { AnalyticsTab } from '../components/account/AnalyticsTab';
 import AccountTabs, { AccountTab } from '../components/account/AccountTabs';
 import MarketTab from '../components/account/MarketTab';
 import { TournamentsTab } from '../components/account/TournamentsTab';
+import AccountLayout from '../components/Layouts/AccountLayout';
 
-
-
-export default function AccountPage() {
+const AccountPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -23,14 +21,12 @@ export default function AccountPage() {
     tabFromUrl || 'withdrawal'
   );
 
-  // Sync URL → state
   useEffect(() => {
     if (tabFromUrl && tabFromUrl !== activeTab) {
       setActiveTab(tabFromUrl);
     }
   }, [tabFromUrl, activeTab]);
 
-  // State → URL
   const handleTabChange = (tab: AccountTab) => {
     setActiveTab(tab);
     router.push(`/account?tab=${tab}`, { scroll: false });
@@ -59,7 +55,6 @@ export default function AccountPage() {
 
   return (
     <div className="h-full flex flex-col">
-      
       <AccountTabs
         activeTab={activeTab}
         onTabChange={handleTabChange}
@@ -70,4 +65,11 @@ export default function AccountPage() {
       </div>
     </div>
   );
-}
+};
+
+/* ✅ Attach layout HERE */
+AccountPage.getLayout = function getLayout(page: React.ReactNode) {
+  return <AccountLayout>{page}</AccountLayout>;
+};
+
+export default AccountPage;

@@ -34,7 +34,7 @@ const AccountTabs=({ activeTab, onTabChange }: AccountTabsProps)=> {
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           className={cn(
-            'px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors rounded-t-lg',
+            'px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors rounded-sm',
             activeTab === tab.id
               ? 'bg-secondary text-foreground'
               : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'

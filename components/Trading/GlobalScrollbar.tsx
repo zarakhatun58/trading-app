@@ -1,54 +1,45 @@
 "use client";
+
 import { useEffect } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { createRoot } from "react-dom/client";
 
-const toSvgString = (Icon: any) => {
-  const svg = Icon({ size: 16 });
-  const children = svg.props.children;
-
-  return `<svg width="16" height="16" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round">
-      ${children
-        .map((c: any) => {
-          const name = c.type;
-          const props = Object.entries(c.props)
-            .map(([k, v]) => `${k}="${v}"`)
-            .join(" ");
-          return `<${name} ${props} />`;
-        })
-        .join("")}
-    </svg>`;
-};
-
-const GlobalScrollbar=()=> {
+export default function GlobalScrollbar() {
   useEffect(() => {
-    document.querySelectorAll("[data-scroll]").forEach((el: any) => {
-      if (el.classList.contains("has-custom-scroll")) return;
-      el.classList.add("has-custom-scroll");
+    document.querySelectorAll("[data-scroll]").forEach((el) => {
+      const container = el as HTMLElement;
+      if (container.dataset.scrollReady) return;
+      container.dataset.scrollReady = "true";
 
       const wrapper = document.createElement("div");
       wrapper.className = "custom-scroll-wrapper";
 
-      const upBtn = document.createElement("button");
-      upBtn.className = "scroll-btn scroll-up";
-      upBtn.innerHTML = toSvgString(ChevronUp);
-
-      const downBtn = document.createElement("button");
-      downBtn.className = "scroll-btn scroll-down";
-      downBtn.innerHTML = toSvgString(ChevronDown);
+      const upBtn = document.createElement("div");
+      const downBtn = document.createElement("div");
 
       wrapper.appendChild(upBtn);
       wrapper.appendChild(downBtn);
-      el.parentElement?.appendChild(wrapper);
+      container.parentElement?.appendChild(wrapper);
 
-      upBtn.onclick = () => (el.scrollTop -= 60);
-      downBtn.onclick = () => (el.scrollTop += 60);
+      createRoot(upBtn).render(
+        <button
+          className="scroll-btn scroll-up"
+          onClick={() => (container.scrollTop -= 60)}
+        >
+          <ChevronUp size={16} />
+        </button>
+      );
+
+      createRoot(downBtn).render(
+        <button
+          className="scroll-btn scroll-down"
+          onClick={() => (container.scrollTop += 60)}
+        >
+          <ChevronDown size={16} />
+        </button>
+      );
     });
   }, []);
 
   return null;
 }
-
-
-export default GlobalScrollbar;

@@ -45,7 +45,7 @@ const TradingPage = () => {
   const [chartType, setChartType] = useState('candles');
   const [timeframe, setTimeframe] = useState('1m');
   const [candleData, setCandleData] = useState<CandleData[]>([]);
-  const [balance, setBalance] = useState(1000000);
+  const [balance, setBalance] = useState(10000);
   const [pairs, setPairs] = useState<CurrencyPair[]>(currencyPairs);
   const [selectedPairIds, setSelectedPairIds] = useState<string[]>(['eur-chf']);
   const [pinnedPairIds, setPinnedPairIds] = useState<string[]>([]);

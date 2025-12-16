@@ -9,16 +9,16 @@ export default function AccountLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [sidebarCollapsedToIcons, setSidebarCollapsedToIcons] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showSocialModal, setShowSocialModal] = useState(false);``
+  const [showSocialModal, setShowSocialModal] = useState(false);
+  const [hideBalance, setHideBalance] = useState(false);
+  const [balance, setBalance] = useState(10000);
 
   return (
     <div className="flex h-screen bg-[#1b2230] overflow-hidden text-white">
-      {/* Sidebar */}
       <TradingSidebar
         isExpanded={sidebarExpanded}
         onToggleExpand={() => setSidebarExpanded((v) => !v)}
@@ -32,9 +32,14 @@ export default function AccountLayout({
         setIsFullscreen={setIsFullscreen}
       />
 
-      {/* Main Area */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        <TopBar />
+        <TopBar
+          balance={balance}
+          initialIsLive={false}
+          hideBalance={hideBalance}
+          onToggleHideBalance={() => setHideBalance(!hideBalance)}
+        />
+
         <div className="flex-1 overflow-auto">
           {children}
         </div>
