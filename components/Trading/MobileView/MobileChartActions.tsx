@@ -3,6 +3,9 @@
 import { TimerReset, CircuitBoard, Signal } from "lucide-react";
 import { CurrencyPair, Trade } from "../../../types/trading";
 import { useState } from "react";
+import PendingTradeModal from "../PendingTradeModal";
+import LeaderBoardModal from "../LeaderBoardModal";
+import SignalTradeModal from "../SignalTradeModal";
 
 interface TradingPanelProps {
   activePair: CurrencyPair;
@@ -43,13 +46,14 @@ export default function MobileChartActions({
     setIsSignalTrade(false);
   };
   return (
+    <>
     <div
       className="
         md:hidden
         absolute
         top-2
         right-2
-        z-50
+      z-40
         flex gap-2
       "
     >
@@ -100,32 +104,24 @@ export default function MobileChartActions({
           </div>
 
         </div>
-   
+         <PendingTradeModal
+                isOpen={isPendingTrade}
+                onClose={() => setIsPendingTrade(false)}
+                currentQuote={activePair.currentPrice}
+                onTrade={handlePendingTrade}
+              />
+              <LeaderBoardModal
+                isOpen={isLeaderBoardOpen}
+                onClose={() => setIsLeaderBoardOpen(false)}
+                onTrade={handleLeaderBoard}
+              />
+              <SignalTradeModal
+                isOpen={isSignalTrade}
+                onClose={() => setIsSignalTrade(false)}
+                onTrade={handleSignalTrade} activePair={activePair}
+              />
+   </>
   );
 }
 
-function ActionButton({
-  icon: Icon,
-  label,
-  onClick,
-}: {
-  icon: any;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="
-        btn-press
-        w-[46px] h-[38px]
-        bg-[#3a4050] hover:bg-[#4a5060]
-        rounded-sm
-        flex flex-col items-center justify-center
-      "
-    >
-      <Icon size={16} className="text-white" />
-      <span className="text-[6px] text-white mt-0.5">{label}</span>
-    </button>
-  );
-}
+

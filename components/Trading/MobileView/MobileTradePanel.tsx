@@ -27,30 +27,40 @@ useEffect(() => {
 
   return (
     <div className="md:hidden fixed inset-0 z-50">
-      {/* backdrop */}
+      {/* BACKDROP */}
       <div
         className="absolute inset-0 bg-black/50"
         onClick={onClose}
       />
 
-      {/* panel */}
+      {/* PANEL */}
       <div
-         className={cn(
-    'fixed left-0 right-0 md:hidden',
-    'bg-[#101729] sm:bg-[#2b3040] border-t border-[#2a3040]',
-    'transition-transform duration-300',
-    expanded ? 'translate-y-0' : 'translate-y-[75%]'
-  )}
-  style={{
-    bottom: '60px',
-    zIndex: 60, 
-    paddingBottom: 'env(safe-area-inset-bottom)',
-  }}
+        className={cn(
+          "fixed left-0 right-0 md:hidden",
+          "bg-[#101729] border-t border-[#2a3040]",
+          "transition-transform duration-300 ease-out",
+          expanded ? "translate-y-0" : "translate-y-[70%]"
+        )}
+        style={{
+          bottom: "60px", // sits above bottom nav
+          zIndex: 60,
+          maxHeight: "70vh",
+          minHeight: "220px",
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}
       >
-        {/* drag handle */}
-        <div className="h-1 w-10 bg-gray-500 rounded-full mx-auto my-2" />
+        {/* DRAG HANDLE */}
+        <div
+          className="flex justify-center py-2 cursor-pointer"
+          onClick={() => setExpanded(!expanded)}
+        >
+          <div className="h-1 w-10 bg-gray-500 rounded-full" />
+        </div>
 
-        {children}
+        {/* CONTENT */}
+        <div className="overflow-y-auto px-3 pb-4">
+          {children}
+        </div>
       </div>
     </div>
   );

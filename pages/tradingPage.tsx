@@ -10,13 +10,14 @@ import SettingsPanel from '../components/Trading/SettingsPanel';
 import SocialModal from '../components/Trading/SocialModal';
 import TradePairSelector from '../components/Trading/TradePairSelector';
 import SentimentIndicator from '../components/Trading/SentimentIndicator';
-import { Pin, Plus, X, ChevronDown, PoundSterling, DollarSignIcon } from 'lucide-react';
+import { Pin, Plus, X, ChevronDown, PoundSterling, DollarSignIcon, ArrowRightLeft } from 'lucide-react';
 import { cn } from '../libs/utils';
 import AccountPage from './account';
 import MobileChartActions from '../components/Trading/MobileView/MobileChartActions';
 import MobileBottomNav from '../components/Trading/MobileView/MobileBottomNav';
 import { MobileMoreSheet } from '../components/Trading/MobileView/MobileMoreSheet';
 import MobileBottomSidebar from '../components/Trading/MobileView/MobileBottomSidebar';
+import MobileTradeSection from '../components/Trading/MobileView/MobileTradeSection';
 
 const ChartToolbar = dynamic(() => import('../components/Trading/ChartToolbar'), { ssr: false });
 const CandlestickChart = dynamic(() => import('../components/Trading/CandlestickChart'), { ssr: false });
@@ -57,8 +58,8 @@ const TradingPage = () => {
   const [hideBalance, setHideBalance] = useState(false);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
-const [isMoreOpen, setIsMoreOpen] = useState(false);
-
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [showMobileTrades, setShowMobileTrades] = useState(false);
   useEffect(() => {
     setCandleData(generateCandleData(30));
   }, []);
@@ -211,10 +212,10 @@ const [isMoreOpen, setIsMoreOpen] = useState(false);
             />
           </div>
         )}
-       
+
         {/* MOBILE */}
-  <MobileBottomNav onMoreClick={() => setIsMoreOpen(true)} />
-  <MobileMoreSheet open={isMoreOpen} onClose={() => setIsMoreOpen(false)} />
+        <MobileBottomNav onMoreClick={() => setIsMoreOpen(true)} />
+        <MobileMoreSheet open={isMoreOpen} onClose={() => setIsMoreOpen(false)} />
         {/* MAIN CONTENT */}
         <div
           className={cn(
@@ -355,7 +356,7 @@ const [isMoreOpen, setIsMoreOpen] = useState(false);
               </div>
               {/* MOBILE ACTION BUTTONS */}
               <MobileChartActions
-               activePair={activePair}
+                activePair={activePair}
                 onTrade={handleTrade}
                 balance={balance}
                 isLiveAccount={false}
@@ -407,7 +408,19 @@ const [isMoreOpen, setIsMoreOpen] = useState(false);
                 onSellTrade={handleSellTrade}
               />
             )}
+            {/* MOBILE MODAL */}
+            <MobileTradeSection
+              activePair={activePair}
+              onTrade={handleTrade}
+              balance={balance}
+              isLiveAccount={false}
+              onTradeZone={setTradeZone}
+              trades={trades}
+              onSellTrade={handleSellTrade}
+            />
+
           </div>
+
           {/* MOBILE BOTTOM TRADE PANEL */}
           <MobileTradeBottomSheet
             activePair={activePair}
@@ -418,8 +431,8 @@ const [isMoreOpen, setIsMoreOpen] = useState(false);
             trades={trades}
             onSellTrade={handleSellTrade}
           />
-           <MobileBottomNav onMoreClick={() => setIsMoreOpen(true)} />
-  <MobileMoreSheet open={isMoreOpen} onClose={() => setIsMoreOpen(false)} />
+          <MobileBottomNav onMoreClick={() => setIsMoreOpen(true)} />
+          <MobileMoreSheet open={isMoreOpen} onClose={() => setIsMoreOpen(false)} />
         </div>
       </div>
 

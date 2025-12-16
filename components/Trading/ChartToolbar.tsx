@@ -1,10 +1,10 @@
 "use client";
 import { useState } from 'react';
-import { Pencil, BarChart3, Clock, X, Activity } from 'lucide-react';
+import { Pencil, BarChart3, Clock, X, Activity, ArrowRightLeft } from 'lucide-react';
 
 interface ChartToolbarProps {
   onDrawingClick: () => void;
-   onOpenIndicators:()=>void;
+  onOpenIndicators: () => void;
   onChartTypeChange: (type: string) => void;
   currentChartType: string;
   currentTimeframe: string;
@@ -22,7 +22,7 @@ const timeframes = ['1m', '5m', '15m', '30m', '1h', '4h', '1d'];
 
 export const ChartToolbar = ({
   onDrawingClick,
-   onOpenIndicators,
+  onOpenIndicators,
   onChartTypeChange,
   currentChartType,
   currentTimeframe,
@@ -30,9 +30,21 @@ export const ChartToolbar = ({
 }: ChartToolbarProps) => {
   const [showChartTypes, setShowChartTypes] = useState(false);
   const [showTimeframes, setShowTimeframes] = useState(false);
+  const [showMobileTrades, setShowMobileTrades] = useState(false);
 
   return (
-    <div className="absolute bottom-1 sm:bottom-4 left-2 sm:left-4 z-20 flex flex-col gap-2">
+    <div className="absolute z-20 flex flex-col gap-2
+    left-2 top-1/2 -translate-y-1/2
+    sm:bottom-4 sm:left-4 sm:top-auto sm:translate-y-0">
+      {/* <button
+        onClick={() => setShowMobileTrades(true)}
+        className="
+    md:hidden
+    w-10 h-10 rounded-lg bg-card/90 backdrop-blur border border-border flex items-center justify-center hover:bg-accent transition-colors
+  "
+      >
+        <ArrowRightLeft size={18} className="text-white" />
+      </button> */}
       <button
         onClick={onDrawingClick}
         className="w-10 h-10 rounded-lg bg-card/90 backdrop-blur border border-border flex items-center justify-center hover:bg-accent transition-colors"
@@ -70,9 +82,8 @@ export const ChartToolbar = ({
                   onChartTypeChange(type.id);
                   setShowChartTypes(false);
                 }}
-                className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-accent transition-colors ${
-                  currentChartType === type.id ? 'bg-primary/20 text-primary' : 'text-foreground'
-                }`}
+                className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-accent transition-colors ${currentChartType === type.id ? 'bg-primary/20 text-primary' : 'text-foreground'
+                  }`}
               >
                 <span className="text-base">{type.icon}</span>
                 <span>{type.label}</span>
@@ -111,9 +122,8 @@ export const ChartToolbar = ({
                   onTimeframeChange(tf);
                   setShowTimeframes(false);
                 }}
-                className={`w-full px-3 py-2 text-left text-sm font-mono hover:bg-accent transition-colors ${
-                  currentTimeframe === tf ? 'bg-primary/20 text-primary' : 'text-foreground'
-                }`}
+                className={`w-full px-3 py-2 text-left text-sm font-mono hover:bg-accent transition-colors ${currentTimeframe === tf ? 'bg-primary/20 text-primary' : 'text-foreground'
+                  }`}
               >
                 {tf}
               </button>
@@ -124,9 +134,9 @@ export const ChartToolbar = ({
       <button
         className="w-10 h-10 rounded-lg bg-card/90 backdrop-blur border border-border flex items-center justify-center hover:bg-destructive/20 hover:border-destructive/50 transition-colors"
         title="Indicators"
-         onClick={onOpenIndicators}
+        onClick={onOpenIndicators}
       >
-         <Activity size={16} className="text-gray-300" />
+        <Activity size={16} className="text-gray-300" />
       </button>
     </div>
   );

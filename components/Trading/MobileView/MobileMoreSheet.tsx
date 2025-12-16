@@ -34,7 +34,7 @@ export function MobileMoreSheet({
   return (
     <div
       className={`
-        fixed inset-0 z-60
+        fixed inset-0 z-50
         transition-opacity duration-300
         ${open ? "bg-black/50 opacity-100" : "pointer-events-none opacity-0"}
       `}

@@ -47,28 +47,54 @@ const generateAbsoluteTimeOptions = () => {
 
   const options = isAbsoluteMode ? generateAbsoluteTimeOptions() : durationOptions;
   return (
-    <div className="absolute top-full left-0 right-0 mt-1 bg-[#1a1f2e] border border-[#2a3040] rounded-lg overflow-hidden z-50 shadow-xl">
-      <div className="grid grid-cols-3 gap-1 p-2 max-h-[200px] overflow-y-auto">
-        {options.map((option) => (
-          <button
-            key={option.value}
-            onClick={() => {
-              onSelectTime(option.value);
-              onClose();
-            }}
-            className={`py-2 px-2 rounded text-xs font-medium transition-colors ${
-              currentTime === option.value
-                ? 'bg-success text-white'
-                : 'bg-[#2a3040] text-gray-300 hover:bg-[#3a4050]'
-            }`}
-          >
-            {option.label}
-          </button>
-        ))}
+    <>
+      {/* Backdrop (mobile only) */}
+      <div
+        className="fixed inset-0 z-40 md:hidden"
+        onClick={onClose}
+      />
+
+      <div
+        className="
+          z-50
+          bg-[#1a1f2e]
+          border border-[#2a3040]
+          rounded-lg
+          shadow-xl
+          w-[220px]
+
+          /* Desktop */
+          md:absolute md:top-full md:left-0 md:mt-1
+
+          /* Mobile */
+          fixed top-4 left-4
+        "
+      >
+        <div className="grid grid-cols-3 gap-1 p-2 max-h-[180px] overflow-y-auto">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                onSelectTime(option.value);
+                onClose();
+              }}
+              className={`py-2 px-2 rounded text-xs font-medium transition-colors
+                ${
+                  currentTime === option.value
+                    ? "bg-success text-white"
+                    : "bg-[#2a3040] text-gray-300 hover:bg-[#3a4050]"
+                }
+              `}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
-};
+}
+
 
 
 export default SwitchTimeMenu;

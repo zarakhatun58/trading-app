@@ -154,7 +154,7 @@ export default function MobileTradeBottomSheet({
     <div
       className={cn(
         'fixed bottom-[60px] left-0 right-0 z-50 md:hidden',
-        'bg-[#2b3040] border-t border-[#2a3040]',
+        'bg-[#101729] border-t border-[#2a3040]',
         'transition-transform duration-300',
         expanded ? 'translate-y-0' : 'translate-y-[60%]'
       )}
@@ -171,14 +171,14 @@ export default function MobileTradeBottomSheet({
       <div className="px-3 pb-3 space-y-3">
         {/* TIME + INVESTMENT */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="py-3 border-b border-[#2a3040]">
+          <div className="py-3 ">
             <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#2b3040] z-10 font-bold">
+              <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#101729] z-10 font-bold">
                 Time
               </label>
               <div className="
       flex items-center justify-between
-      bg-[#2a3040]
+      bg-[#101729]
       border border-[#3a4050]
       rounded-sm
       px-3 py-3 mt-1
@@ -227,7 +227,7 @@ export default function MobileTradeBottomSheet({
               {/* SWITCH TIME Link — Exact Look */}
               <button
                 onClick={toggleTimeMode}
-                className="absolute -bottom-2 left-[32%] px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
+                className="absolute -bottom-2 left-[32%] px-1 text-[10px] text-primary font-bold bg-[#101729]"
               >
                 SWITCH TIME
               </button>
@@ -242,12 +242,12 @@ export default function MobileTradeBottomSheet({
               />
             </div>
           </div>
-          <div className="py-3 border-b border-[#2a3040] mb-2">
+          <div className="py-3 mb-2">
             <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#2b3040] z-10 font-bold">
+              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729] z-10 font-bold">
                 Investment
               </label>
-              <div className="flex items-center justify-between bg-[#2a3040] border border-[#3a4050] rounded-sm p-3 mt-1">
+              <div className="flex items-center justify-between bg-[#101729] border border-[#3a4050] rounded-sm p-3 mt-1">
                 <button
                   onClick={() => adjustInvestment(isPercentMode ? -1 : -10)}
                   className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
@@ -270,7 +270,7 @@ export default function MobileTradeBottomSheet({
               </div>
               <button
                 onClick={toggleInvestmentMode}
-                className="absolute -bottom-2 left-[38%] px-1 text-[10px] text-primary font-bold bg-[#2b3040]"
+                className="absolute -bottom-2 left-[38%] px-1 text-[10px] text-primary font-bold bg-[#101729]"
               >
                 SWITCH
               </button>

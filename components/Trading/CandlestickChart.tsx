@@ -36,8 +36,8 @@ interface Notification {
   timestamp: Date;
 }
 
- const CandlestickChart = ({ 
-  data, 
+const CandlestickChart = ({
+  data,
   currentPrice,
   chartType,
   tradeStartTime,
@@ -87,18 +87,18 @@ interface Notification {
   // Convert to Heiken Ashi data
   const calculateHeikenAshi = (candles: CandleData[]): CandleData[] => {
     if (candles.length === 0) return [];
-    
+
     const heikenData: CandleData[] = [];
-    
+
     for (let i = 0; i < candles.length; i++) {
       const current = candles[i];
       const prev = i > 0 ? heikenData[i - 1] : current;
-      
+
       const haClose = (current.open + current.high + current.low + current.close) / 4;
       const haOpen = i === 0 ? (current.open + current.close) / 2 : (prev.open + prev.close) / 2;
       const haHigh = Math.max(current.high, haOpen, haClose);
       const haLow = Math.min(current.low, haOpen, haClose);
-      
+
       heikenData.push({
         time: current.time,
         open: haOpen,
@@ -107,7 +107,7 @@ interface Notification {
         close: haClose,
       });
     }
-    
+
     return heikenData;
   };
 
@@ -226,7 +226,7 @@ interface Notification {
     ctx.strokeStyle = 'hsl(217, 33%, 17%)';
     ctx.lineWidth = 1;
     ctx.setLineDash([]);
-    
+
     const verticalSteps = 10;
     for (let i = 0; i <= verticalSteps; i++) {
       const x = padding.left + (chartWidth / verticalSteps) * i;
@@ -241,7 +241,7 @@ interface Notification {
     for (let i = 0; i <= priceSteps; i++) {
       const price = minPrice + (priceRange / priceSteps) * i;
       const y = priceToY(price);
-      
+
       ctx.beginPath();
       ctx.moveTo(padding.left, y);
       ctx.lineTo(width - padding.right, y);
@@ -267,59 +267,59 @@ interface Notification {
     if (chartType === 'area') {
       ctx.beginPath();
       ctx.moveTo(indexToX(0), priceToY(chartData[0].close));
-      
+
       for (let i = 1; i < chartData.length; i++) {
         ctx.lineTo(indexToX(i), priceToY(chartData[i].close));
       }
-      
+
       ctx.strokeStyle = 'hsl(142, 71%, 45%)';
       ctx.lineWidth = 2;
       ctx.stroke();
-      
+
       ctx.lineTo(indexToX(chartData.length - 1), height - padding.bottom);
       ctx.lineTo(indexToX(0), height - padding.bottom);
       ctx.closePath();
-      
+
       const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
       gradient.addColorStop(0, 'hsla(142, 71%, 45%, 0.3)');
       gradient.addColorStop(1, 'hsla(142, 71%, 45%, 0.05)');
       ctx.fillStyle = gradient;
       ctx.fill();
-      
+
     } else if (chartType === 'bars') {
       const barWidth = Math.max(2, (chartWidth / chartData.length) * 0.5);
-      
+
       chartData.forEach((candle, index) => {
         const x = indexToX(index);
         const isGreen = candle.close >= candle.open;
         const color = isGreen ? 'hsl(142, 71%, 45%)' : 'hsl(0, 84%, 60%)';
-        
+
         ctx.strokeStyle = color;
         ctx.lineWidth = 1;
-        
+
         ctx.beginPath();
         ctx.moveTo(x, priceToY(candle.high));
         ctx.lineTo(x, priceToY(candle.low));
         ctx.stroke();
-        
+
         ctx.beginPath();
         ctx.moveTo(x - barWidth, priceToY(candle.open));
         ctx.lineTo(x, priceToY(candle.open));
         ctx.stroke();
-        
+
         ctx.beginPath();
         ctx.moveTo(x, priceToY(candle.close));
         ctx.lineTo(x + barWidth, priceToY(candle.close));
         ctx.stroke();
       });
-      
+
     } else {
       const candleWidth = Math.max(4, (chartWidth / chartData.length) * 0.7);
 
       chartData.forEach((candle, index) => {
         const x = indexToX(index);
         const isGreen = candle.close >= candle.open;
-        
+
         ctx.strokeStyle = isGreen ? 'hsl(142, 71%, 45%)' : 'hsl(0, 84%, 60%)';
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -331,7 +331,7 @@ interface Notification {
         const bodyTop = priceToY(Math.max(candle.open, candle.close));
         const bodyBottom = priceToY(Math.min(candle.open, candle.close));
         const bodyHeight = Math.max(1, bodyBottom - bodyTop);
-        
+
         ctx.fillRect(x - candleWidth / 2, bodyTop, candleWidth, bodyHeight);
       });
     }
@@ -370,7 +370,7 @@ interface Notification {
     const badgeWidth = 70;
     const badgeHeight = 20;
     ctx.fillRect(width - padding.right, currentY - badgeHeight / 2, badgeWidth, badgeHeight);
-    
+
     ctx.fillStyle = 'hsl(222, 47%, 11%)';
     ctx.font = 'bold 11px JetBrains Mono';
     ctx.textAlign = 'left';
@@ -385,7 +385,7 @@ interface Notification {
       ctx.moveTo(startX, padding.top);
       ctx.lineTo(startX, height - padding.bottom);
       ctx.stroke();
-      
+
       ctx.fillStyle = 'hsl(215, 20%, 65%)';
       ctx.font = '10px Inter';
       ctx.textAlign = 'center';
@@ -400,7 +400,7 @@ interface Notification {
       ctx.moveTo(endX, padding.top);
       ctx.lineTo(endX, height - padding.bottom);
       ctx.stroke();
-      
+
       ctx.fillStyle = 'hsl(215, 20%, 65%)';
       ctx.textAlign = 'center';
       ctx.fillText('End of trade', endX, padding.top - 10);
@@ -470,9 +470,9 @@ interface Notification {
       {showCrosshair && (
         <>
           {/* Vertical line */}
-          <div 
+          <div
             className="absolute pointer-events-none"
-            style={{ 
+            style={{
               left: clampedX,
               top: crosshairTop,
               height: crosshairBottom - crosshairTop,
@@ -481,9 +481,9 @@ interface Notification {
             }}
           />
           {/* Horizontal line - stops at chart right edge */}
-          <div 
+          <div
             className="absolute pointer-events-none"
-            style={{ 
+            style={{
               top: clampedY,
               left: crosshairLeft,
               width: crosshairRight - crosshairLeft,
@@ -492,9 +492,9 @@ interface Notification {
             }}
           />
           {/* Time label at bottom */}
-          <div 
+          <div
             className="absolute bg-[#2a3040] text-white text-xs px-2 py-1 rounded pointer-events-none"
-            style={{ 
+            style={{
               left: Math.max(crosshairLeft, Math.min(crosshairRight - 60, clampedX - 30)),
               top: crosshairBottom + 4,
             }}
@@ -502,22 +502,22 @@ interface Notification {
             {crosshairTime}
           </div>
           {/* Price label with notification icon - positioned at right edge of chart area */}
-          <div 
+          <div
             className="absolute flex items-center gap-1 pointer-events-auto"
-            style={{ 
+            style={{
               left: crosshairRight - 90,
               top: Math.max(crosshairTop, Math.min(crosshairBottom - 20, clampedY - 10)),
             }}
           >
             {isNearNotification && nearestNotification ? (
-              <button 
+              <button
                 onClick={() => removeNotification(nearestNotification.id)}
                 className="p-1 bg-destructive rounded hover:bg-destructive/80 transition-colors"
               >
                 <X size={12} className="text-white" />
               </button>
             ) : (
-              <button 
+              <button
                 onClick={addNotification}
                 className="p-1 bg-[#2a3040] rounded hover:bg-[#3a4050] transition-colors"
               >
@@ -533,8 +533,8 @@ interface Notification {
 
       {/* Pair Info Button */}
       <button
-  onClick={() => setShowPairInfo(true)}
-  className="
+        onClick={() => setShowPairInfo(true)}
+        className="
     absolute
     left-3 md:left-4
     top-10 md:top-12
@@ -547,18 +547,30 @@ interface Notification {
     hover:bg-primary/30
     transition-colors
   "
->
-  <Info size={12} className="w-3 h-3 md:w-3.5 md:h-3.5" />
+      >
+        <Info size={12} className="w-3 h-3 md:w-3.5 md:h-3.5" />
 
-  {/* Hide text on very small screens */}
-  <span className="font-medium hidden sm:inline text-[9px] md:text-sm">
-    PAIR INFO
-  </span>
-</button>
+        {/* Hide text on very small screens */}
+        <span className="font-medium hidden sm:inline text-[9px] md:text-sm">
+          PAIR INFORMATION
+        </span>
+      </button>
 
 
       {/* Time Display */}
-      <div className="absolute left-10 md:left-4 top-2 md:top-4 flex items-center gap-2 text-success text-xs md:text-sm">
+      <div className="absolute
+  left-2
+  sm:left-4
+  md:left-4
+  top-2
+  md:top-4
+  flex
+  items-center
+  sm:items-start
+  gap-2
+  text-success
+  text-xs
+  md:text-sm">
         <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
         <span className="font-mono text-[#ffffff] text-[10px]">{new Date().toLocaleTimeString()} <span className="text-gray-500">UTC</span></span>
       </div>
@@ -597,9 +609,9 @@ interface Notification {
         const priceRange = maxPrice - minPrice;
         const chartHeight = dimensions.height - padding.top - padding.bottom;
         const tradeY = padding.top + chartHeight - ((trade.entryPrice - minPrice) / priceRange) * chartHeight;
-        
+
         if (tradeY < padding.top || tradeY > dimensions.height - padding.bottom) return null;
-        
+
         return (
           <div
             key={trade.id}
@@ -609,18 +621,18 @@ interface Notification {
             onMouseLeave={() => setHoveredTradeId(null)}
           >
             {/* Trade line */}
-            <div 
+            <div
               className={`absolute left-[60px] right-[80px] h-[2px] ${trade.direction === 'up' ? 'bg-success' : 'bg-destructive'}`}
               style={{ boxShadow: '0 0 4px rgba(0,0,0,0.5)' }}
             />
-            
+
             {/* Trade info box */}
-            <div 
+            <div
               className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-1.5 rounded ${trade.direction === 'up' ? 'bg-success' : 'bg-destructive'} text-white text-xs shadow-lg`}
             >
               <span className="font-mono">{trade.amount} ₹</span>
               {hoveredTradeId === trade.id && (
-                <button 
+                <button
                   onClick={() => onSellTrade?.(trade.id)}
                   className="px-2 py-0.5 bg-black/30 rounded text-[10px] hover:bg-black/50 transition-colors"
                 >
@@ -628,9 +640,9 @@ interface Notification {
                 </button>
               )}
             </div>
-            
+
             {/* Entry price label */}
-            <div 
+            <div
               className={`absolute right-[10px] -translate-y-1/2 px-2 py-1 rounded text-xs font-mono text-white ${trade.direction === 'up' ? 'bg-success' : 'bg-destructive'}`}
             >
               {trade.entryPrice.toFixed(3)}
@@ -642,14 +654,14 @@ interface Notification {
       {/* Notifications Stack - Bottom Left */}
       <div className="absolute left-2 md:left-4 bottom-2 md:bottom-4 flex flex-col gap-2 z-30 max-w-[120px] md:max-w-xs">
         {notifications.map((notification) => (
-          <div 
+          <div
             key={notification.id}
             className="bg-[#1a1f2e] border border-[#2a3040] rounded-lg p-2 md:p-3 flex items-center gap-2 md:gap-3 animate-slide-in shadow-xl"
             onMouseEnter={() => setHoveredNotificationId(notification.id)}
             onMouseLeave={() => setHoveredNotificationId(null)}
           >
             {hoveredNotificationId === notification.id ? (
-              <button 
+              <button
                 onClick={() => removeNotification(notification.id)}
                 className="p-1 bg-destructive rounded hover:bg-destructive/80 transition-colors"
               >
@@ -668,13 +680,13 @@ interface Notification {
 
       {/* Zoom Controls - Bottom Center */}
       <div className="absolute left-1/2 -translate-x-1/2 bottom-2 md:bottom-4 flex items-center gap-2 md:gap-3 bg-[#1a1f2e]/80 rounded-lg px-2 md:px-3 py-1 md:py-1.5">
-        <button 
+        <button
           onClick={() => handleZoom(-10)}
           className="text-gray-400 hover:text-white transition-colors p-1"
         >
           <Minus size={12} className="md:w-[14px] md:h-[14px]" />
         </button>
-        <button 
+        <button
           onClick={() => handleZoom(10)}
           className="text-gray-400 hover:text-white transition-colors p-1"
         >

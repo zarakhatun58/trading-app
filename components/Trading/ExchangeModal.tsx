@@ -16,7 +16,7 @@ const currencies = [
   { code: 'CAD', symbol: 'C$', flag: '🇨🇦' },
 ];
 
- const ExchangeModal = ({
+const ExchangeModal = ({
   isOpen,
   onClose,
   currentCurrency
@@ -27,134 +27,135 @@ const currencies = [
 
   if (!isOpen) return null;
 
-  const exchangeRate = 113.97;
-  const exchangeFee = 3;
-
-  const currentCurrencyData = currencies.find(c => c.code === myCurrency) || { code: 'INR', symbol: '₹', flag: '🇮🇳' };
-  const newCurrencyData = currencies.find(c => c.code === newCurrency) || currencies[0];
-
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 z-50" onClick={onClose} />
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50  max-w-[700px] bg-[#2b3040] rounded-lg shadow-2xl ">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 ">
-          <h2 className="text-[20px] font-semibold text-white">Exchange Form</h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-lg hover:bg-[#2a3040] transition-colors"
-          >
-            <X size={20} className="text-gray-400" />
-          </button>
-        </div>
+      {/* BACKDROP */}
+      <div
+        className="fixed inset-0 z-40 bg-black/60"
+        onClick={onClose}
+      />
 
-        {/* Content */}
-        <div className="p-4">
-          {/* Currency Selection */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {/* My Currency */}
-            <div className="relative ">
-              <label className="absolute -top-2 left-3 px-1 text-xs text-gray-500 z-10">
-                My Currency:
-              </label>
-              <div className="border border-[#3a4050] rounded-sm p-2 flex items-center gap-3">
-                {/* <span className="text-2xl">{currentCurrencyData.flag}</span> */}
-                <span className="text-2xl"><PoundSterling size={14} className="text-green-500 font-bold rounded-full bg-[#ffffff] p-2" /> </span>
-                <span className="text-[14px] text-white">{myCurrency}</span>
-              </div>
-            </div>
+      {/* MODAL WRAPPER */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6">
+        {/* MODAL */}
+        <div
+          className="
+            w-full max-w-[720px]
+            max-h-[90vh]
+            bg-[#2b3040]
+            rounded-xl
+            shadow-2xl
+            flex flex-col
+            overflow-hidden
+          "
+        >
+          {/* HEADER */}
+          <div className="flex items-center justify-between p-4 border-b border-[#3a4050]">
+            <h2 className="text-lg sm:text-xl font-semibold text-white">
+              Exchange Form
+            </h2>
 
-            {/* New Currency */}
-            <div className="relative ">
-              {/* <label className="absolute -top-2 left-3 px-1 text-xs text-gray-500 z-10"> */}
-                <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#2b3040] z-10 font-bold">
-                New Currency:
-              </label>
-              <button 
-                onClick={() => setShowDropdown(!showDropdown)}
-                className="w-full border border-[#3a4050] rounded-lg p-2 flex items-center justify-between gap-3 hover:border-primary transition-colors"
-              >
-                <div className="flex items-center gap-3 ">
-                  {/* <span className="text-2xl">{newCurrencyData.flag}</span> */}
-                  <span className="text-2xl"><PoundSterling size={14} className="text-green-500 font-bold rounded-full bg-[#ffffff] p-2" /> </span>
-                  <span className="text-[14px] text-white">{newCurrency}</span>
-                </div>
-                <svg className={`w-4 h-4 text-gray-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {/* Dropdown */}
-              {showDropdown && (
-                <div className="relative">
-                <div className="absolute top-full left-0 right-0 mt-1 bg-[#2b3040] rounded-lg h-[160px] overflow-y-auto z-20 shadow-xl" data-scroll>
-                  {currencies.map((currency) => (
-                    <button
-                      key={currency.code}
-                      onClick={() => {
-                        setNewCurrency(currency.code);
-                        setShowDropdown(false);
-                      }}
-                      className={` w-full border border-b-[#3a4050] flex items-center gap-3 px-4 py-3 hover:bg-[#2b3040] transition-colors ${newCurrency === currency.code ? 'bg-[#2b3040]' : ''}`}
-                    >
-                      {/* <span className="text-xl">{currency.flag}</span> */}
-                      <span className="text-[14px]"><PoundSterling size={14} className="text-green-500 font-bold rounded-full bg-[#ffffff] p-2" /> </span>
-                      <span className="text-white text-[14px]">{currency.code}</span>
-                    </button>
-                  ))}
-                </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Exchange Display */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-6">
-            <div className="text-center">
-              <div className="text-xs text-gray-400 mb-1">You are exchanging:</div>
-              <div className="flex items-center gap-3">
-                <span className="text-[20px] font-bold text-white">0.00 {myCurrency}</span>
-                <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center">
-                  <span className="text-white text-xl font-bold">₹</span>
-                </div>
-              </div>
-            </div>
-
-            <ArrowRight size={24} className="text-gray-500 mt-4" />
-
-            <div className="text-center">
-              <div className="text-xs text-gray-400 mb-1">You will receive:</div>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                  <span className="text-white text-xl font-bold">{newCurrencyData.symbol}</span>
-                </div>
-                <span className="text-[20px] font-bold text-white">0.00 {newCurrency}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Exchange Rate */}
-          <div className="text-center text-sm text-gray-400 mb-8">
-            Exchange Fee: {exchangeFee}%. {exchangeRate.toFixed(2)} {myCurrency} = 1 {newCurrency}
-          </div>
-
-          {/* Buttons */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button className="flex items-center justify-center gap-2 py-4 bg-success hover:bg-success/90 text-white font-semibold rounded-lg transition-colors">
-              <Check size={18} />
-              Yes, proceed
-            </button>
-            <button 
+            <button
               onClick={onClose}
-              className="py-4 bg-[#2a3040] hover:bg-[#3a4050] text-white font-semibold rounded-lg transition-colors"
+              className="p-2 rounded-lg hover:bg-[#3a4050] transition"
             >
-              No, go back
+              <X size={20} className="text-gray-400" />
             </button>
+          </div>
+
+          {/* BODY (SCROLLABLE) */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+            {/* Currency Selection */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {/* My Currency */}
+              <div className="relative">
+                <label className="absolute -top-2 left-3 px-1 text-xs text-gray-400 bg-[#2b3040]">
+                  My Currency
+                </label>
+                <div className="border border-[#3a4050] rounded-lg p-3 flex items-center gap-3">
+                  <PoundSterling size={16} className="text-green-500 bg-white rounded-full p-1" />
+                  <span className="text-white text-sm">{myCurrency}</span>
+                </div>
+              </div>
+
+              {/* New Currency */}
+              <div className="relative">
+                <label className="absolute -top-2 left-3 px-1 text-xs text-gray-400 bg-[#2b3040]">
+                  New Currency
+                </label>
+
+                <button
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="w-full border border-[#3a4050] rounded-lg p-3 flex justify-between items-center hover:border-primary"
+                >
+                  <span className="text-white text-sm">{newCurrency}</span>
+                  <span className={`text-gray-400 transition ${showDropdown ? 'rotate-180' : ''}`}>⌄</span>
+                </button>
+
+                {showDropdown && (
+                  <div className="absolute z-30 mt-1 w-full max-h-[180px] overflow-y-auto bg-[#2b3040] rounded-lg border border-[#3a4050]">
+                    {currencies.map((c) => (
+                      <button
+                        key={c.code}
+                        onClick={() => {
+                          setNewCurrency(c.code);
+                          setShowDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-3 text-sm text-white hover:bg-[#3a4050]"
+                      >
+                        {c.code}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Exchange Info */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-6">
+              <div className="text-center">
+                <div className="text-xs text-gray-400 mb-1">
+                  You are exchanging
+                </div>
+                <div className="text-lg font-bold text-white">
+                  0.00 {myCurrency}
+                </div>
+              </div>
+
+              <ArrowRight className="text-gray-400 hidden md:block" />
+
+              <div className="text-center">
+                <div className="text-xs text-gray-400 mb-1">
+                  You will receive
+                </div>
+                <div className="text-lg font-bold text-white">
+                  0.00 {newCurrency}
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center text-sm text-gray-400 mb-6">
+              Exchange Fee: 3% • 113.97 {myCurrency} = 1 {newCurrency}
+            </div>
+
+            {/* ACTIONS */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button className="py-3 bg-success text-white rounded-lg font-semibold hover:bg-success/90">
+                Yes, proceed
+              </button>
+              <button
+                onClick={onClose}
+                className="py-3 bg-[#3a4050] text-white rounded-lg hover:bg-[#4a5060]"
+              >
+                No, go back
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </>
   );
 };
+
 
 export default ExchangeModal;
