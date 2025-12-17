@@ -13,7 +13,7 @@ const NotificationModal = ({ isOpen, onClose }: NotificationModalProps) => {
       <div className="fixed inset-0 z-40" onClick={onClose} />
       <div className=" absolute top-full mt-2 z-50
   left-1/2 -translate-x-1/2
-  w-[250px]
+  w-[200px]
   sm:w-[320px]
   md:w-[250px]">
         <div data-scroll className="bg-[#1a1f2e] border border-[#2a3040] rounded-sm shadow-2xl overflow-hidden h-[150px]">

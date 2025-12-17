@@ -72,7 +72,7 @@ const SignalTradeModal = ({ isOpen, onClose, onTrade, activePair }: SignalTradeP
         {/* CONTENT */}
         <div data-scroll className="bsolute overflow-y-auto pb-8 mt-3 w-[93%]
     h-[275px]
-    md:h-[300px] ">
+    md:h-[400px] ">
           {/* CURRENT SIGNALS */}
           {currencyPairs.slice(0, 12).map(item => {
             const isUp = item.currentPrice > item.previousPrice;

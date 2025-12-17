@@ -78,7 +78,7 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
         {/* Leaderboard List */}
         <div data-scroll className="absolute overflow-y-auto pb-8 mt-3 w-[93%]
     h-[175px]
-    md:h-[300px]">
+    md:h-[280px]">
           {currencyPairs.slice(0, 12).map((item) => {
             const duration = Math.floor(Math.random() * 10) + 1;
             return (

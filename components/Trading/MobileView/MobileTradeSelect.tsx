@@ -136,7 +136,7 @@ w-auto
                             </button>
 
                             {/* Pin button */}
-                            <button
+                            {/* <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     togglePinPair(pair.id);
@@ -152,7 +152,7 @@ w-auto
       ${isPinned ? "fill-primary" : ""}
     `}
                                 />
-                            </button>
+                            </button> */}
                             {/* MOBILE FULL SCREEN PAIR SELECTOR */}
                             {showTabPairSelector && (
                                 <div className="md:hidden fixed inset-0 z-[100]">
