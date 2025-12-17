@@ -12,6 +12,9 @@ import LeaderBoardModal from '../LeaderBoardModal';
 import SignalTradeModal from '../SignalTradeModal';
 import WhatIsItModal from '../WhatIsItModal';
 import { Line } from 'recharts';
+import MobileInvest from './MobileInvest';
+import SwitchTime from './SwitchTime';
+
 
 
 interface TradingPanelProps {
@@ -32,7 +35,7 @@ export default function MobileTradeBottomSheet({
   trades = [],
   onSellTrade
 }: TradingPanelProps) {
-      const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [investment, setInvestment] = useState(100);
   const [tradeTime, setTradeTime] = useState(60);
   const [isPendingTrade, setIsPendingTrade] = useState(false);
@@ -154,7 +157,7 @@ export default function MobileTradeBottomSheet({
   return (
     <div
       className={cn(
-        'fixed bottom-[115px] left-0 right-0 z-50 md:hidden',
+        'fixed bottom-[125px] left-0 right-0 z-50 md:hidden',
         'bg-[#101729] border-t border-[#2a3040]',
         'transition-transform duration-300',
         expanded ? 'translate-y-0' : 'translate-y-[60%]'
@@ -234,7 +237,7 @@ export default function MobileTradeBottomSheet({
               </button>
 
               {/* Dropdown */}
-              <SwitchTimeMenu
+              <SwitchTime
                 isOpen={showTimeMenu}
                 onClose={() => setShowTimeMenu(false)}
                 currentTime={tradeTime}
@@ -275,7 +278,7 @@ export default function MobileTradeBottomSheet({
               >
                 SWITCH
               </button>
-              <InvestmentMenu
+              <MobileInvest
                 isOpen={showInvestmentMenu}
                 onClose={() => setShowInvestmentMenu(false)}
                 currentInvestment={investment}
@@ -287,42 +290,50 @@ export default function MobileTradeBottomSheet({
         </div>
 
         {/* PAYOUT */}
-        <div>
-              <div className="text-left text-[11px] text-[#ffffff] w-full px-2">
-                Your payout: <span className="text-white font-bold float-right"> {calculatedPayout} $</span>
-              </div>
-              {isPercentMode && (
-                <div className="text-left text-[11px] text-[#989c99] px-2">
-                  Investment :
-                  <span className="text-[#989c99] font-semibold float-right">{investment}$</span>
-                </div>
-              )}
+        <div className="space-y-1">
+          <div className="flex items-center text-[11px] text-white px-2">
+            <span>Your payout:</span>
+            <span className="mx-2 flex-1 border-b border-dashed border-[#989c99]/60" />
+            <span className="ml-auto font-bold">{calculatedPayout} $</span>
+          </div>
+
+          {isPercentMode && (
+            <div className="flex items-center text-[11px] text-[#989c99] px-2">
+              <span>Investment</span>
+
+              {/* flexible dashed line */}
+              <span className="mx-2 flex-1 border-b border-dashed border-[#989c99]/60" />
+
+              <span className="font-semibold">{investment}$</span>
             </div>
+          )}
+        </div>
+
 
         {/* BUTTONS */}
         <div className="grid grid-cols-2 gap-2">
-           <button
-              onClick={handleDownClick}
-              onMouseEnter={() => setDownHovered(true)}
-              onMouseLeave={() => setDownHovered(false)}
-              className="btn-press w-full py-1 px-4 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-            >
-              <span>Down</span>
-              <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
-                <TrendingDown size={16} className="text-white" />
-              </div>
-            </button>
           <button
-              onClick={handleUpClick}
-              onMouseEnter={() => setUpHovered(true)}
-              onMouseLeave={() => setUpHovered(false)}
-              className="btn-press relative w-full py-1 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
-            >
-              <span>Up</span>
-              <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
-                <TrendingUp size={16} className="text-white" />
-              </div>
-            </button>
+            onClick={handleDownClick}
+            onMouseEnter={() => setDownHovered(true)}
+            onMouseLeave={() => setDownHovered(false)}
+            className="btn-press w-full py-1 px-4 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+          >
+            <span>Down</span>
+            <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
+              <TrendingDown size={16} className="text-white" />
+            </div>
+          </button>
+          <button
+            onClick={handleUpClick}
+            onMouseEnter={() => setUpHovered(true)}
+            onMouseLeave={() => setUpHovered(false)}
+            className="btn-press relative w-full py-1 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+          >
+            <span>Up</span>
+            <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">
+              <TrendingUp size={16} className="text-white" />
+            </div>
+          </button>
         </div>
       </div>
     </div>

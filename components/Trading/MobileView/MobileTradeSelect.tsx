@@ -84,8 +84,8 @@ const MobileTradeSelect = () => {
                             key={pair.id}
                             className={`shrink-0 flex items-center
           rounded cursor-pointer transition-all
-          gap-1 px-1.5 py-1
-          sm:gap-2 sm:px-2 sm:py-1
+          gap-1 px-1.5 py-2
+          sm:gap-2 sm:px-2 sm:py-1 mb-1
 w-auto
           ${isActive
                                     ? 'bg-[#1a1f2e] border border-none'
