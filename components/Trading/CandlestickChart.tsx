@@ -65,7 +65,7 @@ const CandlestickChart = ({
   const [timeframe, setTimeframe] = useState('1m');
   const [showPairInfo, setShowPairInfo] = useState(false);
   const [hoveredTradeId, setHoveredTradeId] = useState<string | null>(null);
-
+  const isMobile = dimensions.width < 768;
   // Chart padding - keep crosshair within these bounds
   const padding = { top: 40, right: 80, bottom: 40, left: 60 };
 
@@ -255,12 +255,23 @@ const CandlestickChart = ({
     }
 
     // Time labels
-    ctx.textAlign = 'center';
-    const timeStep = Math.ceil(chartData.length / 8);
-    for (let i = 0; i < chartData.length; i += timeStep) {
-      const x = indexToX(i);
-      ctx.fillStyle = 'hsl(215, 20%, 55%)';
-      ctx.fillText(chartData[i].time, x, height - 10);
+    // ctx.textAlign = 'center';
+    // const timeStep = Math.ceil(chartData.length / 8);
+    // for (let i = 0; i < chartData.length; i += timeStep) {
+    //   const x = indexToX(i);
+    //   ctx.fillStyle = 'hsl(215, 20%, 55%)';
+    //   ctx.fillText(chartData[i].time, x, height - 10);
+    // }
+
+    // Time labels (HIDE ON MOBILE)
+    if (!isMobile) {
+      ctx.textAlign = 'center';
+      const timeStep = Math.ceil(chartData.length / 8);
+      for (let i = 0; i < chartData.length; i += timeStep) {
+        const x = indexToX(i);
+        ctx.fillStyle = 'hsl(215, 20%, 55%)';
+        ctx.fillText(chartData[i].time, x, height - 10);
+      }
     }
 
     // Draw chart based on type
@@ -692,7 +703,7 @@ const CandlestickChart = ({
       </div>
 
       {/* Zoom Controls - Bottom Center */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-2 md:bottom-4 flex items-center gap-2 md:gap-3 bg-[#1a1f2e]/80 rounded-lg px-2 md:px-3 py-1 md:py-1.5">
+      <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bottom-2 md:bottom-4 flex items-center gap-2 md:gap-3 bg-[#1a1f2e]/80 rounded-lg px-2 md:px-3 py-1 md:py-1.5">
         <button
           onClick={() => handleZoom(-10)}
           className="text-gray-400 hover:text-white transition-colors p-1"

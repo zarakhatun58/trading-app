@@ -22,11 +22,11 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="relative pb-2">
+    <div className="relative pb-2 ">
       {/* BACKDROP */}
       <div className=" fixed
     right-0 top-[63px]
-    w-[70vw] h-[50vh]
+    w-[70vw] h-[400px]
     bg-[#101729]
     border border-[#2a3040]
     rounded-sm shadow-xl p-3
@@ -76,9 +76,9 @@ const LeaderBoardModal = ({ isOpen, onClose, onTrade }: LeaderBoardProps) => {
         </div>
 
         {/* Leaderboard List */}
-        <div data-scroll className="absolute overflow-y-auto pb-4 mt-3     w-[93%]
-    h-[180px]
-    md:h-[300px] ">
+        <div data-scroll className="absolute overflow-y-auto pb-8 mt-3 w-[93%]
+    h-[175px]
+    md:h-[300px]">
           {currencyPairs.slice(0, 12).map((item) => {
             const duration = Math.floor(Math.random() * 10) + 1;
             return (
