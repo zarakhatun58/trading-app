@@ -1,5 +1,5 @@
 import React from 'react';
-import TradingPage from './tradingPage';
+import TradingPage from './trading';
 
 const demo = () => {
     return (

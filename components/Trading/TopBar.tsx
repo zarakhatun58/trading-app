@@ -153,7 +153,7 @@ const TopBar = ({
           )}
         </button>
 
-        <div ref={onlineUsersRef} className="relative">
+        {/* <div ref={onlineUsersRef} className="relative hidden sm:inline">
           <button
             onClick={() => setShowOnlineUsers(!showOnlineUsers)}
             className=" btn-press bg-[#2a3040] relative rounded-sm transition-colors hover:bg-[#2a3040]
@@ -175,7 +175,7 @@ const TopBar = ({
             onClose={() => setShowOnlineUsers(false)}
             onlineCount={onlineUsers}
           />
-        </div>
+        </div> */}
 
         <div ref={accountRef} className="relative">
           <button

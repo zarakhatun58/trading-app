@@ -18,6 +18,7 @@ import MobileBottomNav from '../components/Trading/MobileView/MobileBottomNav';
 import { MobileMoreSheet } from '../components/Trading/MobileView/MobileMoreSheet';
 import MobileBottomSidebar from '../components/Trading/MobileView/MobileBottomSidebar';
 import MobileTradeSection from '../components/Trading/MobileView/MobileTradeSection';
+import MobileTradeSelect from '../components/Trading/MobileView/MobileTradeSelect';
 
 const ChartToolbar = dynamic(() => import('../components/Trading/ChartToolbar'), { ssr: false });
 const CandlestickChart = dynamic(() => import('../components/Trading/CandlestickChart'), { ssr: false });
@@ -143,6 +144,7 @@ const TradingPage = () => {
       });
     }
   }, [trades]);
+
   const handleSelectPair = (pairId: string) => {
     if (selectedPairIds.includes(pairId)) {
       if (selectedPairIds.length > 1) {
@@ -231,7 +233,7 @@ const TradingPage = () => {
           <div className="flex flex-1 overflow-hidden sm:pl-4 pl-2 pb-[60px] md:pb-0">
 
             {/* SENTIMENT INDICATOR */}
-            <div className="md:flex mr-2">
+            <div className="hidden md:flex mr-2">
               <SentimentIndicator
                 buyPercentage={Math.round(sentimentBuy)}
                 onPlusClick={() => setShowPairSelector(!showPairSelector)}
@@ -251,7 +253,7 @@ const TradingPage = () => {
             <div className=" relative flex flex-col flex-1 min-w-0 ">
 
               {/* CURRENCY TABS */}
-              <div className="flex items-center
+              <div className="flex items-center hidden md:flex  
     bg-[#101729] border-b border-[#2a3040]
     overflow-x-auto
     gap-1 sm:gap-2
@@ -369,7 +371,7 @@ const TradingPage = () => {
     fixed inset-0 z-40
     md:static md:z-auto
     h-screen md:h-auto
-    pb-0 md:pb-[140px]">
+    pb-0 md:pb-[150px] sm:h-screen">
                 <CandlestickChart
                   data={candleData}
                   currentPrice={activePair.currentPrice}
@@ -384,14 +386,16 @@ const TradingPage = () => {
                   onSellTrade={handleSellTrade}
                 />
                 {/* CHART TOOLBAR */}
-                <ChartToolbar
-                  onOpenIndicators={() => setShowIndicators(true)}
-                  onDrawingClick={() => setShowDrawingSidebar(true)}
-                  onChartTypeChange={setChartType}
-                  currentChartType={chartType}
-                  currentTimeframe={timeframe}
-                  onTimeframeChange={setTimeframe}
-                />
+                <div className="hidden md-flex:none">
+                  <ChartToolbar
+                    onOpenIndicators={() => setShowIndicators(true)}
+                    onDrawingClick={() => setShowDrawingSidebar(true)}
+                    onChartTypeChange={setChartType}
+                    currentChartType={chartType}
+                    currentTimeframe={timeframe}
+                    onTimeframeChange={setTimeframe}
+                  />
+                </div>
               </div>
 
             </div>
@@ -420,7 +424,7 @@ const TradingPage = () => {
             />
 
           </div>
-
+<MobileTradeSelect/>
           {/* MOBILE BOTTOM TRADE PANEL */}
           <MobileTradeBottomSheet
             activePair={activePair}

@@ -23,10 +23,9 @@ export default function MobileBottomNav({
       className="
         md:hidden
         fixed bottom-0 left-0 right-0
-        h-[60px]
+        h-[35px]
         bg-[#101729]
-        border-t border-[#2a3040]
-        z-50
+      z-50
         flex items-center justify-around
       "
     >
@@ -42,7 +41,7 @@ export default function MobileBottomNav({
             `}
           >
             {item.icon}
-            <span className="mt-1">{item.label}</span>
+            {/* <span className="mt-1">{item.label}</span> */}
           </button>
         );
       })}
@@ -53,7 +52,7 @@ export default function MobileBottomNav({
         className="flex flex-col items-center text-gray-400 text-[10px]"
       >
         <MoreHorizontal size={22} />
-        <span className="mt-1">More</span>
+        {/* <span className="mt-1">More</span> */}
       </button>
     </div>
   );

@@ -41,9 +41,9 @@ export default function AccountSettingsTab() {
 
             {/* PROFILE */}
             <div className="flex items-center gap-3">
-              <div className="relative w-20 h-20">
+              <div className="relative">
       {/* PROFILE CIRCLE */}
-      <div className="w-80 h-80 rounded-full bg-[#2a3040] overflow-hidden flex items-center justify-center">
+      <div className="w-20 h-20 rounded-full bg-[#2a3040] overflow-hidden flex items-center justify-center">
         {image ? (
           <img
             src={image}

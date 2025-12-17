@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling, DollarSignIcon, Settings, TimerReset, Signal, CircuitBoard } from 'lucide-react';
+import { ArrowUp, ArrowDown, Plus, Minus, Clock, ShoppingCart, CreditCard, Receipt, User, LogOut, ArrowRightLeft, TrendingDown, TrendingUp, ArrowUpCircle, ArrowDownCircle, ChevronUp, ChevronDown, DollarSign, PoundSterling, DollarSignIcon, Settings, TimerReset, Signal, CircuitBoard, AlignVerticalSpaceBetween, CheckLine } from 'lucide-react';
 import { CurrencyPair, Trade } from '../../../types/trading';
 import { cn } from '../../../libs/utils';
 import { Switch } from '../../ReusableUI/switch';
@@ -11,6 +11,7 @@ import PendingTradeModal from '../PendingTradeModal';
 import LeaderBoardModal from '../LeaderBoardModal';
 import SignalTradeModal from '../SignalTradeModal';
 import WhatIsItModal from '../WhatIsItModal';
+import { Line } from 'recharts';
 
 
 interface TradingPanelProps {
@@ -153,7 +154,7 @@ export default function MobileTradeBottomSheet({
   return (
     <div
       className={cn(
-        'fixed bottom-[60px] left-0 right-0 z-50 md:hidden',
+        'fixed bottom-[115px] left-0 right-0 z-50 md:hidden',
         'bg-[#101729] border-t border-[#2a3040]',
         'transition-transform duration-300',
         expanded ? 'translate-y-0' : 'translate-y-[60%]'
@@ -161,17 +162,17 @@ export default function MobileTradeBottomSheet({
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {/* HANDLE */}
-      <div
+      {/* <div
         className="flex justify-center py-2 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="w-10 h-1.5 bg-[#4a5060] rounded-full" />
-      </div>
+      </div> */}
 
-      <div className="px-3 pb-3 space-y-3">
+      <div className="px-3 pb-1 space-y-1">
         {/* TIME + INVESTMENT */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="py-3 ">
+          <div className="py-2 ">
             <div className="relative">
               <label className="absolute -top-2 left-3 px-1 text-[11px] text-[#8b93a7] bg-[#101729] z-10 font-bold">
                 Time
@@ -186,7 +187,7 @@ export default function MobileTradeBottomSheet({
                 <button
                   onClick={() => adjustTime(-30)}
                   className="
-          w-7 h-7 rounded-sm
+          w-5 h-5 rounded-sm
           bg-[#3a4050] 
           flex items-center justify-center 
           text-gray-300 
@@ -194,7 +195,7 @@ export default function MobileTradeBottomSheet({
           transition font-bold btn-press
         "
                 >
-                  <Minus size={16} className='font-bold' />
+                  <Minus size={12} className='font-bold' />
                 </button>
 
                 {/* Time Display */}
@@ -212,7 +213,7 @@ export default function MobileTradeBottomSheet({
                 <button
                   onClick={() => adjustTime(30)}
                   className="
-          w-7 h-7 rounded-sm
+           w-5 h-5 rounded-sm
           bg-[#3a4050] 
           flex items-center justify-center 
           text-gray-300 
@@ -220,7 +221,7 @@ export default function MobileTradeBottomSheet({
           transition btn-press
         "
                 >
-                  <Plus size={16} className='font-bold' />
+                  <Plus size={12} className='font-bold' />
                 </button>
               </div>
 
@@ -242,7 +243,7 @@ export default function MobileTradeBottomSheet({
               />
             </div>
           </div>
-          <div className="py-3 mb-2">
+          <div className="py-2">
             <div className="relative">
               <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729] z-10 font-bold">
                 Investment
@@ -250,9 +251,9 @@ export default function MobileTradeBottomSheet({
               <div className="flex items-center justify-between bg-[#101729] border border-[#3a4050] rounded-sm p-3 mt-1">
                 <button
                   onClick={() => adjustInvestment(isPercentMode ? -1 : -10)}
-                  className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+                  className="btn-press w-5 h-5 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
                 >
-                  <Minus size={16} className='font-bold' />
+                  <Minus size={12} className='font-bold' />
                 </button>
 
                 <button
@@ -263,9 +264,9 @@ export default function MobileTradeBottomSheet({
                 </button>
                 <button
                   onClick={() => adjustInvestment(isPercentMode ? 1 : 10)}
-                  className="btn-press w-7 h-7 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
+                  className="btn-press  w-5 h-5 rounded-sm bg-[#3a4050] flex items-center justify-center text-gray-300 hover:bg-[#4a5060] transition-colors"
                 >
-                  <Plus size={16} className='font-bold' />
+                  <Plus size={12} className='font-bold' />
                 </button>
               </div>
               <button
@@ -287,13 +288,13 @@ export default function MobileTradeBottomSheet({
 
         {/* PAYOUT */}
         <div>
-              <div className="text-left text-[12px] text-[#ffffff] w-full">
-                Your payout: <span className="text-white font-bold float-right">{calculatedPayout} $</span>
+              <div className="text-left text-[11px] text-[#ffffff] w-full px-2">
+                Your payout: <span className="text-white font-bold float-right"> {calculatedPayout} $</span>
               </div>
               {isPercentMode && (
-                <div className="text-left text-[12px] text-[#989c99] ">
+                <div className="text-left text-[11px] text-[#989c99] px-2">
                   Investment :
-                  <span className="text-[#989c99] font-bold float-right">{investment}$</span>
+                  <span className="text-[#989c99] font-semibold float-right">{investment}$</span>
                 </div>
               )}
             </div>
@@ -304,7 +305,7 @@ export default function MobileTradeBottomSheet({
               onClick={handleDownClick}
               onMouseEnter={() => setDownHovered(true)}
               onMouseLeave={() => setDownHovered(false)}
-              className="btn-press w-full py-2 px-4 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+              className="btn-press w-full py-1 px-4 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
             >
               <span>Down</span>
               <div className="w-7 h-7 rounded-full bg-[#ff9186] flex items-center justify-center">
@@ -315,7 +316,7 @@ export default function MobileTradeBottomSheet({
               onClick={handleUpClick}
               onMouseEnter={() => setUpHovered(true)}
               onMouseLeave={() => setUpHovered(false)}
-              className="btn-press relative w-full py-2 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
+              className="btn-press relative w-full py-1 px-4 rounded-sm bg-success hover:bg-success/90 text-white font-semibold text-base flex items-center justify-between transition-colors"
             >
               <span>Up</span>
               <div className="w-7 h-7 rounded-full bg-[#57c78b] flex items-center justify-center">

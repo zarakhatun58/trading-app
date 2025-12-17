@@ -30,17 +30,21 @@ const SignalTradeModal = ({ isOpen, onClose, onTrade, activePair }: SignalTradeP
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex">
+   <div className="relative pb-2">
       {/* BACKDROP */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-      />
+      <div className="fixed
+    right-0 top-[63px]
+    w-[70vw] h-[50vh]
+    bg-[#101729]
+    border border-[#2a3040]
+    rounded-sm shadow-xl p-3
+    z-50
 
-      {/* MODAL */}
-      <div className="relative ml-auto w-full max-w-xs sm:max-w-sm md:w-[246px] h-full sm:h-[480px] bg-[#101729] border border-[#2a3040] rounded-l-md shadow-xl p-3 transform transition-transform duration-300 ease-out
-        translate-x-0 sm:translate-x-0"
-      >
+    md:right-[234px]
+    md:w-[246px]
+    md:h-[480px]
+
+    animate-slideLeft" >
         {/* HEADER */}
         <div className="flex justify-between items-center mb-1">
           <span className="text-lg text-white font-semibold">Trading Signal</span>
@@ -62,7 +66,7 @@ const SignalTradeModal = ({ isOpen, onClose, onTrade, activePair }: SignalTradeP
         />
 
         {/* CONTENT */}
-        <div className="overflow-y-auto h-[calc(100%-80px)] pr-2">
+        <div data-scroll className="absolute overflow-y-auto h-[380px] mb-4 mt-3 w-[93%] ">
           {/* CURRENT SIGNALS */}
           {currencyPairs.slice(0, 12).map(item => {
             const isUp = item.currentPrice > item.previousPrice;

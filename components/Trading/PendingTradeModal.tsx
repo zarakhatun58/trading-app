@@ -72,39 +72,44 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
   const timeOptions = isAbsoluteTimeMode ? absoluteTimeOptions : durationTimeOptions;
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      {/* BACKDROP */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose}></div>
+    <div className="fixed
+    top-[64px]
+    z-50
+    right-0 md:right-[237px]">
+      <div className="bg-[#101729]
+      rounded-sm
+      border border-[#2a3040]
+      shadow-2xl
+      overflow-hidden
 
-      {/* MODAL */}
-      <div className="relative ml-auto w-full max-w-xs sm:max-w-sm md:w-[241px] h-full sm:h-auto bg-[#101729] border border-[#2a3040] rounded-l-md shadow-2xl p-4 flex flex-col">
-        {/* CLOSE BUTTON */}
-        <button
+      w-[180px] h-auto
+      px-3 py-2
+
+      md:w-[241px]
+      md:px-4 md:py-[13px]">
+        {/* <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-300 hover:text-white transition z-50"
         >
           <X size={18} />
-        </button>
+        </button> */}
 
         {/* TABS */}
-        <div className="flex mb-4 mt-3">
+        <div className="flex mb-4">
           <button
             onClick={() => setActiveTab("quote")}
-            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${
-              activeTab === "quote"
-                ? "bg-[#2a3040] text-white"
-                : "bg-[#1a1f2e] text-gray-400 hover:text-gray-300"
-            }`}
+            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${activeTab === "quote"
+                ? 'bg-[#2a3040] text-white' : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-300'
+              }`}
           >
             QUOTE
           </button>
           <button
             onClick={() => setActiveTab("time")}
-            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${
-              activeTab === "time"
+            className={`flex-1 py-1 rounded-sm text-[10px] font-semibold transition-colors ${activeTab === "time"
                 ? "bg-primary text-white"
                 : "bg-[#1a1f2e] text-gray-400 hover:text-gray-300"
-            }`}
+              }`}
           >
             TIME
           </button>
@@ -113,23 +118,18 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
         {/* CONTENT */}
         <div className="flex-1 overflow-y-auto space-y-4">
           {activeTab === "quote" ? (
-            <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729]">
-                Quote:
-              </label>
-              <input
-                type="text"
-                value={quoteValue}
-                onChange={(e) => setQuoteValue(e.target.value)}
-                className="w-full py-2 px-3 bg-[#101729] border border-[#3a4050] rounded-sm text-white text-[14px] focus:outline-none focus:border-primary"
-              />
+            <div className="relative h-[30px]">
+               <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729]">
+                 Quote: </label>
+             <input type="text" value={quoteValue} onChange={(e) => setQuoteValue(e.target.value)} 
+             className="w-full py-2 px-3 bg-[#101729] border border-[#3a4050] rounded-sm text-white text-[12px] focus:outline-none focus:border-primary" />
               <div className="text-xs text-gray-500 mt-1">
                 Current quote: {currentQuote.toFixed(3)}
               </div>
             </div>
           ) : (
             <div className="relative">
-              <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729]">
+            <label className="absolute -top-2 left-3 px-1 text-[12px] text-gray-500 bg-[#101729] z-10">
                 Time:
               </label>
               <input
@@ -165,11 +165,10 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
                         setPeriod(p);
                         setShowPeriodMenu(false);
                       }}
-                      className={`py-2 px-3 rounded text-[10px] transition-colors ${
-                        period === p
+                      className={`py-2 px-3 rounded text-[10px] transition-colors ${period === p
                           ? "bg-primary text-white"
                           : "bg-[#2a3040] text-gray-300 hover:bg-[#3a4050]"
-                      }`}
+                        }`}
                     >
                       {p}
                     </button>
@@ -213,7 +212,7 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
                   period
                 )
               }
-              className="w-full py-2 rounded-sm bg-success hover:bg-success/90 text-white font-semibold flex items-center justify-between"
+              className="btn-press w-full py-2 px-2 rounded-sm text-[14px] bg-success hover:bg-success/90 text-white font-semibold flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Clock size={16} />
@@ -232,7 +231,7 @@ const PendingTradeModal = ({ isOpen, onClose, currentQuote, onTrade }: PendingTr
                   period
                 )
               }
-              className="w-full py-2 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold flex items-center justify-between"
+              className="btn-press w-full py-2 px-2 rounded-sm bg-destructive hover:bg-destructive/90 text-white font-semibold flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Clock size={16} />

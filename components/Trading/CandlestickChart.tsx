@@ -456,7 +456,14 @@ const CandlestickChart = ({
   });
 
   return (
-    <div ref={containerRef} className="relative flex-1 h-full min-h-[300px] md:min-h-[400px] overflow-hidden">
+    <div ref={containerRef} className=" relative
+    flex-1
+    h-[calc(100svh-220px)]
+    md:h-full
+    min-h-[calc(100svh-220px)]
+    md:min-h-[400px]
+    overflow-hidden"
+    >
       <canvas
         ref={canvasRef}
         width={dimensions.width}
@@ -530,49 +537,55 @@ const CandlestickChart = ({
           </div>
         </>
       )}
-
-      {/* Pair Info Button */}
-      <button
-        onClick={() => setShowPairInfo(true)}
+      <div
         className="
     absolute
-    left-3 md:left-4
-    top-10 md:top-12
-    flex items-center gap-1.5 md:gap-2
-    px-2 md:px-3
-    py-1 md:py-1.5
-    rounded-full
-    bg-primary/20 text-primary
-    text-[10px] md:text-sm
-    hover:bg-primary/30
-    transition-colors
+    left-2
+    top-2
+
+    flex flex-row md:flex-col
+    items-center md:items-start
+    gap-2
+
+    z-40
   "
       >
-        <Info size={12} className="w-3 h-3 md:w-3.5 md:h-3.5" />
+        {/* Time Display */}
+        <div
+          className="
+      flex items-center gap-1
+      text-success
+      text-[10px] md:text-sm
+    "
+        >
+          <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+          <span className="font-mono text-white">
+            {new Date().toLocaleTimeString()}
+            <span className="text-gray-500 hidden sm:inline"> UTC</span>
+          </span>
+        </div>
+        {/* Pair Info Button */}
+        <button
+          onClick={() => setShowPairInfo(true)}
+          className="
+      flex items-center justify-center
+      w-[36px] h-[28px] md:w-auto md:h-auto
+      px-1 py-1
+      rounded-full
+      bg-primary/20 text-primary
+      hover:bg-primary/30
+      transition-colors
+    "
+        >
+          <Info className="w-3 h-3 md:w-3.5 md:h-3.5" />
 
-        {/* Hide text on very small screens */}
-        <span className="font-medium hidden sm:inline text-[9px] md:text-sm">
-          PAIR INFORMATION
-        </span>
-      </button>
+          {/* Text ONLY desktop */}
+          <span className="hidden md:inline ml-1 text-[10px] font-medium">
+            PAIR INFORMATION
+          </span>
+        </button>
 
 
-      {/* Time Display */}
-      <div className="absolute
-  left-2
-  sm:left-4
-  md:left-4
-  top-2
-  md:top-4
-  flex
-  items-center
-  sm:items-start
-  gap-2
-  text-success
-  text-xs
-  md:text-sm">
-        <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-        <span className="font-mono text-[#ffffff] text-[10px]">{new Date().toLocaleTimeString()} <span className="text-gray-500">UTC</span></span>
       </div>
 
       {/* OHLC Display - Bottom Left */}
