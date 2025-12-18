@@ -1,3 +1,4 @@
+'use client';
 import { Inbox } from 'lucide-react';
 
 const MyRequestsTab = () => {

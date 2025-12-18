@@ -1,5 +1,5 @@
+'use client';
 import { useState } from 'react';
-
 import { HelpCircle } from 'lucide-react';
 import { Button } from '../ReusableUI/button';
 import { Input } from '../ReusableUI/input';
@@ -11,7 +11,7 @@ const CreateRequestTab = () => {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
 
   return (
-    <div className="max-w-2xl mx-auto py-8">
+    <div className="mx-auto py-8 max-w-[1100px]">
       <div className="text-center mb-8">
         <HelpCircle size={48} className="mx-auto text-primary mb-4" />
         <p className="text-sm text-muted-foreground">Didn't find an answer to your question?</p>

@@ -1,9 +1,12 @@
+
+'use client';
 import { useState } from 'react';
 import FAQCategoryTabs from './FAQCategoryTabs';
 import FAQAccordion from './FAQAccordion';
 import { HelpCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ReusableUI/tabs';
 
-const faqData: Record<string, { question: string; answer: string }[]> = {
+export const faqData: Record<string, { question: string; answer: string }[]> = {
   general: [
     { question: 'What are digital options?', answer: 'Digital options are financial instruments that allow you to trade on price movements of various assets. You predict whether the price will go up or down within a specific time frame.' },
     { question: 'What is the expiration period of a trade?', answer: 'The expiration period is the time after which the trade will be automatically closed. You can choose from various expiration times ranging from 1 minute to several hours.' },
@@ -55,22 +58,23 @@ const faqData: Record<string, { question: string; answer: string }[]> = {
 
 const FAQTab = () => {
   const [activeCategory, setActiveCategory] = useState('general');
-
+  const [activeTab, setActiveTab] = useState('faq');
   return (
     <div className="py-6">
       <h2 className="text-xl font-semibold text-center mb-6">Frequently Asked Questions</h2>
-      
-      <FAQCategoryTabs 
-        activeCategory={activeCategory} 
-        onCategoryChange={setActiveCategory} 
-      />
 
-      <div className="mt-8">
-        <FAQAccordion items={faqData[activeCategory] || []} />
+      <FAQCategoryTabs
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+      />
+      <div className='mt-8'>
+        <div className="m-auto max-w-[700px]">
+          <FAQAccordion items={faqData[activeCategory] || []} />
+        </div>
       </div>
 
       {/* Contact Support */}
-      <div className="mt-12 bg-card rounded-lg p-6 flex items-center justify-center gap-4">
+      <div className="m-auto bg-[#2a3040] rounded-lg p-4 flex items-center justify-center gap-4 max-w-[350px]">
         <HelpCircle size={24} className="text-primary" />
         <div>
           <p className="text-sm text-muted-foreground">Didn't find an answer to your question?</p>

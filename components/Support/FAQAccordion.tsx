@@ -1,3 +1,4 @@
+'use client';
 import {
   Accordion,
   AccordionContent,
@@ -21,7 +22,7 @@ const FAQAccordion = ({ items }: FAQAccordionProps) => {
   const rightColumn = items.slice(midPoint);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 mx-2">
       <div>
         <Accordion type="single" collapsible className="space-y-2">
           {leftColumn.map((item, index) => (
@@ -40,8 +41,8 @@ const FAQAccordion = ({ items }: FAQAccordionProps) => {
           ))}
         </Accordion>
       </div>
-      <div>
-        <Accordion type="single" collapsible className="space-y-2">
+      <div className=''>
+        <Accordion type="single" collapsible className="space-y-2 ">
           {rightColumn.map((item, index) => (
             <AccordionItem 
               key={index} 

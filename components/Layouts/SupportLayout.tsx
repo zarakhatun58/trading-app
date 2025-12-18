@@ -1,30 +1,60 @@
-import { ReactNode } from 'react';
+'use client';
 
-interface SupportLayoutProps {
-  children: ReactNode;
-}
+import MobileBottomNav from '../Trading/MobileView/MobileBottomNav';
+import TopBar from '../Trading/TopBar';
+import TradingSidebar from '../Trading/TradingSidebar';
+import { useState } from 'react';
 
-const SupportLayout = ({ children }: SupportLayoutProps) => {
+export default function SupportLayout({ children }: { children: React.ReactNode }) {
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [sidebarCollapsedToIcons, setSidebarCollapsedToIcons] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   return (
-    <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6">
-      {/* Main Content */}
-      <div className="flex-1 min-w-0">
-        {children}
+    <div className="flex h-screen bg-[#1b2230]">
+      <div className='hidden md:flex'>
+        <TradingSidebar
+          isExpanded={sidebarExpanded}
+          onToggleExpand={() => setSidebarExpanded(v => !v)}
+          onSettingsClick={() => { }}
+          onSocialClick={() => { }}
+          onCollapseToIcons={() => setSidebarCollapsedToIcons(v => !v)}
+          isCollapsedToIcons={sidebarCollapsedToIcons}
+          isFullscreen={false}
+          setIsFullscreen={() => { }}
+        />
       </div>
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <TopBar
+          balance={0}
+          initialIsLive={false}
+          hideBalance={false}
+          onToggleHideBalance={() => { }}
+        />
 
-      {/* Right Sidebar - Account Info */}
-      <div className="w-full lg:w-[200px] space-y-4">
-        <div className="bg-card rounded-lg p-4 text-center">
-          <p className="text-xs text-muted-foreground mb-1">Available for withdrawal</p>
-          <p className="text-xl font-bold text-foreground">0.00 $</p>
-        </div>
-        <div className="bg-card rounded-lg p-4 text-center">
-          <p className="text-xs text-muted-foreground mb-1">In the account</p>
-          <p className="text-xl font-bold text-foreground">0.00 $</p>
+        <div className="flex-1 overflow-auto px-2 py-2">
+          <div className="relative">
+
+            {/* RIGHT INFO TEXT (IMAGE STYLE) */}
+            <div className="hidden md:flex absolute right-0 top-0 text-right text-sm text-muted-foreground flex flex-row">
+              <div className='h-8 '>
+                Available for withdrawal
+                <div className="text-white font-semibold">0.00 $</div>
+              </div>
+              <div className='h-8 pl-8 '>
+                In the account
+                <div className="text-white font-semibold">0.00 $</div>
+              </div>
+            </div>
+
+            {/* MAIN CONTENT */}
+            <div className="mx-auto ">
+              {children}
+            </div>
+
+          </div>
         </div>
       </div>
+     <MobileBottomNav onMoreClick={() => setIsMoreOpen(true)} />
     </div>
   );
-};
-
-export default SupportLayout;
+}

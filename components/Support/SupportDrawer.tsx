@@ -1,3 +1,4 @@
+'use client';
 import { X, HelpCircle, BookOpen, ChevronRight, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '../../libs/utils';

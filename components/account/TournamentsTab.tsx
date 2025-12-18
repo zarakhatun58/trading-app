@@ -1,5 +1,4 @@
 
-'use client';
 import { useState } from 'react';
 import { Clock, Info } from 'lucide-react';
 import { cn } from '../../libs/utils';
@@ -120,7 +119,7 @@ export function TournamentsTab() {
                 <h3 className="text-lg font-semibold">{tournament.name}</h3>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground">PRIZE POOL</p>
-                  <p className="text-xl font-bold text-success">{tournament.prizePool.toLocaleString()} $</p>
+                  <p className="text-xl font-bold text-success"> {tournament.prizePool.toLocaleString('en-US')} $</p>
                 </div>
               </div>
 

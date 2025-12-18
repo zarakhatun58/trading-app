@@ -30,7 +30,8 @@ export default function MobileChartActions({
   const [isPendingTrade, setIsPendingTrade] = useState(false);
   const [isSignalTrade, setIsSignalTrade] = useState(false);
   const [isLeaderBoardOpen, setIsLeaderBoardOpen] = useState(false);
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
+const [isMoreOpen, setIsMoreOpen] = useState(false);
+const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handlePendingTrade = (direction: 'up' | 'down', amount: number, type: 'quote' | 'time', value: string, period: string) => {
     onTradeZone?.(direction);
@@ -47,8 +48,10 @@ export default function MobileChartActions({
     onTrade(direction, amount, tradeTime);
     setIsSignalTrade(false);
   };
+
   return (
     <>
+    {!isModalOpen && (
       <div className="md:hidden fixed top-36 left-4 z-50">
         <button
           onClick={() => setIsMoreOpen(prev => !prev)}
@@ -63,6 +66,7 @@ export default function MobileChartActions({
           <MoreVertical className="w-4 h-4 text-white" />
         </button>
       </div>
+    )}
       {/* === ACTION COLUMN === */}
       {isMoreOpen && (
         <div className="

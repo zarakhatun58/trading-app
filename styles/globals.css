@@ -116,6 +116,7 @@
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', sans-serif;
     background-color: #101729;
+    
   }
 
   .font-mono {

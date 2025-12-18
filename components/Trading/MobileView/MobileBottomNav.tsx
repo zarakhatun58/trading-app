@@ -14,7 +14,7 @@ export default function MobileBottomNav({
   { key: 'TRADE', icon: <TrendingUp size={20} />, label: 'Trade', route: '/trading' },
   { key: 'SUPPORT', icon: <HelpCircle size={20} />, label: 'Support', route: '/support' },
   { key: 'ACCOUNT', icon: <User size={20} />, label: 'Account', route: '/account?tab=account' },
-  { key: 'TOURNAMENT', icon: <Trophy size={20} />, label: 'Tournament', route: '/account/tournaments' },
+  { key: 'TOURNAMENT', icon: <Trophy size={20} />, label: 'Tournament', route: '/tournaments' },
 ];
 
 

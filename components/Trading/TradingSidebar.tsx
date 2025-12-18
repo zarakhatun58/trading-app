@@ -74,8 +74,8 @@ const expandedBottomItems = [
 const SIDEBAR_ROUTES: Record<string, string> = {
   TRADE: '/trading',
   ACCOUNT: '/account/account',
-  ANALYTICS: '/account/analytics',
-  'TOURNA-MENTS': '/account/tournaments',
+  ANALYTICS: 'account/?tab=analytics',
+  'TOURNA-MENTS': '/tournaments',
   SUPPORT: '/support',
   'JOIN US': '/join-us',
 };
@@ -91,7 +91,7 @@ const TradingSidebar = ({
   isCollapsedToIcons,
   setIsFullscreen
 }: TradingSidebarProps) => {
- const router = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
 
   const sidebarItems: SidebarItem[] = [
@@ -101,34 +101,34 @@ const TradingSidebar = ({
       onClick: () => router.push('/trading'),
       active: pathname === '/trading',
     },
-    
+
     {
       icon: <User size={24} />,
       label: 'ACCOUNT',
-       onClick: () => router.push('/account?tab=account'),
-  active: pathname.startsWith('/account'),
+      onClick: () => router.push('/account?tab=account'),
+      active: pathname.startsWith('/account'),
     },
     {
       icon: <Trophy size={24} />, label: 'TOURNA-MENTS',
       badge: 4,
-      onClick: () => router.push('/account/tournaments'),
-      active: pathname.includes('tournaments'),
+      onClick: () => router.push('/tournaments'),
+      active: pathname.includes('/tournaments'),
     },
-    
+
     // { icon: <MoreHorizontal size={18} />, label: 'MORE' },
     {
       icon: <Activity size={24} />, label: 'ANALYTICS',
-      onClick: () => router.push('/account/analytics'),
-      active: pathname.includes('analytics'),
+      onClick: () => router.push('account/?tab=analytics'),
+      active: pathname.includes('/analytics'),
     },
     { icon: <BarChart3 size={24} />, label: 'MARKET' },
     {
       icon: <HelpCircle size={24} />,
       label: 'SUPPORT',
-      onClick: () => router.push('/support'),
+      onClick: () => router.push('/support/'),
       active: pathname.startsWith('/support'),
     },
-   
+
 
   ];
   const [isMuted, setIsMuted] = useState(false);
@@ -202,7 +202,7 @@ const TradingSidebar = ({
       </aside>
     );
   }
- 
+
   return (
     <aside className={cn(
       "bg-[#101729] flex flex-col h-screen transition-all duration-300 pl-2",
@@ -257,7 +257,7 @@ const TradingSidebar = ({
                   </span>
                 )}
               </div>
-              
+
             </button>
           );
           if (!isExpanded) {
@@ -273,9 +273,9 @@ const TradingSidebar = ({
 
           return <div key={index}>{ButtonContent}</div>;
         })}
-        
+
       </nav>
- 
+
       {isExpanded && (
         <div data-scroll className="px-2 py-4 border-t border-sidebar-border overflow-y-auto ">
           <div className="text-xs text-muted-foreground mb-2 px-4">jkhatun258@gmail.com</div>
@@ -345,10 +345,10 @@ const TradingSidebar = ({
             Help
           </button>
         </div>
-       
+
       )}
 
-     
+
     </aside>
   );
 };
