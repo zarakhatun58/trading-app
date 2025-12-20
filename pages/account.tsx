@@ -54,13 +54,13 @@ const AccountPage = () => {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-[#1b2230] p-2">
       <AccountTabs
         activeTab={activeTab}
         onTabChange={handleTabChange}
       />
 
-      <div className="flex-1 overflow-auto">
+      <div data-scroll className="flex-1 overflow-auto">
         {renderTabContent()}
       </div>
     </div>

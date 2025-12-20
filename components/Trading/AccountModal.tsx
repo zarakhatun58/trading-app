@@ -62,7 +62,7 @@ const AccountModal = ({
           {/* Left Content */}
           <div className="w-[180px] sm:w-[160px] md:w-full p-2 md:p-3 bg-[#1c1f2d] rounded-sm">
             <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-3 bg-[#282a38] p-2 rounded-sm w-[170px]">
+              <div className="flex items-center gap-3 bg-[#282a38] p-2 rounded-sm w-[160px]">
                 <div className="w-8 h-8 flex items-center justify-center text-white font-bold">
                   <Menu />
                 </div>
@@ -73,7 +73,7 @@ const AccountModal = ({
                   <span className="font-bold text-white text-[9px] md:text-[10px]">+0% profit</span>
                 </div>
               </div>
-              <button className="p-4 rounded-sm hover:bg-slate-900 bg-[#282a38]"
+              <button className="ml-2 p-4 rounded-sm hover:bg-slate-900 bg-[#282a38]"
                 title={hideBalance ? "Show balance" : "Hide balance"}
                 onClick={onToggleHideBalance}
               >

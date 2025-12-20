@@ -25,7 +25,7 @@ const Support = () => {
       <Tabs defaultValue="faq" value={activeTab} onValueChange={setActiveTab}>
 
        {/* ================= DESKTOP TABS ================= */}
-        <TabsList className="hidden md:flex bg-[#2b3040] mb-8">
+        <TabsList className="hidden md:flex bg-[#2b3040] mb-8 w-[300px]">
           <TabsTrigger value="my-requests">My requests</TabsTrigger>
           <TabsTrigger value="create-request">Create request</TabsTrigger>
           <TabsTrigger value="faq">FAQ</TabsTrigger>
@@ -80,7 +80,6 @@ const Support = () => {
         <TabsContent value="create-request">
           <CreateRequestTab />
         </TabsContent>
-
         <TabsContent value="faq">
           <FAQTab />
         </TabsContent>

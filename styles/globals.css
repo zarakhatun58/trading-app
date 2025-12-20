@@ -250,9 +250,9 @@
 
 /* UP & DOWN BUTTONS */
 .scroll-btn {
-  width: 26px;
-  height: 26px;
-  background: #ffffff;
+  width: 10px;
+  height: 10px;
+  /* background: #ffffff; */
   border-radius: 6px;
   display: flex;
   align-items: center;

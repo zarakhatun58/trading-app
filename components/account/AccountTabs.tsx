@@ -37,17 +37,16 @@ const AccountTabs = ({ activeTab, onTabChange }: AccountTabsProps) => {
     <div className="relative">
 
       {/* ================= DESKTOP TABS ================= */}
-      <div className="hidden md:flex items-center gap-1
-        bg-card border-b border-border px-4 overflow-x-auto"
+      <div className="hidden md:flex items-center gap-1 bg-[#2b3040] max-w-[38rem] rounded-sm"
       >
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              'px-4 py-3 text-sm font-medium whitespace-nowrap rounded-sm transition-colors',
+              'px-2 py-2 text-[14px] font-medium whitespace-nowrap rounded-sm transition-colors',
               activeTab === tab.id
-                ? 'bg-secondary text-foreground'
+                ? 'bg-secondary text-foreground rounded-sm m-1'
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             )}
           >
@@ -55,7 +54,44 @@ const AccountTabs = ({ activeTab, onTabChange }: AccountTabsProps) => {
           </button>
         ))}
       </div>
+ {/* RIGHT INFO TEXT  */}
+           {activeTab === 'account' && (
+  <div className="hidden md:flex absolute right-0 top-0 text-right text-sm text-muted-foreground flex-row">
+    <div className="h-8">
+      <p className="mb-1">My current currency</p>
+      <div className="text-white font-semibold text-[14px]">
+        $ USD{' '}
+        <button className="text-[8px] bg-primary px-2 rounded-sm text-white">
+          CHANGE
+        </button>
+      </div>
+    </div>
 
+    <div className="h-8 pl-8">
+      <p className="mb-1">Available for withdrawal</p>
+      <div className="text-white font-semibold text-[14px]">0.00 $</div>
+    </div>
+
+    <div className="h-8 pl-8">
+      <p className="mb-1">In the account</p>
+      <div className="text-white font-semibold text-[14px]">0.00 $</div>
+    </div>
+  </div>
+)}
+
+{activeTab === 'withdrawal' && (
+  <div className="hidden md:flex absolute right-0 top-0 text-right text-sm text-muted-foreground flex-row">
+    <div className="h-8 pl-8">
+      <p className="mb-1">Available for withdrawal</p>
+      <div className="text-white font-semibold text-[14px]">0.00 $</div>
+    </div>
+
+    <div className="h-8 pl-8">
+      <p className="mb-1">In the account</p>
+      <div className="text-white font-semibold text-[14px]">0.00 $</div>
+    </div>
+  </div>
+)}
       {/* ================= MOBILE ACCORDION ================= */}
       <div className="md:hidden px-4 mt-3">
         <button

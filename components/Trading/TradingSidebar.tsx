@@ -121,7 +121,10 @@ const TradingSidebar = ({
       onClick: () => router.push('account/?tab=analytics'),
       active: pathname.includes('/analytics'),
     },
-    { icon: <BarChart3 size={24} />, label: 'MARKET' },
+    { icon: <BarChart3 size={24} />, label: 'MARKET',
+   onClick: () => router.push('account/?tab=market'),
+      active: pathname.includes('/market'),
+  },
     {
       icon: <HelpCircle size={24} />,
       label: 'SUPPORT',

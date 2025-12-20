@@ -15,14 +15,17 @@ const config: Config = {
       center: true,
       padding: "2rem",
       screens: {
+        md: "768px",
+        xl: "1280px",
+        xl2: "1330px",
         "2xl": "1400px",
-         'xl2': '1330px',
+        xxl: "1530px",
       },
     },
 
     extend: {
       rotate: {
-        'x-10': '10deg', 
+        'x-10': '10deg',
         'y-10': '10deg',
       },
       fontFamily: {

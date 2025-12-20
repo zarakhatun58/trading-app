@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FloatingInput from './FloatingInput';
+import FloatingInput from './ReusableUI/FloatingInput';
 import { useSearchParams } from "next/navigation";
 
 const AuthBox = () => {

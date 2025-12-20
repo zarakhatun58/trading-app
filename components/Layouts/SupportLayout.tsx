@@ -34,7 +34,7 @@ export default function SupportLayout({ children }: { children: React.ReactNode 
         <div className="flex-1 overflow-auto px-2 py-2">
           <div className="relative">
 
-            {/* RIGHT INFO TEXT (IMAGE STYLE) */}
+            {/* RIGHT INFO TEXT */}
             <div className="hidden md:flex absolute right-0 top-0 text-right text-sm text-muted-foreground flex flex-row">
               <div className='h-8 '>
                 Available for withdrawal
